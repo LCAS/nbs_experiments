@@ -16,12 +16,12 @@ Or whatever new instructions Marc has kindly compiled for us [here](https://gith
 # Installing Tiago in Kinetic with Gazebo8 compatibility
 
 
-Mostly we will use same instructions than in PAL tutorials (see [here](http://wiki.ros.org/Robots/TIAGo/Tutorials/Installation/TiagoSimulation)  ), but we will use our own rosinstall file from here. Follow these instructions: 
+Mostly we will use same instructions than in PAL tutorials (see [here](http://wiki.ros.org/Robots/TIAGo/Tutorials/Installation/TiagoSimulation)), but we will use our own rosinstall file from here. Follow these instructions: 
 
     mkdir ~/workspace/tiago
     cd ~/workspace/tiago
-    cp ~/Downloads/tiago_lcas.rosinstall  ~/workspace/tiago
-
+    curl https://raw.githubusercontent.com/MFernandezCarmona/inb3123_experiments/master/tiago_lcas.rosinstall
+    
     rosinstall src /opt/ros/kinetic 
     tiago_lcas.rosinstall
 
