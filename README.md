@@ -22,8 +22,7 @@ Mostly we will use same instructions than in PAL tutorials (see [here](http://wi
     cd ~/workspace/tiago
     curl https://raw.githubusercontent.com/MFernandezCarmona/inb3123_experiments/master/tiago_lcas.rosinstall
     
-    rosinstall src /opt/ros/kinetic 
-    tiago_lcas.rosinstall
+    rosinstall src /opt/ros/kinetic tiago_lcas.rosinstall
 
     sudo rosdep init
     rosdep update
