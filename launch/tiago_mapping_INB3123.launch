@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+    <include file="$(find inb3123_experiments)/launch/tiago_navigation_INB3123.launch">
+      <arg name="map"            default="$(find inb3123_experiments)/maps/map_sim"/>
+      <arg name="state"          default="mapping"/>
+    </include>
+
+</launch>

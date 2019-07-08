@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package>
+  <name>inb3123_experiments</name>
+  <version>0.0.0</version>
+  <description>Simulates Office INB3123 in gazebo for a TIAGO robot</description>
+
+
+  <maintainer email="manolofc@gmail.com">Manuel Fernandez</maintainer>
+
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <export>
+  </export>
+</package>

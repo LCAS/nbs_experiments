@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  MFC:  starts gazebo with INB3123 model
+-->
+
+<launch>
+
+  <!-- this makes world mesh available to gazebo -->
+  <env name="GAZEBO_MODEL_PATH" value="$(find inb3123_experiments)/models/"/>
+
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find inb3123_experiments)/worlds/INB3123/INB3123.world"/>
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="headless" value="false"/>
+    <arg name="debug" value="false"/>
+    <arg name="verbose" value="true"/>
+    <arg name="physics" default="ode"/>
+  </include>
+
+
+
+</launch>

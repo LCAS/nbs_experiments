@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  MFC:  based on tiago_simulation tiago_navigation.launch
+        As a mayor hack uses different map for localization and navigation
+        Mostly defines our tiago model (iron) and simulated world (INB)
+-->
+<launch>
+
+    <arg name="rviz"           default="true"/>
+    <arg name="state"          default="localization"/>
+    <arg name="loc_map_yaml"   default="$(find inb3123_experiments)/maps/map_sim/map.yaml"/>
+    <arg name="nav_map_yaml"   default="$(find inb3123_experiments)/maps/map_sim_mcdm/map.yaml"/>
+
+
+    <!--Args not likely to change -->
+    <arg name="localization"   default="amcl"/>
+    <arg name="mapping"        default="gmapping"/>
+    <arg name="octomap"        default="false"/>
+    <arg name="multiple"       default="false"/>
+    <arg name="tf_prefix"      default=""/>
+    <arg name="public_sim"     default="true"/>
+
+    <arg name="planner"        default="base"/>
+    <arg name="global_planner" default="global_planner"/>
+    <arg name="local_planner"  default="teb"/>
+
+
+    <!--Create gazebo world and simulated robot -->
+    <include file="$(find inb3123_experiments)/launch/tiago_gazebo_INB3123.launch"/>
+
+    <!-- Localization -->
+  <node name="loc_map_server" pkg="map_server" type="map_server" args="$(arg loc_map_yaml)"  output="screen">
+        <remap from="map" to ="loc_map"/>
+        <param name="frame_id" value="loc_map"/>
+  </node>
+
+  <node pkg="amcl" type="amcl" name="amcl" output="screen">
+    <!-- remap from="scan" to="$(arg scan)"/ -->
+    <remap from="map" to="loc_map"/>
+    <!-- Load the last saved pose estimate (initial pose) -->
+    <rosparam file="$(env HOME)/.pal/pose.yaml" command="load"/>
+
+    <rosparam file="$(find tiago_2dnav)/config/localization/amcl.yaml" command="load"/>
+    <!-- Change map parameter -->
+    <rosparam param="global_frame_id" subst_value="True">loc_map</rosparam>
+
+    <param name="use_map_topic" value="true"/>
+    <param name="first_map_only" value="true"/>
+  </node>
+
+    <!-- Navigation -->
+    <node name="nav_map_server" pkg="map_server" type="map_server" args="$(arg nav_map_yaml)"  output="screen">
+          <!-- Better leave these unchanged otherwise move_base need changes too -->
+          <!-- remap from="map" to ="nav_map"/-->
+          <!-- param name="frame_id" value="loc_map"/ -->
+    </node>
+
+    <node pkg="tf" type="static_transform_publisher" name="nav_map_2_loc_map_tfb"
+        args="2.0 1.0 0.0 0.0 0.0 0.0 1.0 map loc_map 100"/>
+
+      <include file="$(find tiago_2dnav)/launch/state_machine.launch">
+        <arg name="state" value="$(arg state)"/>
+        <arg name="public_sim" value="true"/>
+      </include>
+
+      <!-- Planning -->
+      <include file="$(find tiago_2dnav)/launch/move_$(arg planner).launch">
+        <arg name="global_planner" value="$(arg global_planner)"/>
+        <arg name="local_planner"  value="$(arg local_planner)"/>
+        <arg name="public_sim"     value="true"/>
+        <arg name="rgbd_sensors"   value="false"/>
+        <arg name="tf_prefix"      value="$(arg tf_prefix)"/>
+        <arg name="multiple"       value="$(arg multiple)"/>
+      </include>
+
+      <!-- Change map parameter -->
+      <rosparam param="/move_base/global_costmap/inflation_layer/inflation_radius" subst_value="True">0.01</rosparam>
+      <rosparam param="/move_base/local_costmap/inflation_layer/inflation_radius" subst_value="True">0.01</rosparam>
+
+
+      <include file="$(find tiago_laser_sensors)/launch/rgbd_cloud_laser.launch">
+        <arg name="cloud" value="/xtion/depth_registered/points"/>
+      </include>
+
+    <node name="rviz" pkg="rviz" type="rviz" if="$(arg rviz)"
+      args="-d $(find inb3123_experiments)/config/inb_sim.rviz"/>
+
+
+    <node name="relay_map" pkg="topic_tools" type="relay" args="/map /vo_map"/>
+
+
+
+</launch>
