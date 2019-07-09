@@ -3,13 +3,18 @@
   MFC:
     This file contains the configuration for creating a tag grid with visualization
     and some ground truth.
-
-TODO
-  get regions from tiago and put them rosparam /mmap/zoi/submap_0/
-
 -->
 
 <launch>
+
+    <arg name="map_folder" default="$(find mcdm_experiments)/maps/inb3123/map_real"/>
+
+    <!--
+      Get regions from tiago map config and put them in rosparam server.
+      This is automatically done inside tiago, but if we don't use PAL nav stack
+      it will be missing
+    -->
+    <rosparam command="load" file="$(arg map_folder)/mmap.yaml" ns="mmap"/>
 
     <include file="$(find rfid_grid_map)/launch/grid_debug.launch">
         <arg name="tagID"                value="390100010000000000000001"/>

@@ -33,6 +33,9 @@
     <arg name="camera_model" value="$(arg camera_model)"/>
     <arg name="multi" value="$(arg multi)"/>
     <arg name="gzpose" value="$(arg gzpose)"/>
+    <arg name="has_rfid"  value="true"/>
+    <arg name="has_thermal_camera"  value="true"/>
+    <arg name="has_sonars"  value="false"/>
   </include>
 
   <!-- bring up robot -->
