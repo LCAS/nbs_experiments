@@ -8,8 +8,8 @@
 
     <arg name="rviz"           default="true"/>
     <arg name="state"          default="localization"/>
-    <arg name="loc_map_yaml"   default="$(find inb3123_experiments)/maps/map_sim/map.yaml"/>
-    <arg name="nav_map_yaml"   default="$(find inb3123_experiments)/maps/map_sim_mcdm/map.yaml"/>
+    <arg name="loc_map_yaml"   default="$(find mcdm_experiments)/maps/inb3123/map_sim/map.yaml"/>
+    <arg name="nav_map_yaml"   default="$(find mcdm_experiments)/maps/inb3123/map_sim_mcdm/map.yaml"/>
 
 
     <!--Args not likely to change -->
@@ -26,7 +26,7 @@
 
 
     <!--Create gazebo world and simulated robot -->
-    <include file="$(find inb3123_experiments)/launch/tiago_gazebo_INB3123.launch"/>
+    <include file="$(find mcdm_experiments)/launch/tiago_gazebo_INB3123.launch"/>
 
     <!-- Localization -->
   <node name="loc_map_server" pkg="map_server" type="map_server" args="$(arg loc_map_yaml)"  output="screen">
@@ -40,7 +40,7 @@
     <!-- Load the last saved pose estimate (initial pose) -->
     <rosparam file="$(env HOME)/.pal/pose.yaml" command="load"/>
 
-    <rosparam file="$(find tiago_2dnav)/config/localization/amcl.yaml" command="load"/>
+    <rosparam file="$(find pal_navigation_cfg_tiago)/config/localization/amcl.yaml" command="load"/>
     <!-- Change map parameter -->
     <rosparam param="global_frame_id" subst_value="True">loc_map</rosparam>
 
@@ -83,7 +83,7 @@
       </include>
 
     <node name="rviz" pkg="rviz" type="rviz" if="$(arg rviz)"
-      args="-d $(find inb3123_experiments)/config/inb_sim.rviz"/>
+      args="-d $(find mcdm_experiments)/config/inb_sim.rviz"/>
 
 
     <node name="relay_map" pkg="topic_tools" type="relay" args="/map /vo_map"/>

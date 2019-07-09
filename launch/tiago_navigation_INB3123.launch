@@ -2,6 +2,7 @@
 <!--
   MFC:  based on tiago_simulation tiago_navigation.launch
         Mostly defines our tiago model (iron) and simulated world (INB)
+        It relies on TIAGo package configuration with little change
 -->
 <launch>
 
@@ -12,7 +13,7 @@
 
     <arg name="localization"   default="amcl"/>
     <arg name="mapping"        default="gmapping"/>
-    <arg name="map"            default="$(find inb3123_experiments)/maps/map_sim"/>
+    <arg name="map"            default="$(find mcdm_experiments)/maps/inb3123/map_sim"/>
     <arg name="octomap"        default="false"/>
     <arg name="multiple"       default="false"/>
     <arg name="tf_prefix"      default=""/>
@@ -24,7 +25,7 @@
 
 
     <!--Create gazebo world and simulated robot -->
-    <include file="$(find inb3123_experiments)/launch/tiago_gazebo_INB3123.launch"/>
+    <include file="$(find mcdm_experiments)/launch/tiago_gazebo_INB3123.launch"/>
 
     <!-- Localization or Mapping state -->
     <node pkg="pal_navigation_sm" type="navigation.sh" name="navigation"

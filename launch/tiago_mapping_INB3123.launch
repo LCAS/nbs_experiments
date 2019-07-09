@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  MFC:  Basically calls  tiago_navigation.launch
+        Mostly defines our tiago model (iron) and simulated world (INB)
+        It relies on TIAGo package configuration with little change
+-->
+
 <launch>
 
-    <include file="$(find inb3123_experiments)/launch/tiago_navigation_INB3123.launch">
-      <arg name="map"            default="$(find inb3123_experiments)/maps/map_sim"/>
+    <include file="$(find mcdm_experiments)/launch/tiago_navigation_INB3123.launch">
+      <arg name="map"            default="$(find mcdm_experiments)/maps/inb3123/map_sim"/>
       <arg name="state"          default="mapping"/>
     </include>
 

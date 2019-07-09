@@ -21,7 +21,7 @@
   <env name="LC_NUMERIC" value="C" />
 
   <!-- start up world -->
-  <include file="$(find inb3123_experiments)/launch/INB3123_world.launch">
+  <include file="$(find mcdm_experiments)/launch/INB3123_world.launch">
   </include>
 
   <!-- spawn robot in simulation -->

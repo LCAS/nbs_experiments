@@ -40,9 +40,9 @@
 - git: {local-name: pal_hardware_gazebo,              uri: 'https://github.com/MFernandezCarmona/pal_hardware_gazebo.git', version: 'kinetic-devel'}
 - git: {local-name: pal_gazebo_plugins,               uri: 'https://github.com/MFernandezCarmona/pal_gazebo_plugins.git', version: 'kinetic-devel'}
 ################################################################################
-#                           INB3123 packages                    #
+#                           Experiment setup packages                          #
 ################################################################################
-- git: {local-name: lcas/inb3123_experiments,               uri: 'https://github.com/MFernandezCarmona/inb3123_experiments.git', version: 'master'}
+- git: {local-name: lcas/mcdm_experiments,            uri: 'https://github.com/MFernandezCarmona/mcdm_experiments.git', version: 'master'}
 ################################################################################
 #                           MCDM packages                                      #
 ################################################################################
