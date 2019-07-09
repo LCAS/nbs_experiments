@@ -1,5 +1,5 @@
 # mcdm_experiments
-This repo contains INB3123 maps and gazebo worlds for experiments. It's main use is to get an environment for mcdm experiments with Tiago.
+This repo contains maps and gazebo worlds for experiments. It's main use is to get an environment for mcdm experiments with Tiago and others.
 
 
 # Simulation
