@@ -24,7 +24,7 @@ Mostly we will use same instructions than in PAL tutorials (see [here](http://wi
 
     mkdir ~/workspace/tiago
     cd ~/workspace/tiago
-    curl https://raw.githubusercontent.com/MFernandezCarmona/mcdm_experiments/master/tiago_lcas.rosinstall
+    curl https://raw.githubusercontent.com/MFernandezCarmona/mcdm_experiments/master/tiago_lcas.rosinstall?token=ABUL7VIP7NPR64HXH5FWHOC5ERQOC# > tiago_lcas.rosinstall
 
     rosinstall src /opt/ros/kinetic tiago_lcas.rosinstall
 
