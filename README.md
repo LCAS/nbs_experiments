@@ -22,24 +22,26 @@ Or whatever new instructions Marc has kindly compiled for us [here](https://gith
 
 Mostly we will use same instructions than in PAL tutorials (see [here](http://wiki.ros.org/Robots/TIAGo/Tutorials/Installation/TiagoSimulation)), but we will use our own rosinstall file from here. Follow these instructions:
 
+    source /opt/ros/kinetic/setup.bash
     mkdir ~/workspace/tiago
     cd ~/workspace/tiago
-    curl https://raw.githubusercontent.com/MFernandezCarmona/mcdm_experiments/master/tiago_lcas.rosinstall?token=ABUL7VIP7NPR64HXH5FWHOC5ERQOC# > tiago_lcas.rosinstall
+    # Download file tiago_lcas.rosinstall from this repo
 
     rosinstall src /opt/ros/kinetic tiago_lcas.rosinstall
 
-    # not sure about the init here ...
-    #sudo rosdep init
     rosdep update
 
-    rosdep install --from-paths src --ignore-src --rosdistro kinetic --skip-keys="opencv2 opencv2-nonfree pal_laser_filters speed_limit  sensor_to_cloud hokuyo_node libdw-dev python-graphitesend-pip python-statsd pal_filters pal_vo_server pal_usb_utils pal_pcl pal_pcl_points_throttle_and_filter pal_karto pal_local_joint_control camera_calibration_files pal_startup_msgs pal-orbbec-openni2 dummy_actuators_manager pal_local_planner gravity_compensation_controller current_limit_controller dynamic_footprint dynamixel_cpp tf_lookup"
+    rosdep install -y --from-paths src --ignore-src --rosdistro kinetic --skip-keys="opencv2 opencv2-nonfree pal_laser_filters speed_limit  sensor_to_cloud hokuyo_node libdw-dev python-graphitesend-pip python-statsd pal_filters pal_vo_server pal_usb_utils pal_pcl pal_pcl_points_throttle_and_filter pal_karto pal_local_joint_control camera_calibration_files pal_startup_msgs pal-orbbec-openni2 dummy_actuators_manager pal_local_planner gravity_compensation_controller current_limit_controller dynamic_footprint dynamixel_cpp tf_lookup"
 
-It will produce some errors regarding gazebo7, but it's fine. After that we can compile:
+Now we are almost ready to compile the packages. First compile amtec (it fails sometimes, just retry compiling):
 
-    source /opt/ros/kinetic/setup.bash
-    catkin build -DCATKIN_ENABLE_TESTING=0
+    catkin build amtec -DCATKIN_ENABLE_TESTING=0 -DCMAKE_BUILD_TYPE=Debug
 
-Amtec fails sometimes. Just retry compiling it with:
+And finally the workspace:
+
+    catkin build -DCATKIN_ENABLE_TESTING=0 -DCMAKE_BUILD_TYPE=Debug
+
+
 
     catkin build amtec
 
