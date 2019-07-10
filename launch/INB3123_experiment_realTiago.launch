@@ -1,43 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  MFC:  based on tiago_simulation tiago_navigation.launch
-        As a mayor hack uses different map for localization and navigation
-        Mostly defines our tiago model (iron) and simulated world (INB)
 
-        If not simulated remember:
-          - Sync times with tiago
-                sudo service ntp stop
-            * add in /etc/ntp.conf
-                server 10.68.0.1
-            * add in /etc/hosts
-                10.68.0.1 tiago-29c
-                sudo service ntp start
-                ntptrace 10.68.0.1
 
-          - Set rosmaster at tiago IP on the ETHERNET INTERFACE !!!
-            export ROS_MASTER_URI="http://10.68.0.1:11311"
-          - set ros_ip in your machine (AGAIN ETHERNET IFACE!!!)
-            export ROS_IP=10.68.0.128
-          - stop tiago's own navigation stack
-            chrome  10.5.42.42:8080 # tiago wifi ip ...
-            statup tab, stop
-                enrichme
-                localizer
-                map_configuration_server
-                map_server
-                move_base
-                navigation_sm
-          roslaunch mcdm_experiments INB3123_experiment.launch is_sim:=false rviz:=false
--->
 <launch>
 
-    <arg name="rviz"           default="true"/>
     <arg name="state"          default="localization"/>
-    <arg name="loc_map_yaml"   default="$(find mcdm_experiments)/maps/inb3123/map_sim/map.yaml"/>
-    <arg name="nav_map_yaml"   default="$(find mcdm_experiments)/maps/inb3123/map_sim_mcdm/map.yaml"/>
-    <arg name="map_2_loc_map_pose"   default="2.0 1.0 0.0 0.0 0.0 0.0 1.0"/>
+    <arg name="loc_map_yaml"   default="$(env HOME)/.pal/maps/configurations/INB3123/map.yaml"/>
+    <arg name="nav_map_yaml"   default="$(env HOME)/.pal/maps/configurations/INB3123_mcdm/map.yaml"/>
+    <arg name="map_2_loc_map_pose"   default="0.0 0.0 0.0 0.0 0.0 0.0 1.0"/>
 
-    <!--Args not likely to change -->
     <arg name="localization"   default="amcl"/>
     <arg name="mapping"        default="gmapping"/>
     <arg name="octomap"        default="false"/>
@@ -48,13 +18,10 @@
     <arg name="planner"        default="base"/>
     <arg name="global_planner" default="global_planner"/>
     
-    <!-- Available local planners: carrot/dwa/eband/robotino/teb/trajectory 
-	 Available also in robot: dwa/eband/robotino/trajectory
+    <!-- Available local planners: dwa/eband/pal/robotino/trajectory 
+	 Available also in sim: dwa/eband/robotino/trajectory
     -->
     <arg name="local_planner"  default="eband"/>
-
-    <!--Create gazebo world and simulated robot -->
-    <include file="$(find mcdm_experiments)/launch/tiago_gazebo_INB3123.launch"/>
 
     <!-- Localization -->
     <node name="loc_map_server" pkg="map_server" type="map_server" args="$(arg loc_map_yaml)"  output="screen">
@@ -65,8 +32,8 @@
     <node pkg="amcl" type="amcl" name="amcl" output="screen">
         <remap from="map" to="loc_map"/>
         <rosparam file="$(env HOME)/.pal/pose.yaml" command="load"/>
-        <!-- Same yaml in a different packaga in robot -->
-        <rosparam file="$(find pal_navigation_cfg_tiago)/config/localization/amcl.yaml" command="load"/>
+        <!-- Same yaml in a different packaga in sim -->
+        <rosparam file="$(find tiago_2dnav)/config/localization/amcl.yaml" command="load"/>
         <rosparam param="global_frame_id" subst_value="True">loc_map</rosparam>
         <rosparam param="gui_publish_rate" subst_value="True">30</rosparam>
         <param name="use_map_topic" value="true"/>
@@ -90,8 +57,8 @@
         <arg name="global_planner" value="$(arg global_planner)"/>
         <arg name="local_planner"  value="$(arg local_planner)"/>
         <arg name="public_sim"     value="true"/>
-        <!-- rgbd_sensors arg is only present in simulation -->
-        <arg name="rgbd_sensors"   value="false"/>
+        <!-- rgbd_sensors arg is only present in simulation  -->
+	<!-- arg name="rgbd_sensors"   value="false"/-->
         <arg name="tf_prefix"      value="$(arg tf_prefix)"/>
         <arg name="multiple"       value="$(arg multiple)"/>
     </include>
@@ -104,13 +71,5 @@
     <rosparam param="/move_base/local_costmap/inflation_layer/inflation_radius" subst_value="True">0.2</rosparam>
 
 
-    <include file="$(find tiago_laser_sensors)/launch/rgbd_cloud_laser.launch">
-        <arg name="cloud" value="/xtion/depth_registered/points"/>
-    </include>
-
-    <node name="rviz" pkg="rviz" type="rviz" if="$(arg rviz)"
-         args="-d $(find mcdm_experiments)/config/inb_sim.rviz"/>
-
-    <node name="relay_map" pkg="topic_tools" type="relay" args="/map /vo_map"/>
 
 </launch>
