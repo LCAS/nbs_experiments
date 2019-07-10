@@ -7,6 +7,11 @@
 
 <launch>
 
+<!--
+    <env name="ROSCONSOLE_CONFIG_FILE"
+    value="$(find mcdm_experiments)/config/custom_rosconsole.conf"/>
+-->
+
     <arg name="map_folder" default="$(find mcdm_experiments)/maps/inb3123/map_sim"/>
 
     <!--

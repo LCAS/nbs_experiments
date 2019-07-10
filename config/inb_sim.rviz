@@ -187,11 +187,7 @@ Visualization Manager:
               Alpha: 1
               Show Axes: false
               Show Trail: false
-            suspension_left_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-            suspension_right_link:
+            thermal_camera:
               Alpha: 1
               Show Axes: false
               Show Trail: false
@@ -314,7 +310,7 @@ Visualization Manager:
           Marker Topic: text_marker
           Name: Mode
           Namespaces:
-            "": true
+            {}
           Queue Size: 100
           Value: true
         - Class: rviz/Group
@@ -1129,7 +1125,7 @@ Visualization Manager:
   Global Options:
     Background Color: 48; 48; 48
     Default Light: true
-    Fixed Frame: map
+    Fixed Frame: odom
     Frame Rate: 30
   Name: root
   Tools:
@@ -1150,7 +1146,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 25.0884323
+      Distance: 10.9646797
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
