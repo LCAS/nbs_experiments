@@ -72,9 +72,13 @@
         <param name="use_map_topic" value="true"/>
         <param name="first_map_only" value="true"/>
     </node>
-    
-    <rosparam param="/amcl/odom_alpha1" subst_value="True">0.4</rosparam>
 
+    <rosparam param="/amcl/odom_alpha1" subst_value="True">0.4</rosparam>
+    <rosparam param="/amcl/odom_alpha1" subst_value="True">0.04</rosparam>
+    <rosparam param="/amcl/odom_alpha1" subst_value="True">1.6</rosparam>
+    <rosparam param="/amcl/odom_alpha1" subst_value="True">0.04</rosparam>
+    <rosparam param="/amcl/min_particles" subst_value="True">1000</rosparam>
+    <rosparam param="/amcl/update_min_a" subst_value="True">!degrees 5.0</rosparam>
 
     <!-- Navigation -->
     <node name="nav_map_server" pkg="map_server" type="map_server" args="$(arg nav_map_yaml)"  output="screen">
