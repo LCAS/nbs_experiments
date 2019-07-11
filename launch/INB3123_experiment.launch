@@ -47,9 +47,9 @@
 
     <arg name="planner"        default="base"/>
     <arg name="global_planner" default="global_planner"/>
-    
-    <!-- Available local planners: carrot/dwa/eband/robotino/teb/trajectory 
-	 Available also in robot: dwa/eband/robotino/trajectory
+
+    <!-- Available local planners: carrot/dwa/eband/teb/trajectory
+	 Available also in robot: dwa/eband/trajectory
     -->
     <arg name="local_planner"  default="eband"/>
 
@@ -96,13 +96,21 @@
         <arg name="multiple"       value="$(arg multiple)"/>
     </include>
 
-    <!-- 
-         Change map parameter:
-         Inflation radius of 0.1 was insuficient in real robot
-    -->
-    <rosparam param="/move_base/global_costmap/inflation_layer/inflation_radius" subst_value="True">0.2</rosparam>
-    <rosparam param="/move_base/local_costmap/inflation_layer/inflation_radius" subst_value="True">0.2</rosparam>
+    <!--    Change map parameters -->
 
+    <!-- Inflation radius of 0.1 was insuficient in real robot-->
+    <rosparam param="/move_base/global_costmap/inflation_layer/inflation_radius" subst_value="True">0.15</rosparam>
+    <rosparam param="/move_base/local_costmap/inflation_layer/inflation_radius" subst_value="True">0.15</rosparam>
+
+    <!-- Real tiago cables make radius a little bigger-->
+    <rosparam param="/move_base/global_costmap/robot_radius" subst_value="True">0.275</rosparam>
+    <rosparam param="/move_base/local_costmap/robot_radius" subst_value="True">0.275</rosparam>
+
+    <!-- Relax local planner conditions-->
+    <rosparam param="/move_base/EBandPlannerROS/yaw_goal_tolerance" subst_value="True">0.7</rosparam>
+    <rosparam param="/move_base/EBandPlannerROS/max_acceleration" subst_value="True">0.25</rosparam>
+    <rosparam param="/move_base/EBandPlannerROS/max_vel_lin" subst_value="True">0.5</rosparam>
+    <rosparam param="/move_base/EBandPlannerROS/max_vel_th" subst_value="True">0.2</rosparam>
 
     <include file="$(find tiago_laser_sensors)/launch/rgbd_cloud_laser.launch">
         <arg name="cloud" value="/xtion/depth_registered/points"/>
