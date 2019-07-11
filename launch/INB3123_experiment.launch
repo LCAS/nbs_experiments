@@ -34,8 +34,7 @@
     <arg name="rviz"           default="true"/>
     <arg name="state"          default="localization"/>
     <arg name="loc_map_yaml"   default="$(find mcdm_experiments)/maps/inb3123/map_sim/map.yaml"/>
-    <arg name="nav_map_yaml"   default="$(find mcdm_experiments)/maps/inb3123/map_sim_mcdm/map.yaml"/>
-    <arg name="map_2_loc_map_pose"   default="2.0 1.0 0.0 0.0 0.0 0.0 1.0"/>
+    <arg name="nav_map_yaml"   default="$(find mcdm_experiments)/maps/inb3123/map_sim_mcdm/map_ric.yaml"/>
 
     <!--Args not likely to change -->
     <arg name="localization"   default="amcl"/>
@@ -47,6 +46,7 @@
 
     <arg name="planner"        default="base"/>
     <arg name="global_planner" default="global_planner"/>
+    <arg name="local_planner"  default="eband"/>
 
     <!-- Available local planners: carrot/dwa/eband/teb/trajectory
 	 Available also in robot: dwa/eband/trajectory
@@ -84,8 +84,8 @@
     <node name="nav_map_server" pkg="map_server" type="map_server" args="$(arg nav_map_yaml)"  output="screen">
     </node>
 
-    <node pkg="tf" type="static_transform_publisher" name="map_2_loc_map_tfb"
-        args="$(arg map_2_loc_map_pose) map loc_map 1000"/>
+    <node pkg="tf" type="static_transform_publisher" name="nav_map_2_loc_map_tfb"
+        args="0.0 0.0 0.0 0.0 0.0 0.0 1.0 map loc_map 100"/>
 
     <include file="$(find tiago_2dnav)/launch/state_machine.launch">
         <arg name="state" value="$(arg state)"/>
