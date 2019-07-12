@@ -46,7 +46,6 @@
 
     <arg name="planner"        default="base"/>
     <arg name="global_planner" default="global_planner"/>
-    <arg name="local_planner"  default="eband"/>
 
     <!-- Available local planners: carrot/dwa/eband/teb/trajectory
 	 Available also in robot: dwa/eband/trajectory
@@ -106,8 +105,8 @@
     <!--    Change map parameters -->
 
     <!-- Inflation radius of 0.1 was insuficient in real robot-->
-    <rosparam param="/move_base/global_costmap/inflation_layer/inflation_radius" subst_value="True">0.15</rosparam>
-    <rosparam param="/move_base/local_costmap/inflation_layer/inflation_radius" subst_value="True">0.15</rosparam>
+    <rosparam param="/move_base/global_costmap/inflation_layer/inflation_radius" subst_value="True">0.10</rosparam>
+    <rosparam param="/move_base/local_costmap/inflation_layer/inflation_radius" subst_value="True">0.10</rosparam>
 
     <!-- Real tiago cables make radius a little bigger-->
     <rosparam param="/move_base/global_costmap/robot_radius" subst_value="True">0.275</rosparam>
@@ -116,8 +115,8 @@
     <!-- Relax local planner conditions-->
     <rosparam param="/move_base/EBandPlannerROS/yaw_goal_tolerance" subst_value="True">0.7</rosparam>
     <rosparam param="/move_base/EBandPlannerROS/max_acceleration" subst_value="True">0.25</rosparam>
-    <rosparam param="/move_base/EBandPlannerROS/max_vel_lin" subst_value="True">0.5</rosparam>
-    <rosparam param="/move_base/EBandPlannerROS/max_vel_th" subst_value="True">0.2</rosparam>
+    <rosparam param="/move_base/EBandPlannerROS/max_vel_lin" subst_value="True">1.0</rosparam>
+    <rosparam param="/move_base/EBandPlannerROS/max_vel_th" subst_value="True">0.4</rosparam>
      <rosparam param="/move_base/EBandPlannerROS/xy_goal_tolerance" subst_value="True">0.1</rosparam>
 
     <include file="$(find tiago_laser_sensors)/launch/rgbd_cloud_laser.launch">
