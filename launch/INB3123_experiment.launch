@@ -51,6 +51,9 @@
     <arg name="planner"        default="base"/>
     <arg name="global_planner" default="global_planner"/>
 
+    <!-- localization -->
+    <arg name="use_fake_localization" value="false"/>
+
     <!-- Simulation nodes -->
     <group  if="$(arg is_sim)">
         <!--Create gazebo world and simulated robot -->
@@ -67,33 +70,47 @@
     </group>
 
     <!-- Localization -->
-    <node name="loc_map_server" pkg="map_server" type="map_server" args="$(arg loc_map_yaml)"  output="screen">
-        <remap from="map" to ="loc_map"/>
-        <param name="frame_id" value="loc_map"/>
-    </node>
+    <group if="$(eval arg('use_fake_localization') == 0)">
+      <node name="loc_map_server" pkg="map_server" type="map_server" args="$(arg loc_map_yaml)"  output="screen">
+          <remap from="map" to ="loc_map"/>
+          <param name="frame_id" value="loc_map"/>
+      </node>
 
-    <node pkg="amcl" type="amcl" name="amcl" output="screen">
-        <remap from="map" to="loc_map"/>
-        <rosparam file="$(env HOME)/.pal/pose.yaml" command="load"/>
-        <rosparam file="$(arg amcl_cfg)" command="load"/>
-        <rosparam param="global_frame_id" subst_value="True">loc_map</rosparam>
-        <rosparam param="gui_publish_rate" subst_value="True">30</rosparam>
-        <param name="use_map_topic" value="true"/>
-        <param name="first_map_only" value="true"/>
-    </node>
+      <node pkg="amcl" type="amcl" name="amcl" output="screen">
+          <remap from="map" to="loc_map"/>
+          <rosparam file="$(env HOME)/.pal/pose.yaml" command="load"/>
+          <rosparam file="$(arg amcl_cfg)" command="load"/>
+          <rosparam param="global_frame_id" subst_value="True">loc_map</rosparam>
+          <rosparam param="gui_publish_rate" subst_value="True">30</rosparam>
+          <param name="use_map_topic" value="true"/>
+          <param name="first_map_only" value="true"/>
+      </node>
 
-    <!--
-        Localization adjustments tested only in simulation
-        TODO: check if they are needed in real robot too
-    -->
-    <group if="$(arg is_sim)">
-      <rosparam param="/amcl/odom_alpha1" subst_value="True">0.4</rosparam>
-      <rosparam param="/amcl/odom_alpha1" subst_value="True">0.04</rosparam>
-      <rosparam param="/amcl/odom_alpha1" subst_value="True">1.6</rosparam>
-      <rosparam param="/amcl/odom_alpha1" subst_value="True">0.04</rosparam>
-      <rosparam param="/amcl/min_particles" subst_value="True">1000</rosparam>
-      <rosparam param="/amcl/update_min_a" subst_value="True">!degrees 5.0</rosparam>
+      <!--
+          Localization adjustments tested only in simulation
+          TODO: check if they are needed in real robot too
+      -->
+      <group if="$(arg is_sim)">
+        <rosparam param="/amcl/odom_alpha1" subst_value="True">0.4</rosparam>
+        <rosparam param="/amcl/odom_alpha1" subst_value="True">0.04</rosparam>
+        <rosparam param="/amcl/odom_alpha1" subst_value="True">1.6</rosparam>
+        <rosparam param="/amcl/odom_alpha1" subst_value="True">0.04</rosparam>
+        <rosparam param="/amcl/min_particles" subst_value="True">1000</rosparam>
+        <rosparam param="/amcl/update_min_a" subst_value="True">!degrees 5.0</rosparam>
+      </group>
+
     </group>
+
+
+
+    <group if="$(eval arg('use_fake_localization') == 1)">
+      <node pkg="fake_localization" type="fake_localization" respawn="false" name="fake_loc">
+           <remap from="base_pose_ground_truth" to="/ground_truth_odom" />
+           <param name="odom_frame_id" type="string" value="odom"/>
+           <param name="base_frame_id" type="string" value="base_link"/>
+      </node>
+    </group>
+
 
     <!-- Navigation -->
     <node name="nav_map_server" pkg="map_server" type="map_server" args="$(arg nav_map_yaml)"  output="screen">
