@@ -887,28 +887,8 @@ Visualization Manager:
         NavMap: true
         PlanMap: true
         Planning:
-          Base:
-            Global:
-              Costmap: true
-              Plan:
-                Global Planner: true
-                Navfn: true
-                Value: true
-              Potential: true
-              Value: true
-              Voxel Grid: true
-            Goal: true
-            Local:
-              Cost: true
-              Costmap: true
-              Plan:
-                DWA: true
-                Pal: true
-                Trajectory: true
-                Value: true
-              Polygon: true
-              Trajectories: true
-              Value: true
+          "":
+            "": true
             Value: true
           Value: true
         PointStamped:

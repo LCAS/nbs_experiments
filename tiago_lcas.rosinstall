@@ -1,6 +1,5 @@
 # PAL repos
 - git: {local-name: aruco_ros,                        uri: 'https://github.com/pal-robotics/aruco_ros.git', version: 'kinetic-devel'}
-- git: {local-name: gazebo_ros_pkgs,                  uri: 'https://github.com/pal-robotics-forks/gazebo_ros_pkgs.git', version: 'kinetic-devel'}
 - git: {local-name: head_action,                      uri: 'https://github.com/pal-robotics/head_action.git', version: 'indigo-devel'}
 - git: {local-name: hey5_description,                 uri: 'https://github.com/pal-robotics/hey5_description.git', version: 'master'}
 - git: {local-name: pal_gazebo_worlds,                uri: 'https://github.com/pal-robotics/pal_gazebo_worlds.git', version: 'kinetic-devel'}
@@ -17,13 +16,10 @@
 - git: {local-name: ros_controllers,                  uri: 'https://github.com/pal-robotics-forks/ros_controllers.git', version: 'kinetic-devel'}
 - git: {local-name: rviz_plugin_covariance,           uri: 'https://github.com/pal-robotics/rviz_plugin_covariance.git', version: 'indigo-devel'}
 - git: {local-name: simple_grasping_action,           uri: 'https://github.com/pal-robotics/simple_grasping_action.git', version: 'master'}
-- git: {local-name: simple_models_robot,              uri: 'https://github.com/pal-robotics/simple_models_robot.git', version: 'kinetic-devel'}
 - git: {local-name: tf_lookup,                        uri: 'https://github.com/pal-robotics/tf_lookup.git', version: 'master'}
 - git: {local-name: tiago_description_calibration,    uri: 'https://github.com/pal-robotics/tiago_description_calibration.git', version: 'indigo-devel'}
 - git: {local-name: tiago_moveit_config,              uri: 'https://github.com/pal-robotics/tiago_moveit_config.git', version: 'kinetic-devel'}
 - git: {local-name: tiago_navigation,                 uri: 'https://github.com/pal-robotics/tiago_navigation.git', version: 'kinetic-devel'}
-- git: {local-name: tiago_robot,                      uri: 'https://github.com/pal-robotics/tiago_robot.git', version: 'kinetic-devel'}
-- git: {local-name: tiago_simulation,                 uri: 'https://github.com/pal-robotics/tiago_simulation.git', version: 'kinetic-devel'}
 - git: {local-name: tiago_tutorials,                  uri: 'https://github.com/pal-robotics/tiago_tutorials.git', version: 'kinetic-devel'}
 - git: {local-name: pal_navigation_cfg_public,        uri: 'https://github.com/pal-robotics/pal_navigation_cfg_public.git', version: 'master'}
 - git: {local-name: ddynamic_reconfigure_python,      uri: 'https://github.com/pal-robotics/ddynamic_reconfigure_python', version: 'master'}
@@ -39,6 +35,13 @@
 ################################################################################
 - git: {local-name: pal_hardware_gazebo,              uri: 'https://github.com/MFernandezCarmona/pal_hardware_gazebo.git', version: 'kinetic-devel'}
 - git: {local-name: pal_gazebo_plugins,               uri: 'https://github.com/MFernandezCarmona/pal_gazebo_plugins.git', version: 'kinetic-devel'}
+- git: {local-name: gazebo_ros_pkgs,                  uri: 'https://github.com/MFernandezCarmona/gazebo_ros_pkgs.git', version: 'kinetic-devel'}
+- git: {local-name: simple_models_robot,              uri: 'https://github.com/MFernandezCarmona/simple_models_robot.git', version: 'kinetic-devel'}
+################################################################################
+#                           forks for RFID reader compatibility                #
+################################################################################
+- git: {local-name: tiago_robot,                      uri: 'https://github.com/MFernandezCarmona/tiago_robot.git', version: 'kinetic-devel'}
+- git: {local-name: tiago_simulation,                 uri: 'https://github.com/MFernandezCarmona/tiago_simulation.git', version: 'kinetic-devel'}
 ################################################################################
 #                           Experiment setup packages                          #
 ################################################################################
