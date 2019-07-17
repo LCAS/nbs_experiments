@@ -7,15 +7,19 @@
         If not simulated remember:
           - Sync times with tiago
                 sudo service ntp stop
-                sudo ntpdate -s tiago-29c
+            * add in /etc/ntp.conf
+                server 10.68.0.1
+            * add in /etc/hosts
+                10.68.0.1 tiago-29c
                 sudo service ntp start
-                ntpdate -q tiago-29c
-          - Set rosmaster at tiago IP
-            export ROS_MASTER_URI="http://10.5.42.42:11311"
-          - set ros_ip in your machine
-            export ROS_IP=10.5.42.168
+                ntptrace 10.68.0.1
+
+          - Set rosmaster at tiago IP on the ETHERNET INTERFACE !!!
+            export ROS_MASTER_URI="http://10.68.0.1:11311"
+          - set ros_ip in your machine (AGAIN ETHERNET IFACE!!!)
+            export ROS_IP=10.68.0.128
           - stop tiago's own navigation stack
-            chrome  10.5.42.42:8080
+            chrome  10.5.42.42:8080 # tiago wifi ip ...
             statup tab, stop
                 enrichme
                 localizer
@@ -23,19 +27,14 @@
                 map_server
                 move_base
                 navigation_sm
-
+          roslaunch mcdm_experiments INB3123_experiment.launch is_sim:=false rviz:=false
 -->
 <launch>
 
-    <arg name="is_sim"         default="true"/>
     <arg name="rviz"           default="true"/>
     <arg name="state"          default="localization"/>
-    <arg name="loc_map_yaml"   default="$(find mcdm_experiments)/maps/inb3123/map_sim/map.yaml"  if="$(arg is_sim)"/>
-    <arg name="nav_map_yaml"   default="$(find mcdm_experiments)/maps/inb3123/map_sim_mcdm/map.yaml"  if="$(arg is_sim)"/>
-    <arg name="map_2_loc_map_pose"   default="2.0 1.0 0.0 0.0 0.0 0.0 1.0"  if="$(arg is_sim)"/>
-    <arg name="loc_map_yaml"   default="$(find mcdm_experiments)/maps/inb3123/map_real/map.yaml"  unless="$(arg is_sim)"/>
-    <arg name="nav_map_yaml"   default="$(find mcdm_experiments)/maps/inb3123/map_real_mcdm/map.yaml"  unless="$(arg is_sim)"/>
-    <arg name="map_2_loc_map_pose"   default="0.0 0.0 0.0 0.0 0.0 0.0 1.0"  unless="$(arg is_sim)"/>
+    <arg name="loc_map_yaml"   default="$(find mcdm_experiments)/maps/inb3123/map_sim/map.yaml"/>
+    <arg name="nav_map_yaml"   default="$(find mcdm_experiments)/maps/inb3123/map_sim_mcdm/map_ric.yaml"/>
 
     <!--Args not likely to change -->
     <arg name="localization"   default="amcl"/>
@@ -47,11 +46,14 @@
 
     <arg name="planner"        default="base"/>
     <arg name="global_planner" default="global_planner"/>
-    <arg name="local_planner"  default="teb"/>
 
+    <!-- Available local planners: carrot/dwa/eband/teb/trajectory
+	 Available also in robot: dwa/eband/trajectory
+    -->
+    <arg name="local_planner"  default="eband"/>
 
     <!--Create gazebo world and simulated robot -->
-    <include file="$(find mcdm_experiments)/launch/tiago_gazebo_INB3123.launch" if="$(arg is_sim)"/>
+    <include file="$(find mcdm_experiments)/launch/tiago_gazebo_INB3123.launch"/>
 
     <!-- Localization -->
     <node name="loc_map_server" pkg="map_server" type="map_server" args="$(arg loc_map_yaml)"  output="screen">
@@ -60,29 +62,29 @@
     </node>
 
     <node pkg="amcl" type="amcl" name="amcl" output="screen">
-        <!-- remap from="scan" to="$(arg scan)"/ -->
         <remap from="map" to="loc_map"/>
-        <!-- Load the last saved pose estimate (initial pose) -->
         <rosparam file="$(env HOME)/.pal/pose.yaml" command="load"/>
-
+        <!-- Same yaml in a different packaga in robot -->
         <rosparam file="$(find pal_navigation_cfg_tiago)/config/localization/amcl.yaml" command="load"/>
-        <!-- Change map parameter -->
         <rosparam param="global_frame_id" subst_value="True">loc_map</rosparam>
         <rosparam param="gui_publish_rate" subst_value="True">30</rosparam>
-
         <param name="use_map_topic" value="true"/>
         <param name="first_map_only" value="true"/>
     </node>
 
+    <rosparam param="/amcl/odom_alpha1" subst_value="True">0.4</rosparam>
+    <rosparam param="/amcl/odom_alpha1" subst_value="True">0.04</rosparam>
+    <rosparam param="/amcl/odom_alpha1" subst_value="True">1.6</rosparam>
+    <rosparam param="/amcl/odom_alpha1" subst_value="True">0.04</rosparam>
+    <rosparam param="/amcl/min_particles" subst_value="True">1000</rosparam>
+    <rosparam param="/amcl/update_min_a" subst_value="True">!degrees 5.0</rosparam>
+
     <!-- Navigation -->
     <node name="nav_map_server" pkg="map_server" type="map_server" args="$(arg nav_map_yaml)"  output="screen">
-          <!-- Better leave these unchanged otherwise move_base need changes too -->
-          <!-- remap from="map" to ="nav_map"/-->
-          <!-- param name="frame_id" value="loc_map"/ -->
     </node>
 
-    <node pkg="tf" type="static_transform_publisher" name="map_2_loc_map_tfb"
-        args="$(arg map_2_loc_map_pose) map loc_map 1000"/>
+    <node pkg="tf" type="static_transform_publisher" name="nav_map_2_loc_map_tfb"
+        args="0.0 0.0 0.0 0.0 0.0 0.0 1.0 map loc_map 100"/>
 
     <include file="$(find tiago_2dnav)/launch/state_machine.launch">
         <arg name="state" value="$(arg state)"/>
@@ -94,14 +96,21 @@
         <arg name="global_planner" value="$(arg global_planner)"/>
         <arg name="local_planner"  value="$(arg local_planner)"/>
         <arg name="public_sim"     value="true"/>
+        <!-- rgbd_sensors arg is only present in simulation -->
         <arg name="rgbd_sensors"   value="false"/>
         <arg name="tf_prefix"      value="$(arg tf_prefix)"/>
         <arg name="multiple"       value="$(arg multiple)"/>
     </include>
 
-    <!-- Change map parameter -->
-    <rosparam param="/move_base/global_costmap/inflation_layer/inflation_radius" subst_value="True">0.01</rosparam>
-    <rosparam param="/move_base/local_costmap/inflation_layer/inflation_radius" subst_value="True">0.01</rosparam>
+    <!--    Change map parameters -->
+
+    <!-- Inflation radius of 0.1 was insuficient in real robot-->
+    <rosparam param="/move_base/global_costmap/inflation_layer/inflation_radius" subst_value="True">0.10</rosparam>
+    <rosparam param="/move_base/local_costmap/inflation_layer/inflation_radius" subst_value="True">0.10</rosparam>
+
+    <!-- Real tiago cables make radius a little bigger-->
+    <rosparam param="/move_base/global_costmap/robot_radius" subst_value="True">0.275</rosparam>
+    <rosparam param="/move_base/local_costmap/robot_radius" subst_value="True">0.275</rosparam>
 
     <!-- laser used to be 0.3 and rgbd 0.5, but that was too much -->
     <rosparam param="/move_base/global_costmap/obstacle_laser_layer/base_scan/expected_update_rate" subst_value="True">0.6</rosparam>
@@ -109,14 +118,20 @@
     <rosparam param="/move_base/local_costmap/obstacle_laser_layer/base_scan/expected_update_rate" subst_value="True">0.6</rosparam>
     <rosparam param="/move_base/local_costmap/obstacle_rgbd_layer/rgbd_scan/expected_update_rate" subst_value="True">1.0</rosparam>
 
+    <!-- Relax local planner conditions-->
+    <rosparam param="/move_base/EBandPlannerROS/yaw_goal_tolerance" subst_value="True">0.7</rosparam>
+    <rosparam param="/move_base/EBandPlannerROS/max_acceleration" subst_value="True">0.25</rosparam>
+    <rosparam param="/move_base/EBandPlannerROS/max_vel_lin" subst_value="True">0.7</rosparam>
+    <rosparam param="/move_base/EBandPlannerROS/max_vel_th" subst_value="True">0.25</rosparam>
+    <rosparam param="/move_base/EBandPlannerROS/xy_goal_tolerance" subst_value="True">0.1</rosparam>
 
-    <include file="$(find tiago_laser_sensors)/launch/rgbd_cloud_laser.launch"  if="$(arg is_sim)">
+    <include file="$(find tiago_laser_sensors)/launch/rgbd_cloud_laser.launch">
         <arg name="cloud" value="/xtion/depth_registered/points"/>
     </include>
 
     <node name="rviz" pkg="rviz" type="rviz" if="$(arg rviz)"
          args="-d $(find mcdm_experiments)/config/inb_sim.rviz"/>
 
-    <node name="relay_map" pkg="topic_tools" type="relay" args="/map /vo_map"  if="$(arg is_sim)"/>
+    <node name="relay_map" pkg="topic_tools" type="relay" args="/map /vo_map"/>
 
 </launch>
