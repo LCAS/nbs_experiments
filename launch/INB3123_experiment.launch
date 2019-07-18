@@ -27,7 +27,8 @@
     <arg name="loc_map_yaml"   default="$(find mcdm_experiments)/maps/inb3123/map_sim/map.yaml" if="$(arg is_sim)"/>
     <arg name="nav_map_yaml"   default="$(find mcdm_experiments)/maps/inb3123/map_sim_mcdm/map_ric.yaml" if="$(arg is_sim)"/>
     <arg name="map_2_loc_map_pose"   default="0.25 0.15 0.0 0.0 0.0 0.0 1.0" if="$(arg is_sim)"/>
-    <arg name="use_fake_localization" value="true" if="$(arg is_sim)"/>
+    <arg name="use_fake_localization" default="true" if="$(arg is_sim)"/>
+
     <!-- Same yaml is in a different package in robot -->
     <arg name="amcl_cfg" default="$(find pal_navigation_cfg_tiago)/config/localization/amcl.yaml" if="$(arg is_sim)"/>
 
@@ -36,7 +37,7 @@
     <arg name="loc_map_yaml"   default="$(env HOME)/.pal/maps/configurations/INB3123/map.yaml" unless="$(arg is_sim)"/>
     <arg name="nav_map_yaml"   default="$(env HOME)/.pal/maps/configurations/INB3123_mcdm/map.yaml" unless="$(arg is_sim)"/>
     <arg name="map_2_loc_map_pose"   default="0.0 0.0 0.0 0.0 0.0 0.0 1.0" unless="$(arg is_sim)"/>
-    <arg name="use_fake_localization" value="false" unless="$(arg is_sim)"/>
+    <arg name="use_fake_localization" value="default" unless="$(arg is_sim)"/>
     <!-- Same yaml is in a different package in simulation -->
     <arg name="amcl_cfg" default="$(find tiago_2dnav)/config/localization/amcl.yaml" unless="$(arg is_sim)"/>
 
@@ -73,7 +74,7 @@
   		<rosparam command="load" file="$(find mcdm_experiments)/config/laser_filter.yaml" />
   	</node>
 
-    <!-- Localization -->
+    <!-- .......................... Localization ........................... -->
     <node name="loc_map_server" pkg="map_server" type="map_server" args="$(arg loc_map_yaml)"  output="screen">
         <remap from="map" to ="loc_map"/>
         <param name="frame_id" value="loc_map"/>
@@ -114,20 +115,7 @@
       </node>
     </group>
 
-    <!--
-        Localization adjustments tested only in simulation
-        TODO: check if they are needed in real robot too
-    -->
-    <group if="$(arg is_sim)">
-      <rosparam param="/amcl/odom_alpha1" subst_value="True">0.4</rosparam>
-      <rosparam param="/amcl/odom_alpha1" subst_value="True">0.04</rosparam>
-      <rosparam param="/amcl/odom_alpha1" subst_value="True">1.6</rosparam>
-      <rosparam param="/amcl/odom_alpha1" subst_value="True">0.04</rosparam>
-      <rosparam param="/amcl/min_particles" subst_value="True">1000</rosparam>
-      <rosparam param="/amcl/update_min_a" subst_value="True">!degrees 5.0</rosparam>
-    </group>
-
-    <!-- Navigation -->
+    <!-- ............................ Navigation ........................... -->
     <node name="nav_map_server" pkg="map_server" type="map_server" args="$(arg nav_map_yaml)"  output="screen">
     </node>
 
@@ -139,7 +127,7 @@
         <arg name="public_sim" value="true"/>
     </include>
 
-    <!-- Planning -->
+    <!-- ............................. Planning ............................ -->
     <include file="$(find tiago_2dnav)/launch/move_$(arg planner).launch">
         <arg name="global_planner" value="$(arg global_planner)"/>
         <arg name="local_planner"  value="$(arg local_planner)"/>
