@@ -80,7 +80,7 @@
         <param name="frame_id" value="loc_map"/>
     </node>
 
-    <group if="$(arg use_fake_localization)">
+    <group unless="$(arg use_fake_localization)">
       <node pkg="amcl" type="amcl" name="amcl" output="screen">
           <remap from="map" to="loc_map"/>
           <rosparam file="$(env HOME)/.pal/pose.yaml" command="load"/>
