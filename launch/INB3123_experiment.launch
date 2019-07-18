@@ -37,7 +37,7 @@
     <arg name="loc_map_yaml"   default="$(env HOME)/.pal/maps/configurations/INB3123/map.yaml" unless="$(arg is_sim)"/>
     <arg name="nav_map_yaml"   default="$(env HOME)/.pal/maps/configurations/INB3123_mcdm/map.yaml" unless="$(arg is_sim)"/>
     <arg name="map_2_loc_map_pose"   default="0.0 0.0 0.0 0.0 0.0 0.0 1.0" unless="$(arg is_sim)"/>
-    <arg name="use_fake_localization" value="default" unless="$(arg is_sim)"/>
+    <arg name="use_fake_localization" default="false" unless="$(arg is_sim)"/>
     <!-- Same yaml is in a different package in simulation -->
     <arg name="amcl_cfg" default="$(find tiago_2dnav)/config/localization/amcl.yaml" unless="$(arg is_sim)"/>
 
@@ -80,7 +80,7 @@
         <param name="frame_id" value="loc_map"/>
     </node>
 
-    <group if="$(eval arg('use_fake_localization') == 0)">
+    <group if="$(arg use_fake_localization)">
       <node pkg="amcl" type="amcl" name="amcl" output="screen">
           <remap from="map" to="loc_map"/>
           <rosparam file="$(env HOME)/.pal/pose.yaml" command="load"/>
@@ -107,7 +107,7 @@
 
     </group>
 
-    <group if="$(eval arg('use_fake_localization') == 1)">
+    <group if="$(arg use_fake_localization)">
       <node pkg="fake_localization" type="fake_localization" respawn="false" name="fake_loc">
            <remap from="base_pose_ground_truth" to="/ground_truth_odom" />
            <param name="odom_frame_id" type="string" value="odom"/>
