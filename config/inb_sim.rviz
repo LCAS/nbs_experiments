@@ -36,7 +36,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: Laser
+    SyncSource: ""
 Toolbars:
   toolButtonStyle: 2
 Visualization Manager:
@@ -291,7 +291,7 @@ Visualization Manager:
           Marker Topic: text_marker
           Name: Mode
           Namespaces:
-            "": true
+            {}
           Queue Size: 100
           Value: true
         - Class: rviz/Group
@@ -671,7 +671,7 @@ Visualization Manager:
           Draw Behind: false
           Enabled: true
           Name: Map
-          Topic: /loc_map
+          Topic: /map
           Unreliable: false
           Use Timestamp: false
           Value: true
@@ -745,7 +745,8 @@ Visualization Manager:
       Value: false
       Visibility:
         Control:
-          "": true
+          Move: true
+          Path: true
           Value: true
         Grid: true
         Localization:
@@ -1155,10 +1156,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 1.31979704
+      Pitch: 0.619797051
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 3.28728533
+      Yaw: 5.5072875
     Saved: ~
 Window Geometry:
   Displays:

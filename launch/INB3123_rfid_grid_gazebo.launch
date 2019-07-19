@@ -36,7 +36,7 @@
         <arg name="worldTagPose"         value="-3.45 -17.25 0.75 0.0 0.0 0.44"/>
         <arg name="is_sim"               value="true"/>
         <arg name="world_tf"             value="loc_map"/>
-        <arg name="with_visualizer"      value="false"/>
+        <arg name="with_visualizer"      value="true"/>
     </include>
 
     <!-- <include file="$(find rfid_grid_map)/launch/grid_debug.launch">
