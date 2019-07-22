@@ -27,7 +27,7 @@ DWAPlannerROS: {
   max_scaling_factor: 0.2,
   publish_cost_grid: true,
   oscillation_reset_dist: 0.05,
-  occdist_scale: 2.0
+  occdist_scale: 5.0
   }
 aggressive_reset:
   layer_names: [obstacle_laser_layer, obstacle_rgbd_layer]
