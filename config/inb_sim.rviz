@@ -12,7 +12,7 @@ Panels:
         - /Planning1/Base1/Global1/Plan1
         - /Planning1/Base1/Local1
         - /Planning1/Base1/Local1/Plan1
-        - /Planning1/Base1/Local1/Plan1/TrajectoryPlanner1
+        - /Planning1/Base1/Local1/Cost1
         - /Localization1/Map1
         - /Mapping1/Map1
         - /RFID grids1
@@ -36,7 +36,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: ""
+    SyncSource: Laser
 Toolbars:
   toolButtonStyle: 2
 Visualization Manager:
@@ -291,7 +291,7 @@ Visualization Manager:
           Marker Topic: text_marker
           Name: Mode
           Namespaces:
-            {}
+            "": true
           Queue Size: 100
           Value: true
         - Class: rviz/Group
@@ -565,7 +565,7 @@ Visualization Manager:
                       Radius: 0.0299999993
                       Shaft Diameter: 0.100000001
                       Shaft Length: 0.100000001
-                      Topic: /move_base/TrajectoryPlannerROS/global_plan
+                      Topic: /move_base/DWAPlannerROS/global_plan
                       Unreliable: false
                       Value: true
                   Enabled: true
@@ -605,7 +605,7 @@ Visualization Manager:
                   Size (Pixels): 3
                   Size (m): 0.0299999993
                   Style: Flat Squares
-                  Topic: move_base/TrajectoryPlannerROS/cost_cloud
+                  Topic: /move_base/DWAPlannerROS/trajectory_cloud
                   Unreliable: false
                   Use Fixed Frame: true
                   Use rainbow: true
@@ -745,57 +745,41 @@ Visualization Manager:
       Value: false
       Visibility:
         Control:
-          Move: true
-          Path: true
+          "": true
           Value: true
         Grid: true
         Localization:
-          Localization Quality: true
-          Map: true
-          Pose: true
-          Pose Graph: true
+          "": true
           Value: true
         Mapping:
-          Map: true
-          Map (with Virtual Obstacles): true
-          SLAM Graph Edges: true
-          SLAM Graph Vertices: true
-          Trajectory: true
+          "": true
           Value: true
         NavMap: true
         PlanMap: true
         Planning:
-          Base:
-            Global:
-              Costmap: true
-              Plan:
-                Global Planner: true
-                Value: true
-              Value: true
-            Goal: true
-            Local:
-              Cost: true
-              Costmap: true
-              Plan:
-                TrajectoryPlanner: true
-                Value: true
-              Value: true
+          "":
+            "": true
             Value: true
           Value: true
         PointStamped: true
         RFID grids:
+          "": true
           Value: true
-          glasses_5: true
-          keys_2: true
-          mug_7: true
-          pillbox_3: true
-          remote_1: true
-          umbrella_6: true
-          wallet_4: true
         Robot:
-          "":
-            "": true
+          Footprint: true
+          Mode: true
+          Odometry: true
+          RobotModel: true
+          Sensors:
+            Depth Cloud: true
+            Laser: true
+            RGBD scan: true
+            Sonar Cloud: true
+            Sonars: true
             Value: true
+            Virtual Obstacles: true
+          TF: true
+          Twist: true
           Value: true
         Tag_poses:
           "": true
@@ -1141,25 +1125,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 8.24969673
+      Distance: 23.3598232
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 2.08254862
-        Y: -9.48388958
-        Z: 0.592110336
+        X: -8.29394722
+        Y: -2.29912019
+        Z: 3.69066668
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.0500000007
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 0.619797051
+      Pitch: 1.56979632
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 5.5072875
+      Yaw: 6.25729465
     Saved: ~
 Window Geometry:
   Displays:

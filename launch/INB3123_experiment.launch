@@ -19,7 +19,7 @@
             in real robot: dwa/trajectory/pal
         	  in both:       dwa/trajectory
     -->
-    <arg name="local_planner"  default="trajectory"/>
+    <arg name="local_planner"  default="dwa"/>
 
 
     <!--SIM ARGS -->
