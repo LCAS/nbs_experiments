@@ -10,7 +10,7 @@
   <license>APACHE</license>
 
   <buildtool_depend>catkin</buildtool_depend>
-
+  <run_depend>teb_local_planner</run_depend>
   <export>
   </export>
 </package>

@@ -14,13 +14,9 @@
 -->
 <launch>
     <arg name="is_sim"           default="true"/>
-    <!-- Available local planners
-            in sim:        dwa/eband/trajectory/teb/carrot
-            in real robot: dwa/trajectory/pal
-        	  in both:       dwa/trajectory
-    -->
-    <arg name="local_planner"  default="dwa"/>
 
+    <!-- Define move base params here -->
+    <rosparam command="load"  file="$(find mcdm_experiments)/config/move_base_teb.yaml" ns="move_base"/>
 
     <!--SIM ARGS -->
     <arg name="rviz"           default="true" if="$(arg is_sim)"/>
@@ -42,16 +38,8 @@
     <arg name="amcl_cfg" default="$(find tiago_2dnav)/config/localization/amcl.yaml" unless="$(arg is_sim)"/>
 
     <!--Args not likely to change -->
-    <arg name="state"          default="localization"/>
-    <arg name="localization"   default="amcl"/>
-    <arg name="mapping"        default="gmapping"/>
-    <arg name="octomap"        default="false"/>
-    <arg name="multiple"       default="false"/>
-    <arg name="tf_prefix"      default=""/>
-    <arg name="public_sim"     default="true"/>
-
-    <arg name="planner"        default="base"/>
-    <arg name="global_planner" default="global_planner"/>
+    <arg name="odom"           default="mobile_base_controller/odom"/>
+    <arg name="cmd_vel"        default="nav_vel"/>
 
     <!-- Simulation nodes -->
     <group  if="$(arg is_sim)">
@@ -122,23 +110,10 @@
     <node pkg="tf" type="static_transform_publisher" name="map_2_loc_map_tfb"
         args="$(arg map_2_loc_map_pose) map loc_map 1000"/>
 
-    <include file="$(find tiago_2dnav)/launch/state_machine.launch">
-        <arg name="state" value="$(arg state)"/>
-        <arg name="public_sim" value="true"/>
-    </include>
-
-    <!-- ............................. Planning ............................ -->
-    <include file="$(find tiago_2dnav)/launch/move_$(arg planner).launch">
-        <arg name="global_planner" value="$(arg global_planner)"/>
-        <arg name="local_planner"  value="$(arg local_planner)"/>
-        <arg name="public_sim"     value="true"/>
-        <!-- rgbd_sensors arg is only present in simulation -->
-        <arg name="rgbd_sensors"   value="false" if="$(arg is_sim)"/>
-        <arg name="tf_prefix"      value="$(arg tf_prefix)"/>
-        <arg name="multiple"       value="$(arg multiple)"/>
-    </include>
-
-    <!--    Change map parameters -->
-    <rosparam command="load"  file="$(find mcdm_experiments)/config/move_base.yaml" ns="move_base"/>
+    <!-- Planning -->
+    <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+      <remap from="odom"    to="$(arg odom)"/>
+      <remap from="cmd_vel" to="$(arg cmd_vel)"/>
+    </node>
 
 </launch>
