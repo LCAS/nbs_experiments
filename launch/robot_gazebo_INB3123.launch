@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  MFC:  Creates gazebo simulated world (INB) and spawns corresponding robot
+-->
+<launch>
+  <arg name="robot"  default="tiago"/>
+  <arg name="gzpose" default="-x 0.17 -y 0.14 -z 0.09 -R 0.0 -P 0.0 -Y 0.0"/>
+  <arg name="gui" value="true"/>
+
+  <!-- start up world -->
+  <include file="$(find mcdm_experiments)/launch/INB3123_world.launch">
+    <arg name="gui" value="$(arg gui)"/>
+  </include>
+  
+  <!-- create robot -->
+  <group  if="$(eval robot == 'tiago')">
+    <include file="$(find mcdm_experiments)/launch/tiago_gazebo.launch">
+      <arg name="gzpose" value="$(arg gzpose)"/>
+    </include>
+  </group>
+
+  <group  if="$(eval robot == 'scitos')">
+    <include file="$(find mcdm_experiments)/launch/scitos_gazebo.launch">
+      <arg name="gzpose" value="$(arg gzpose)"/>
+    </include>
+  </group>
+
+</launch>

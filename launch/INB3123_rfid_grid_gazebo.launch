@@ -11,6 +11,7 @@
     <env name="ROSCONSOLE_CONFIG_FILE"
     value="$(find mcdm_experiments)/config/custom_rosconsole.conf"/>
 -->
+    <arg name="robot"           default="tiago"/>
 
     <arg name="map_folder" default="$(find mcdm_experiments)/maps/inb3123/map_sim"/>
 
@@ -25,7 +26,8 @@
     <node pkg="gazebo_rfid_node" type="wirelessNodeMonitor" name="rfid_node_sim" >
          <param name="ros_rfid_topic_name" value="/lastTag"/>
          <param name="ros_rfid_frame_id" value="lastTag"/>
-         <param name="gazebo_wireless_node_topic_name" value="/gazebo/INB3123/tiago/torso_lift_link/tiago_rfid_reader_sensor/transceiver"/>
+         <param name="gazebo_wireless_node_topic_name" value="/gazebo/INB3123/scitos/base_footprint/tiago_rfid_reader_sensor/transceiver" if="$(eval robot == 'scitos')"/>
+         <param name="gazebo_wireless_node_topic_name" value="/gazebo/INB3123/tiago/torso_lift_link/tiago_rfid_reader_sensor/transceiver" if="$(eval robot == 'tiago')"/>
     </node>
 
 

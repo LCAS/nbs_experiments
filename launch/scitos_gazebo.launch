@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  MFC:  based on tiago_simulation tiago_gazebo.launch
+        Mostly spawns our tiago model (iron)
+-->
+<launch>
+  <!--Where do we spawn the robot-->
+  <arg name="gzpose" default="-x 0.17 -y 0.14 -z 0.09 -R 0.0 -P 0.0 -Y 0.0"/>
+
+  <!-- start up world -->
+  <env name="GAZEBO_MODEL_PATH" value="$(find scitos_description)/meshes/"/>
+
+  <arg name="model_name" default="scitos"/>
+
+  <!-- Robot model -->
+  <include file="$(find scitos_description)/launch/upload_scitos.launch"/>
+
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+
+  <!-- Spawn robot in Gazebo -->
+  <node pkg="gazebo_ros" type="spawn_model" name="spawn_model"
+    args="-urdf -param robot_description $(arg gzpose) -model $(arg model_name)" />
+
+  <!-- Relay cmd vel from move_base -->
+<node name="relay_cmd" pkg="topic_tools" type="relay" args="/nav_vel /cmd_vel"/>
+
+</launch>

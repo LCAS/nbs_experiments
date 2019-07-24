@@ -13,11 +13,15 @@
             roslaunch mcdm_experiments INB3123_experiment.launch is_sim:=false
 -->
 <launch>
+    <!-- tiago or scitos -->
+    <arg name="robot"           default="tiago"/>
+
     <arg name="is_sim"           default="true"/>
 
     <!-- Define move base params here -->
-    <rosparam command="load"  file="$(find mcdm_experiments)/config/move_base_teb.yaml" ns="move_base"/>
-
+    <rosparam command="load"  file="$(find mcdm_experiments)/config/move_base_teb.yaml" ns="move_base" if="$(eval robot == 'tiago')"/>
+    <rosparam command="load"  file="$(find mcdm_experiments)/config/move_base_scitos.yaml" ns="move_base" if="$(eval robot == 'scitos')"/>
+    
     <!--SIM ARGS -->
     <arg name="rviz"           default="true" if="$(arg is_sim)"/>
     <arg name="loc_map_yaml"   default="$(find mcdm_experiments)/maps/inb3123/map_sim/map.yaml" if="$(arg is_sim)"/>
@@ -44,16 +48,20 @@
     <!-- Simulation nodes -->
     <group  if="$(arg is_sim)">
         <!--Create gazebo world and simulated robot -->
-        <include file="$(find mcdm_experiments)/launch/tiago_gazebo_INB3123.launch" if="$(arg is_sim)"/>
+        <include file="$(find mcdm_experiments)/launch/robot_gazebo_INB3123.launch">
+          <arg name="robot" value="$(arg robot)"/>
+        </include>
+        <node name="relay_map" pkg="topic_tools" type="relay" args="/map /vo_map"/>
 
         <include file="$(find tiago_laser_sensors)/launch/rgbd_cloud_laser.launch">
-        <arg name="cloud" value="/xtion/depth_registered/points"/>
+            <arg name="cloud" value="/xtion/depth_registered/points"  if="$(eval robot == 'tiago')"/>
+            <arg name="cloud" value="/xtion/depth_registered/points"  if="$(eval robot == 'scitos')"/>
         </include>
 
         <node name="rviz" pkg="rviz" type="rviz" if="$(arg rviz)"
         args="-d $(find mcdm_experiments)/config/inb_sim.rviz"/>
 
-        <node name="relay_map" pkg="topic_tools" type="relay" args="/map /vo_map"/>
+
     </group>
 
     <!-- Remove laser self colision -->
