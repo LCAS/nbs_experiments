@@ -21,40 +21,25 @@
     <!-- Define move base params here -->
     <rosparam command="load"  file="$(find mcdm_experiments)/config/move_base_teb.yaml" ns="move_base" if="$(eval robot == 'tiago')"/>
     <rosparam command="load"  file="$(find mcdm_experiments)/config/move_base_scitos.yaml" ns="move_base" if="$(eval robot == 'scitos')"/>
-
+    
     <!--SIM ARGS -->
-    <group  if="$(arg is_sim)">
-        <arg name="rviz"           default="true"/>
-        <arg name="loc_map_yaml"   default="$(find mcdm_experiments)/maps/inb3123/map_sim/map.yaml"/>
-        <arg name="nav_map_yaml"   default="$(find mcdm_experiments)/maps/inb3123/map_sim_mcdm/map_ric.yaml"/>
-        <arg name="map_2_loc_map_pose"   default="0.25 0.15 0.0 0.0 0.0 0.0 1.0"/>
-        <arg name="use_fake_localization" default="true"/>
+    <arg name="rviz"           default="true" if="$(arg is_sim)"/>
+    <arg name="loc_map_yaml"   default="$(find mcdm_experiments)/maps/inb3123/map_sim/map.yaml" if="$(arg is_sim)"/>
+    <arg name="nav_map_yaml"   default="$(find mcdm_experiments)/maps/inb3123/map_sim_mcdm/map_ric.yaml" if="$(arg is_sim)"/>
+    <arg name="map_2_loc_map_pose"   default="0.25 0.15 0.0 0.0 0.0 0.0 1.0" if="$(arg is_sim)"/>
+    <arg name="use_fake_localization" default="true" if="$(arg is_sim)"/>
 
-        <!-- Same yaml is in a different package in real tiago  -->
-        <group if="$(eval robot == 'tiago')">
-            <arg name="amcl_cfg" default="$(find pal_navigation_cfg_tiago)/config/localization/amcl.yaml"/>
-        </group>
-    </group>
+    <!-- Same yaml is in a different package in robot -->
+    <arg name="amcl_cfg" default="$(find pal_navigation_cfg_tiago)/config/localization/amcl.yaml" if="$(arg is_sim)"/>
 
     <!--REAL ARGS -->
-    <group  unless="$(arg is_sim)">
-        <arg name="rviz"           default="false"/>
-        <arg name="map_2_loc_map_pose"   default="0.0 0.0 0.0 0.0 0.0 0.0 1.0"/>
-        <arg name="use_fake_localization" default="false"/>
-
-        <!-- Same yaml is in a different package in simulation -->
-        <group if="$(eval robot == 'tiago')">
-          <arg name="loc_map_yaml"   default="$(env HOME)/.pal/maps/configurations/INB3123/map.yaml"/>
-          <arg name="nav_map_yaml"   default="$(env HOME)/.pal/maps/configurations/INB3123_mcdm/map.yaml"/>
-          <arg name="amcl_cfg" default="$(find tiago_2dnav)/config/localization/amcl.yaml"/>
-        </group>
-        
-        <group if="$(eval robot == 'scitos')">
-          <arg name="loc_map_yaml"   default="$(find  mcdm_experiments)/maps/inb3123/map_real_sci/cropped.yaml"/>
-          <arg name="nav_map_yaml"   default="$(find  mcdm_experiments)maps/inb3123/map_real_mcdm/map.yaml"/>
-          <arg name="amcl_cfg" default="$(find mcdm_experiments)/config/amcl_scitos.yaml"/>
-        </group>
-    </group>
+    <arg name="rviz"           default="false" unless="$(arg is_sim)"/>
+    <arg name="loc_map_yaml"   default="$(env HOME)/.pal/maps/configurations/INB3123/map.yaml" unless="$(arg is_sim)"/>
+    <arg name="nav_map_yaml"   default="$(env HOME)/.pal/maps/configurations/INB3123_mcdm/map.yaml" unless="$(arg is_sim)"/>
+    <arg name="map_2_loc_map_pose"   default="0.0 0.0 0.0 0.0 0.0 0.0 1.0" unless="$(arg is_sim)"/>
+    <arg name="use_fake_localization" default="false" unless="$(arg is_sim)"/>
+    <!-- Same yaml is in a different package in simulation -->
+    <arg name="amcl_cfg" default="$(find tiago_2dnav)/config/localization/amcl.yaml" unless="$(arg is_sim)"/>
 
     <!--Args not likely to change -->
     <arg name="odom"           default="mobile_base_controller/odom"/>
@@ -84,20 +69,6 @@
     <node pkg="laser_filters" type="scan_to_scan_filter_chain" name="self_collision_filter">
   		<rosparam command="load" file="$(find mcdm_experiments)/config/laser_filter.yaml" />
   	</node>
-
-    <group  unless="$(arg is_sim)">
-        <group if="$(eval robot == 'scitos')">
-          <include file="$(find strands_bringup)/launch/strands_robot.launch">
-            <arg name="machine" value="localhost"/>
-            <arg name="user" value="lcas"/>
-            <arg name="with_mux" value="False"/>
-            <arg name="js" value="/dev/input/js0"/>
-            <arg name="laser" value="/dev/ttyUSB0"/>
-            <arg name="scitos_config" value="/opt/ros/kinetic/share/scitos_mira/resources/SCITOSDriver.xml"/>
-          </include>
-
-        </group>
-    </group>
 
     <!-- .......................... Localization ........................... -->
     <node name="loc_map_server" pkg="map_server" type="map_server" args="$(arg loc_map_yaml)"  output="screen">

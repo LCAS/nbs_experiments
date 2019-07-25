@@ -1,0 +1,22 @@
+# based on strands_bringup start.sh
+# Name the session (can be overriden by command line option -s), optional
+session: mcdm-session
+
+# init_cmd to run before launch in each window
+init_cmd: |
+  SESSION=$USER
+  export ROS_IP=10.82.0.70
+  export ROS_MASTER_IP=http://10.82.0.70:11311
+  JOYSTICK=/dev/input/js0
+  source ~/workspace/mcdm-dev/devel/setup.bash
+# definition of all windows
+windows:
+  - name: roscore
+    panes:
+      - roscore
+  - name: robot
+    panes:
+      - roslaunch strands_bringup strands_robot.launch machine:=localhost user:=$USER with_mux:=False js:=$JOYSTICK laser:=/dev/ttyUSB0 scitos_config:=$(rospack find scitos_mira)/resources/SCITOSDriver.xml
+  - name: navigation
+    panes:
+      - roslaunch mcdm_experiments strands_navigation.launch user:=$USER
