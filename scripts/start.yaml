@@ -17,6 +17,7 @@ windows:
   - name: robot
     panes:
       - roslaunch strands_bringup strands_robot.launch machine:=localhost user:=$USER with_mux:=False js:=$JOYSTICK laser:=/dev/ttyUSB0 scitos_config:=$(rospack find scitos_mira)/resources/SCITOSDriver.xml
+      - rosrun rfid_node rfid_reader_ros.py
   - name: navigation
     panes:
       - roslaunch mcdm_experiments strands_navigation.launch user:=$USER
