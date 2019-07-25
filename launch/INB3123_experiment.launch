@@ -44,14 +44,15 @@
 
         <!-- Same yaml is in a different package in simulation -->
         <group if="$(eval robot == 'tiago')">
-          <arg name="loc_map_yaml"   default="$(find  mcdm_experiments)/maps/inb3123/map_real_sci/cropped.yaml"/>
-          <arg name="nav_map_yaml"   default="$(find  mcdm_experiments)maps/inb3123/map_real_mcdm/map.yaml"/>
+          <arg name="loc_map_yaml"   default="$(env HOME)/.pal/maps/configurations/INB3123/map.yaml"/>
+          <arg name="nav_map_yaml"   default="$(env HOME)/.pal/maps/configurations/INB3123_mcdm/map.yaml"/>
           <arg name="amcl_cfg" default="$(find tiago_2dnav)/config/localization/amcl.yaml"/>
         </group>
+        
         <group if="$(eval robot == 'scitos')">
-            <arg name="loc_map_yaml"   default="$(env HOME)/.pal/maps/configurations/INB3123/map.yaml"/>
-            <arg name="nav_map_yaml"   default="$(env HOME)/.pal/maps/configurations/INB3123_mcdm/map.yaml"/>
-            <arg name="amcl_cfg" default="$(find mcdm_experiments)/config/amcl_scitos.yaml"/>
+          <arg name="loc_map_yaml"   default="$(find  mcdm_experiments)/maps/inb3123/map_real_sci/cropped.yaml"/>
+          <arg name="nav_map_yaml"   default="$(find  mcdm_experiments)maps/inb3123/map_real_mcdm/map.yaml"/>
+          <arg name="amcl_cfg" default="$(find mcdm_experiments)/config/amcl_scitos.yaml"/>
         </group>
     </group>
 
