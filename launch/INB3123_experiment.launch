@@ -46,15 +46,12 @@
 
         <!-- Same yaml is in a different package in simulation -->
         <group if="$(eval robot == 'tiago')">
-            <arg name="amcl_cfg" default="$(find pal_navigation_cfg_tiago)/config/localization/amcl.yaml"/>
+          <arg name="amcl_cfg" default="$(find tiago_2dnav)/config/localization/amcl.yaml"/>
         </group>
         <group if="$(eval robot == 'scitos')">
             <arg name="amcl_cfg" default="$(find mcdm_experiments)/config/amcl_scitos.yaml"/>
         </group>
     </group>
-
-
-    <arg name="amcl_cfg" default="$(find tiago_2dnav)/config/localization/amcl.yaml" unless="$(arg is_sim)"/>
 
     <!--Args not likely to change -->
     <arg name="odom"           default="mobile_base_controller/odom"/>
