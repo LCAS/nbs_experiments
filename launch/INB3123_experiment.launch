@@ -39,16 +39,18 @@
     <!--REAL ARGS -->
     <group  unless="$(arg is_sim)">
         <arg name="rviz"           default="false"/>
-        <arg name="loc_map_yaml"   default="$(env HOME)/.pal/maps/configurations/INB3123/map.yaml"/>
-        <arg name="nav_map_yaml"   default="$(env HOME)/.pal/maps/configurations/INB3123_mcdm/map.yaml"/>
         <arg name="map_2_loc_map_pose"   default="0.0 0.0 0.0 0.0 0.0 0.0 1.0"/>
         <arg name="use_fake_localization" default="false"/>
 
         <!-- Same yaml is in a different package in simulation -->
         <group if="$(eval robot == 'tiago')">
+          <arg name="loc_map_yaml"   default="$(find  mcdm_experiments)/maps/inb3123/map_real_sci/cropped.yaml"/>
+          <arg name="nav_map_yaml"   default="$(find  mcdm_experiments)maps/inb3123/map_real_mcdm/map.yaml"/>
           <arg name="amcl_cfg" default="$(find tiago_2dnav)/config/localization/amcl.yaml"/>
         </group>
         <group if="$(eval robot == 'scitos')">
+            <arg name="loc_map_yaml"   default="$(env HOME)/.pal/maps/configurations/INB3123/map.yaml"/>
+            <arg name="nav_map_yaml"   default="$(env HOME)/.pal/maps/configurations/INB3123_mcdm/map.yaml"/>
             <arg name="amcl_cfg" default="$(find mcdm_experiments)/config/amcl_scitos.yaml"/>
         </group>
     </group>
