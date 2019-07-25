@@ -23,22 +23,37 @@
     <rosparam command="load"  file="$(find mcdm_experiments)/config/move_base_scitos.yaml" ns="move_base" if="$(eval robot == 'scitos')"/>
 
     <!--SIM ARGS -->
-    <arg name="rviz"           default="true" if="$(arg is_sim)"/>
-    <arg name="loc_map_yaml"   default="$(find mcdm_experiments)/maps/inb3123/map_sim/map.yaml" if="$(arg is_sim)"/>
-    <arg name="nav_map_yaml"   default="$(find mcdm_experiments)/maps/inb3123/map_sim_mcdm/map_ric.yaml" if="$(arg is_sim)"/>
-    <arg name="map_2_loc_map_pose"   default="0.25 0.15 0.0 0.0 0.0 0.0 1.0" if="$(arg is_sim)"/>
-    <arg name="use_fake_localization" default="true" if="$(arg is_sim)"/>
+    <group  if="$(arg is_sim)">
+        <arg name="rviz"           default="true"/>
+        <arg name="loc_map_yaml"   default="$(find mcdm_experiments)/maps/inb3123/map_sim/map.yaml"/>
+        <arg name="nav_map_yaml"   default="$(find mcdm_experiments)/maps/inb3123/map_sim_mcdm/map_ric.yaml"/>
+        <arg name="map_2_loc_map_pose"   default="0.25 0.15 0.0 0.0 0.0 0.0 1.0"/>
+        <arg name="use_fake_localization" default="true"/>
 
-    <!-- Same yaml is in a different package in robot -->
-    <arg name="amcl_cfg" default="$(find pal_navigation_cfg_tiago)/config/localization/amcl.yaml" if="$(arg is_sim)"/>
+        <!-- Same yaml is in a different package in real tiago  -->
+        <group if="$(eval robot == 'tiago')">
+            <arg name="amcl_cfg" default="$(find pal_navigation_cfg_tiago)/config/localization/amcl.yaml"/>
+        </group>
+    </group>
 
     <!--REAL ARGS -->
-    <arg name="rviz"           default="false" unless="$(arg is_sim)"/>
-    <arg name="loc_map_yaml"   default="$(env HOME)/.pal/maps/configurations/INB3123/map.yaml" unless="$(arg is_sim)"/>
-    <arg name="nav_map_yaml"   default="$(env HOME)/.pal/maps/configurations/INB3123_mcdm/map.yaml" unless="$(arg is_sim)"/>
-    <arg name="map_2_loc_map_pose"   default="0.0 0.0 0.0 0.0 0.0 0.0 1.0" unless="$(arg is_sim)"/>
-    <arg name="use_fake_localization" default="false" unless="$(arg is_sim)"/>
-    <!-- Same yaml is in a different package in simulation -->
+    <group  unless="$(arg is_sim)">
+        <arg name="rviz"           default="false"/>
+        <arg name="loc_map_yaml"   default="$(env HOME)/.pal/maps/configurations/INB3123/map.yaml"/>
+        <arg name="nav_map_yaml"   default="$(env HOME)/.pal/maps/configurations/INB3123_mcdm/map.yaml"/>
+        <arg name="map_2_loc_map_pose"   default="0.0 0.0 0.0 0.0 0.0 0.0 1.0"/>
+        <arg name="use_fake_localization" default="false"/>
+
+        <!-- Same yaml is in a different package in simulation -->
+        <group if="$(eval robot == 'tiago')">
+            <arg name="amcl_cfg" default="$(find pal_navigation_cfg_tiago)/config/localization/amcl.yaml"/>
+        </group>
+        <group if="$(eval robot == 'scitos')">
+            <arg name="amcl_cfg" default="$(find mcdm_experiments)/config/amcl_scitos.yaml"/>
+        </group>
+    </group>
+
+
     <arg name="amcl_cfg" default="$(find tiago_2dnav)/config/localization/amcl.yaml" unless="$(arg is_sim)"/>
 
     <!--Args not likely to change -->
