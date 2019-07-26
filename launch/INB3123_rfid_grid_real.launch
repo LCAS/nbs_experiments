@@ -7,7 +7,7 @@
 
 <launch>
 
-    <arg name="map_folder" default="$(find mcdm_experiments)/maps/inb3123/map_real"/>
+    <arg name="map_folder"    default="$(find mcdm_experiments)/maps/inb3123/map_real_sci"/>
 
     <!--
       Get regions from tiago map config and put them in rosparam server.
