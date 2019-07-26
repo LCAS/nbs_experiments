@@ -21,3 +21,9 @@ windows:
   - name: navigation
     panes:
       - roslaunch mcdm_experiments strands_navigation.launch user:=$USER
+  # - name: exploration
+  #   panes:
+  #     - roslaunch mcdm_exploration_framework pure.launch save_bag:=true
+  # - name: rfid
+  #   panes:
+  #     - roslaunch mcdm_exploration_framework INB3123_rfid_grid_real.launch
