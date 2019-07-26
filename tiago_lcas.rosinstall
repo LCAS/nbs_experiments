@@ -57,3 +57,7 @@
 #                           RFID                                               #
 ################################################################################
 - git: {local-name: lcas/RFID,                        uri: 'https://github.com/LCAS/RFID.git', version: 'master'}
+################################################################################
+#                           SCITOS                                             #
+################################################################################
+- git: {local-name: lcas/scitos_common,               uri: 'https://github.com/MFernandezCarmona/scitos_common.git', version: 'master'}
