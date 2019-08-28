@@ -41,7 +41,7 @@
         <arg name="with_visualizer"      value="true"/>
     </include>
 
-    <!-- <include file="$(find rfid_grid_map)/launch/grid_debug.launch">
+    <include file="$(find rfid_grid_map)/launch/grid_debug.launch">
         <arg name="tagID"                value="390100010000000000000002"/>
         <arg name="object"               value="keys"/>
         <arg name="tag_num"              value="2"/>
@@ -60,7 +60,7 @@
         <arg name="world_tf"             value="loc_map"/>
         <arg name="with_visualizer"      value="false"/>
     </include>
-
+<!-- 
     <include file="$(find rfid_grid_map)/launch/grid_debug.launch">
         <arg name="tagID"                value="390100010000000000000004"/>
         <arg name="object"               value="wallet"/>
