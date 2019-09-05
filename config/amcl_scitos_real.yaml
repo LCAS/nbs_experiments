@@ -1,7 +1,5 @@
 {base_frame_id: base_link, beam_skip_distance: 0.5, beam_skip_threshold: 0.3, do_beamskip: false,
-  first_map_only: false, global_frame_id: map, gui_publish_rate: 10.0, initial_cov_aa: 0.006667136889128223,
-  initial_cov_xx: 0.010852379814508595, initial_cov_yy: 0.01519094918370456, initial_pose_a: 1.188497560018846,
-  initial_pose_x: -12.487104282222743, initial_pose_y: -8.17501295032843, kld_err: 0.01,
+  first_map_only: false, global_frame_id: map, gui_publish_rate: 10.0, kld_err: 0.01,
   kld_z: 0.99, laser_lambda_short: 0.1, laser_likelihood_max_dist: 2.0, laser_max_beams: 30,
   laser_max_range: -1.0, laser_min_range: -1.0, laser_model_type: likelihood_field,
   laser_sigma_hit: 0.2, laser_z_hit: 0.95, laser_z_max: 0.05, laser_z_rand: 0.05,
