@@ -1,0 +1,51 @@
+session: mcdm
+init_cmd: |
+  source @TMULE_CONFIG_DIR@/../scripts/setup.sh
+  
+windows:
+  - name: ROSCORE
+    tags: ['core', 'robot', 'nav']    
+    panes:
+      - roscore
+      - htop
+    check: "rostopic list"
+
+  - name: ROBOT
+    tags: ['robot', 'nav']
+    panes:
+      - roslaunch strands_bringup strands_robot.launch with_mux:=false js:=/dev/input/js0
+      - roslaunch mcdm_experiments remove_edges_laser.launch
+      - watch -n 2 rosparam dump ~/.ros/pose.yaml /amcl
+    check: "rostopic list | grep -q /move_base/scan_obstacle"
+
+  - name: NAVIGATION
+    tags: ['nav']
+    panes:
+      - roslaunch mcdm_experiments loc_map_server.launch 
+      - roslaunch mcdm_experiments amcl.launch 
+      - roslaunch mcdm_experiments nav_map_server.launch
+      - roslaunch mcdm_experiments move_base.launch  
+    check: "rosnode list | grep -q move_base"
+
+  - name: RFID
+    tags: ['nav']
+    panes:  
+      - rosrun rfid_node rfid_reader_ros.py 
+      - roslaunch mcdm_experiments INB3123_rfid_grid_real.launch map_folder:=$(rospack find mcdm_experiments)/maps/inb3123/map_real_sci
+      - rosrun rfid_grid_map tag_discovery_node.py
+    check: "rostopic list | grep -q /tag_coverage"
+
+  - name: ALIGN
+    tags: ['experiment']
+    panes:  
+      - roslaunch mcdm_experiments INB3123_goto_initial_pose.launch      
+    check: "rostopic echo /move_base/status | grep -q reached"
+
+  # - name: MCDM
+  #   tags: ['experiment']
+  #   panes:  
+  #     - roslaunch mcdm_exploration_framework pure.launch  topic_list:="/tf /tf_static /mcdm_stats /move_base/scan_obstacle /map /loc_map /move_base/current_goal /lastTag"
+
+  - name: testbench
+    panes:        
+      - echo $ROS_MASTER_URI

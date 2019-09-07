@@ -6,7 +6,6 @@ Panels:
       Expanded:
         - /Global Options1
         - /Robot1
-        - /Planning1
         - /Planning1/Base1
         - /Planning1/Base1/Global1
         - /Planning1/Base1/Global1/Global Planner1
@@ -15,6 +14,8 @@ Panels:
         - /Localization1/Map1
         - /Mapping1/Map1
         - /RFID grids1
+        - /Pose1
+        - /Pose2
       Splitter Ratio: 0.446646333
     Tree Height: 696
   - Class: rviz/Selection
@@ -459,7 +460,7 @@ Visualization Manager:
               Value: true
           Enabled: true
           Name: Base
-      Enabled: true
+      Enabled: false
       Name: Planning
     - Class: rviz/Group
       Displays:
@@ -505,7 +506,7 @@ Visualization Manager:
           Unreliable: false
           Use Timestamp: false
           Value: true
-      Enabled: true
+      Enabled: false
       Name: Localization
     - Class: rviz/Group
       Displays:
@@ -574,6 +575,7 @@ Visualization Manager:
       Unreliable: false
       Value: false
       Visibility:
+        "": true
         Control:
           "": true
           Value: true
@@ -582,38 +584,19 @@ Visualization Manager:
           "": true
           Value: true
         Mapping:
-          Map: true
-          Map (with Virtual Obstacles): true
-          SLAM Graph Edges: true
-          SLAM Graph Vertices: true
-          Trajectory: true
+          "": true
           Value: true
         NavMap: true
         PlanMap: true
         Planning:
-          Base:
-            Global:
-              Costmap: true
-              Global Planner: true
-              Value: true
-            Goal: true
-            Local:
-              ActiveGlobalPlan: true
-              Costmap: true
-              LocalPlan: true
-              Value: true
+          "":
+            "": true
             Value: true
           Value: true
         PointStamped: true
         RFID grids:
+          "": true
           Value: true
-          glasses_5: true
-          keys_2: true
-          mug_7: true
-          pillbox_3: true
-          remote_1: true
-          umbrella_6: true
-          wallet_4: true
         Robot:
           Footprint: true
           Mode: true
@@ -630,15 +613,8 @@ Visualization Manager:
           Twist: true
           Value: true
         Tag_poses:
+          "": true
           Value: true
-          glasses_5: true
-          keys_2: true
-          mug_7: true
-          pillbox_3: true
-          remote_1: true
-          umbrella_6: true
-          visited nav poses: true
-          wallet_4: true
         Value: true
         visited plan poses: true
       Zoom Factor: 1
@@ -718,42 +694,42 @@ Visualization Manager:
           Class: rviz/Map
           Color Scheme: map
           Draw Behind: false
-          Enabled: false
+          Enabled: true
           Name: remote_1
           Topic: /grid_390100010000000000000001/grid_map_visualization/occupancy_grid
           Unreliable: false
           Use Timestamp: false
-          Value: false
+          Value: true
         - Alpha: 0.699999988
           Class: rviz/Map
           Color Scheme: map
           Draw Behind: false
-          Enabled: false
+          Enabled: true
           Name: keys_2
           Topic: /grid_390100010000000000000002/grid_map_visualization/occupancy_grid
           Unreliable: false
           Use Timestamp: false
-          Value: false
+          Value: true
         - Alpha: 0.699999988
           Class: rviz/Map
           Color Scheme: map
           Draw Behind: false
-          Enabled: false
+          Enabled: true
           Name: pillbox_3
           Topic: /grid_390100010000000000000003/grid_map_visualization/occupancy_grid
           Unreliable: false
           Use Timestamp: false
-          Value: false
+          Value: true
         - Alpha: 1
           Class: rviz/Map
           Color Scheme: costmap
           Draw Behind: false
-          Enabled: true
+          Enabled: false
           Name: wallet_4
           Topic: /grid_390100010000000000000004/grid_map_visualization/occupancy_grid
           Unreliable: false
           Use Timestamp: false
-          Value: true
+          Value: false
         - Alpha: 0.699999988
           Class: rviz/Map
           Color Scheme: map
@@ -784,7 +760,7 @@ Visualization Manager:
           Unreliable: false
           Use Timestamp: false
           Value: false
-      Enabled: false
+      Enabled: true
       Name: RFID grids
     - Alpha: 1
       Autocompute Intensity Bounds: true
@@ -955,6 +931,61 @@ Visualization Manager:
           Value: false
       Enabled: false
       Name: Tag_poses
+    - Alpha: 0.699999988
+      Class: rviz/Map
+      Color Scheme: map
+      Draw Behind: false
+      Enabled: true
+      Name: Map
+      Topic: /loc_map
+      Unreliable: false
+      Use Timestamp: false
+      Value: true
+    - Alpha: 1
+      Axes Length: 1
+      Axes Radius: 0.100000001
+      Class: rviz/Pose
+      Color: 255; 25; 0
+      Enabled: true
+      Head Length: 0.300000012
+      Head Radius: 0.100000001
+      Name: Pose
+      Shaft Length: 1
+      Shaft Radius: 0.0500000007
+      Shape: Arrow
+      Topic: /poses/390100010000000000000001
+      Unreliable: false
+      Value: true
+    - Alpha: 1
+      Axes Length: 1
+      Axes Radius: 0.100000001
+      Class: rviz/Pose
+      Color: 255; 25; 0
+      Enabled: true
+      Head Length: 0.300000012
+      Head Radius: 0.100000001
+      Name: Pose
+      Shaft Length: 1
+      Shaft Radius: 0.0500000007
+      Shape: Arrow
+      Topic: /poses/390100010000000000000002
+      Unreliable: false
+      Value: true
+    - Alpha: 1
+      Axes Length: 1
+      Axes Radius: 0.100000001
+      Class: rviz/Pose
+      Color: 255; 25; 0
+      Enabled: true
+      Head Length: 0.300000012
+      Head Radius: 0.100000001
+      Name: Pose
+      Shaft Length: 1
+      Shaft Radius: 0.0500000007
+      Shape: Arrow
+      Topic: /poses/390100010000000000000003
+      Unreliable: false
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -980,25 +1011,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 13.2804775
+      Distance: 19.6126213
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.832625747
-        Y: -1.69719124
-        Z: 3.54627275
+        X: -4.93623495
+        Y: -7.89169359
+        Z: 2.83837891
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.0500000007
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 1.36979651
+      Pitch: 1.46979642
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 4.77729845
+      Yaw: 3.3622992
     Saved: ~
 Window Geometry:
   Displays:
@@ -1019,4 +1050,4 @@ Window Geometry:
     collapsed: true
   Width: 1918
   X: 0
-  Y: 24
+  Y: 0
