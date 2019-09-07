@@ -14,14 +14,14 @@
 -->
 <launch>
     <!-- tiago or scitos -->
-    <arg name="robot"           default="tiago"/>
+    <arg name="robot"           default="scitos"/>
 
     <arg name="is_sim"           default="true"/>
 
     <!-- Define move base params here -->
     <rosparam command="load"  file="$(find mcdm_experiments)/config/move_base_teb.yaml" ns="move_base" if="$(eval robot == 'tiago')"/>
     <rosparam command="load"  file="$(find mcdm_experiments)/config/move_base_scitos.yaml" ns="move_base" if="$(eval robot == 'scitos')"/>
-    
+
     <!--SIM ARGS -->
     <arg name="rviz"           default="true" if="$(arg is_sim)"/>
     <arg name="loc_map_yaml"   default="$(find mcdm_experiments)/maps/inb3123/map_sim/map.yaml" if="$(arg is_sim)"/>

@@ -3,7 +3,7 @@
   MFC:  Creates gazebo simulated world (INB) and spawns corresponding robot
 -->
 <launch>
-  <arg name="robot"  default="tiago"/>
+  <arg name="robot"  default="scitos"/>
   <arg name="gzpose" default="-x 0.17 -y 0.14 -z 0.09 -R 0.0 -P 0.0 -Y 0.0"/>
   <arg name="gui" value="true"/>
 
