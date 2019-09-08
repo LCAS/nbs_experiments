@@ -1,151 +1,225 @@
-DWAPlannerROS: {acc_lim_theta: 1.0, acc_lim_x: 0.6, acc_lim_y: 0.0, acc_limit_trans: 0.6,
-  angular_sim_granularity: 0.1, forward_point_distance: 0.0, goal_distance_bias: 24.0,
-  holonomic_robot: false, latch_xy_goal_tolerance: true, max_rot_vel: 0.4, max_scaling_factor: 0.2,
-  max_trans_vel: 0.4, max_vel_x: 0.4, max_vel_y: 0.0, min_rot_vel: 0.0, min_trans_vel: 0.0,
-  min_vel_x: 0.0, min_vel_y: 0.0, occdist_scale: 0.01, oscillation_reset_angle: 0.2,
-  oscillation_reset_dist: 0.05, path_distance_bias: 32.0, prune_plan: true, restore_defaults: false,
-  rot_stopped_vel: 0.01, scaling_speed: 0.25, sim_granularity: 0.025, sim_time: 2.1,
-  stop_time_buffer: 0.2, trans_stopped_vel: 0.01, twirling_scale: 0.0, use_dwa: true,
-  vth_samples: 20, vx_samples: 10, vy_samples: 1, xy_goal_tolerance: 0.3, yaw_goal_tolerance: 0.3}
-NavfnROS: {allow_unknown: false, default_tolerance: 0.0}
+GlobalPlanner: {
+  allow_unknown: false,
+  cost_factor: 5.0,
+  default_tolerance: 0.75,
+  visualize_potential: true,
+  use_dijkstra: true,
+  use_quadratic: true,
+  use_grid_path: false,
+  old_navfn_behavior: false,
+  lethal_cost: 253,
+  neutral_cost: 150,
+  cost_factor: 3.0,
+  publish_potential: true,
+  orientation_mode: 0,
+  orientation_window_size: 1
+  }
+TebLocalPlannerROS:
+  acc_lim_theta: 0.5
+  acc_lim_x: 0.5
+  acc_lim_y: 0.5
+  allow_init_with_backwards_motion: false
+  cmd_angle_instead_rotvel: false
+  complete_global_plan: true
+  delete_detours_backwards: true
+  dt_hysteresis: 0.1
+  dt_ref: 0.3
+  dynamic_obstacle_inflation_dist: 0.4
+  enable_homotopy_class_planning: false
+  enable_multithreading: true
+  exact_arc_length: false
+  feasibility_check_no_poses: 5
+  footprint_model: {type: point}
+  force_reinit_new_goal_dist: 1.0
+  free_goal_vel: false
+  global_plan_overwrite_orientation: true
+  global_plan_prune_distance: 1
+  global_plan_viapoint_sep: -0.1
+  h_signature_prescaler: 0.5
+  h_signature_threshold: 0.1
+  include_costmap_obstacles: true
+  inflation_dist: 0.4
+  is_footprint_dynamic: false
+  legacy_obstacle_association: false
+  max_global_plan_lookahead_dist: 3.0
+  max_number_classes: 4
+  max_ratio_detours_duration_best_duration: 3.0
+  max_samples: 500
+  max_vel_theta: 0.2
+  max_vel_x: 0.3
+  max_vel_x_backwards: 0.0
+  max_vel_y: 0.0
+  min_obstacle_dist: 0.5
+  min_turning_radius: 0.0
+  no_inner_iterations: 5
+  no_outer_iterations: 4
+  obstacle_association_cutoff_factor: 5.0
+  obstacle_association_force_inclusion_factor: 1.5
+  obstacle_cost_exponent: 4.0
+  obstacle_heading_threshold: 0.45
+  obstacle_poses_affected: 15
+  odom_topic: odom
+  optimization_activate: true
+  optimization_verbose: false
+  oscillation_filter_duration: 10
+  oscillation_omega_eps: 0.1
+  oscillation_recovery: true
+  oscillation_recovery_min_duration: 10
+  oscillation_v_eps: 0.1
+  penalty_epsilon: 0.1
+  publish_feedback: false
+  roadmap_graph_area_length_scale: 1.0
+  roadmap_graph_area_width: 5.0
+  roadmap_graph_no_samples: 15
+  selection_alternative_time_cost: false
+  selection_cost_hysteresis: 1.0
+  selection_obst_cost_scale: 100.0
+  selection_prefer_initial_plan: 0.9
+  selection_viapoint_cost_scale: 1.0
+  shrink_horizon_backup: true
+  shrink_horizon_min_duration: 10
+  switching_blocking_period: 0.0
+  teb_autosize: true
+  via_points_ordered: false
+  viapoints_all_candidates: true
+  visualize_hc_graph: false
+  visualize_with_time_as_z_axis_scale: 0.0
+  weight_acc_lim_theta: 1.0
+  weight_acc_lim_x: 1.0
+  weight_acc_lim_y: 1.0
+  weight_adapt_factor: 2.0
+  weight_dynamic_obstacle: 10.0
+  weight_dynamic_obstacle_inflation: 0.2
+  weight_inflation: 0.2
+  weight_kinematics_forward_drive: 100.0
+  weight_kinematics_nh: 1000.0
+  weight_kinematics_turning_radius: 1.0
+  weight_max_vel_theta: 1.0
+  weight_max_vel_x: 2.0
+  weight_max_vel_y: 2.0
+  weight_obstacle: 100.0
+  weight_optimaltime: 1.0
+  weight_shortest_path: 0.0
+  weight_viapoint: 1.0
+  wheelbase: 0.0
+  xy_goal_tolerance: 0.4
+  yaw_goal_tolerance: 0.2
 aggressive_reset:
   layer_names: [obstacle_layer]
-  reset_distance: 0.38
-base_global_planner: strands_navfn/NavfnROS
-base_local_planner: dwa_local_planner/DWAPlannerROS
+  reset_distance: 1.84
+alternative_goals_markers: false
+alternative_goals_thresh: 0.5
+base_global_planner: global_planner/GlobalPlanner
+base_local_planner: teb_local_planner/TebLocalPlannerROS
 clearing_rotation_allowed: true
 conservative_reset:
   layer_names: [obstacle_layer]
-  reset_distance: 2.0
+  reset_distance: 3.0
 conservative_reset_dist: 3.0
-controller_frequency: 10.0
-controller_patience: 15.0
+controller_frequency: 4.0
+controller_patience: 3.0
 global_costmap:
-  footprint: '[[-0.211159,-0.295],[0.013709,-0.297036],[0.102681,-0.254027],[0.199937,-0.143212],[0.231037,-0.049411],[0.219249,0.097558],[0.140899,0.222458],[0.059921,0.279099],[-0.034768,0.307378],[-0.211159,0.295],[-0.511159,0.1],[-0.511159,-0.1],[-0.311159,-0.25]]'
-  footprint_padding: 0.0001
+  footprint:
+  - [-0.031, -0.295]
+  - [ 0.193, -0.297]
+  - [ 0.282, -0.254]
+  - [ 0.379, -0.143]
+  - [ 0.411, -0.049]
+  - [ 0.399,  0.097]
+  - [ 0.320,  0.222]
+  - [ 0.239,  0.279]
+  - [ 0.145,  0.307]
+  - [-0.031,  0.295]
+  - [-0.331,  0.1]
+  - [-0.331, -0.1]
+  - [-0.131, -0.25]
+  footprint_padding: 0.0
   global_frame: /map
-  global_inflation_layer: {cost_scaling_factor: 5.0, enabled: true, inflate_unknown: false,
-    inflation_radius: 0.8}
   height: 10
-  local_inflation_layer: {cost_scaling_factor: 5.0, inflation_radius: 0.2}
-  map_layer: {enabled: true, map_topic: /map}
-  map_type: voxel
+  global_inflation_layer: {cost_scaling_factor: 25.0, inflation_radius: 0.2}
+  map_layer: {map_topic: /map}
+  map_type: costmap
   obstacle_layer:
-    clear_sensor: {clearing: true, data_type: PointCloud2, marking: false, max_obstacle_height: 1.1,
-      min_obstacle_height: -0.1, observation_persistence: 0.0, raytrace_range: 4.0,
-      topic: /move_base/points_clearing}
-    cliff_sensor: {clearing: false, data_type: PointCloud2, marking: true, max_obstacle_height: 0.15,
-      min_obstacle_height: 0.1, observation_persistence: 0.0, obstacle_range: 3.0,
-      topic: /move_base/points_cliff}
-    combination_method: 1
-    enabled: true
-    footprint_clearing_enabled: true
-    head_clear_sensor: {clearing: true, data_type: PointCloud2, marking: false, max_obstacle_height: 1.1,
-      min_obstacle_height: -0.2, observation_persistence: 0.0, raytrace_range: 5.0,
-      topic: /move_base/head_points_clearing}
-    head_cloud_sensor: {clearing: false, data_type: PointCloud2, marking: true, max_obstacle_height: 0.9,
-      min_obstacle_height: 0.3, observation_persistence: 0.0, obstacle_range: 3.0,
-      topic: /move_base/head_points_obstacle}
-    laser_clearing: {clearing: true, data_type: LaserScan, marking: false, sensor_frame: base_laser_link,
+    laser_sensor: {clearing: true, data_type: LaserScan, marking: true, sensor_frame: base_laser_link,
       topic: scan}
-    laser_obstacle: {clearing: false, data_type: LaserScan, marking: true, sensor_frame: base_laser_link,
-      topic: /move_base/scan_obstacle}
     mark_threshold: 0
     max_obstacle_height: 2.0
-    observation_sources: laser_obstacle laser_clearing point_cloud_sensor clear_sensor
-      cliff_sensor head_cloud_sensor head_clear_sensor
+    observation_sources: laser_obstacle laser_clearing
     obstacle_range: 2.5
-    origin_z: 0.0
-    point_cloud_sensor: {clearing: false, data_type: PointCloud2, marking: true, max_obstacle_height: 0.9,
-      min_obstacle_height: 0.1, observation_persistence: 0.0, obstacle_range: 2.0,
-      topic: /move_base/points_obstacle}
+    origin_z: -0.08
     raytrace_range: 3.0
     track_unknown_space: true
     unknown_threshold: 6
     z_resolution: 0.2
     z_voxels: 6
-  origin_x: 0.0
-  origin_y: 0.0
   plugins:
   - {name: map_layer, type: 'costmap_2d::StaticLayer'}
-  - {name: obstacle_layer, type: 'costmap_2d::VoxelLayer'}
+  - {name: obstacle_layer, type: 'costmap_2d::ObstacleLayer'}
   - {name: global_inflation_layer, type: 'costmap_2d::InflationLayer'}
-  publish_frequency: 0.5
-  resolution: 0.05
+  publish_frequency: 4.0
   robot_base_frame: /base_link
-  robot_radius: 0.46
   rolling_window: false
   static_map: true
-  transform_tolerance: 0.3
-  update_frequency: 5.0
+  update_frequency: 1.7
   width: 10
 local_costmap:
-  footprint: '[[-0.211159,-0.295],[0.013709,-0.297036],[0.102681,-0.254027],[0.199937,-0.143212],[0.231037,-0.049411],[0.219249,0.097558],[0.140899,0.222458],[0.059921,0.279099],[-0.034768,0.307378],[-0.211159,0.295],[-0.511159,0.1],[-0.511159,-0.1],[-0.311159,-0.25]]'
-  footprint_padding: 0.0001
-  global_frame: /map
-  global_inflation_layer: {cost_scaling_factor: 5.0, inflation_radius: 0.8}
-  height: 4
-  local_inflation_layer: {cost_scaling_factor: 5.0, enabled: true, inflate_unknown: false,
-    inflation_radius: 0.2}
-  map_layer: {map_topic: /map}
-  map_type: voxel
+  footprint:
+  - [-0.031, -0.295]
+  - [ 0.193, -0.297]
+  - [ 0.282, -0.254]
+  - [ 0.379, -0.143]
+  - [ 0.411, -0.049]
+  - [ 0.399,  0.097]
+  - [ 0.320,  0.222]
+  - [ 0.239,  0.279]
+  - [ 0.145,  0.307]
+  - [-0.031,  0.295]
+  - [-0.331,  0.1]
+  - [-0.331, -0.1]
+  - [-0.131, -0.25]
+  footprint_padding: 0.0
+  global_frame: loc_map
+  height: 10
+  inflation_layer:
+    cost_scaling_factor:  5.0   # exponential rate at which the obstacle cost drops off (default: 10)
+    enabled:              true
+    inflation_radius:     0.1  # max. distance from an obstacle at which costs are incurred for planning paths.
+  map_type: costmap
   obstacle_layer:
-    clear_sensor: {clearing: true, data_type: PointCloud2, marking: false, max_obstacle_height: 1.1,
-      min_obstacle_height: -0.1, observation_persistence: 0.0, raytrace_range: 4.0,
-      topic: /move_base/points_clearing}
-    cliff_sensor: {clearing: false, data_type: PointCloud2, marking: true, max_obstacle_height: 0.15,
-      min_obstacle_height: 0.1, observation_persistence: 0.0, obstacle_range: 3.0,
-      topic: /move_base/points_cliff}
-    combination_method: 1
-    enabled: true
-    footprint_clearing_enabled: true
-    head_clear_sensor: {clearing: true, data_type: PointCloud2, marking: false, max_obstacle_height: 1.1,
-      min_obstacle_height: -0.2, observation_persistence: 0.0, raytrace_range: 5.0,
-      topic: /move_base/head_points_clearing}
-    head_cloud_sensor: {clearing: false, data_type: PointCloud2, marking: true, max_obstacle_height: 0.9,
-      min_obstacle_height: 0.3, observation_persistence: 0.0, obstacle_range: 3.0,
-      topic: /move_base/head_points_obstacle}
-    laser_clearing: {clearing: true, data_type: LaserScan, marking: false, sensor_frame: base_laser_link,
-      topic: scan}
-    laser_obstacle: {clearing: false, data_type: LaserScan, marking: true, sensor_frame: base_laser_link,
-      topic: /move_base/scan_obstacle}
-    mark_threshold: 0
-    max_obstacle_height: 2.0
-    observation_sources: laser_obstacle laser_clearing point_cloud_sensor clear_sensor
-      cliff_sensor head_cloud_sensor head_clear_sensor
-    obstacle_range: 2.5
-    origin_z: 0.0
-    point_cloud_sensor: {clearing: false, data_type: PointCloud2, marking: true, max_obstacle_height: 0.9,
-      min_obstacle_height: 0.1, observation_persistence: 0.0, obstacle_range: 2.0,
-      topic: /move_base/points_obstacle}
-    publish_voxel_map: true
-    raytrace_range: 3.0
-    track_unknown_space: true
-    unknown_threshold: 6
-    z_resolution: 0.2
-    z_voxels: 6
-  origin_x: 0.0
-  origin_y: 0.0
+   enabled: true
+   obstacle_range: 3.0
+   raytrace_range: 3.5
+   inflation_radius: 0.2
+   track_unknown_space: false
+   combination_method: 1
+   observation_sources: laser_scan_sensor
+   laser_scan_sensor: {data_type: LaserScan, topic: /move_base/scan_obstacle, marking: true, clearing: true}
+
   plugins:
-  - {name: obstacle_layer, type: 'costmap_2d::VoxelLayer'}
-  - {name: local_inflation_layer, type: 'costmap_2d::InflationLayer'}
-  publish_frequency: 2.0
-  resolution: 0.05
-  robot_base_frame: /base_link
-  robot_radius: 0.46
+  - {name: obstacle_layer, type: 'costmap_2d::ObstacleLayer'}
+  - {name: inflation_layer, type: 'costmap_2d::InflationLayer'}
+  publish_frequency: 4.0
+  resolution: 0.025
+  robot_base_frame: base_link
+
   rolling_window: true
   static_map: false
-  transform_tolerance: 0.3
-  update_frequency: 5.0
-  width: 4
-max_planning_retries: -1
-oscillation_distance: 0.5
-oscillation_timeout: 0.0
-planner_frequency: 0.5
-planner_patience: 5.0
+  transform_tolerance: 0.2
+  update_frequency: 8.0
+  width: 10
+
+oscillation_distance: 0.2
+oscillation_timeout: 10.0
+planner_frequency: 1.0
+planner_patience: 0.1
 recovery_behavior_enabled: true
 recovery_behaviors:
+- {name: super_conservative_reset, type: clear_costmap_recovery/ClearCostmapRecovery}
 - {name: conservative_reset, type: clear_costmap_recovery/ClearCostmapRecovery}
 - {name: aggressive_reset, type: clear_costmap_recovery/ClearCostmapRecovery}
 restore_defaults: false
-shutdown_costmaps: false
+search_alternative_goals: true
+shutdown_costmaps: true
+super_conservative_reset:
+  layer_names: [obstacle_layer]
+  reset_distance: 5.0

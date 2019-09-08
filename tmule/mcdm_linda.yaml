@@ -41,10 +41,10 @@ windows:
       - roslaunch mcdm_experiments INB3123_goto_initial_pose.launch      
     check: "rostopic echo /move_base/status | grep -q reached"
 
-  # - name: MCDM
-  #   tags: ['experiment']
-  #   panes:  
-  #     - roslaunch mcdm_exploration_framework pure.launch  topic_list:="/tf /tf_static /mcdm_stats /move_base/scan_obstacle /map /loc_map /move_base/current_goal /lastTag"
+  - name: MCDM
+    tags: ['experiment']
+    panes:  
+      - roslaunch mcdm_exploration_framework pure.launch  topic_list:="/tf /tf_static /mcdm_stats /move_base/scan_obstacle /map /loc_map /move_base/current_goal /lastTag" dest_folder:="$ws_root/src/mcdm_exploration_ros_node/data/"
 
   - name: testbench
     panes:        

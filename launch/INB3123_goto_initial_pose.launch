@@ -6,11 +6,17 @@ Provides initial pose to ndt localizer
 <launch>
 
 	<arg name="map_frame_id" value="loc_map"/>
-
+ <!--
 	<arg name="initial_px" default="-15.13"/>
 	<arg name="initial_py" default="-13.87"/>
 	<arg name="initial_oz" default="-0.788"/>
 	<arg name="initial_ow" default="0.615"/>
+-->
+	<arg name="initial_px" default="-8.798"/>
+	<arg name="initial_py" default="-5.585"/>
+	<arg name="initial_oz" default="-0.999"/>
+	<arg name="initial_ow" default="0.012"/>
+
   <!-- INCLUDES .................................................... -->
 
 
