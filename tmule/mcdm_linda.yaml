@@ -21,9 +21,9 @@ windows:
   - name: NAVIGATION
     tags: ['nav']
     panes:
-      - roslaunch mcdm_experiments loc_map_server.launch 
+      - roslaunch mcdm_experiments loc_map_server.launch loc_map_yaml:=$LOC_MAP_YAML
       - roslaunch mcdm_experiments amcl.launch 
-      - roslaunch mcdm_experiments nav_map_server.launch
+      - roslaunch mcdm_experiments nav_map_server.launch map:=$NAV_MAP_YAML
       - roslaunch mcdm_experiments move_base.launch  
     check: "rosnode list | grep -q move_base"
 
@@ -31,14 +31,14 @@ windows:
     tags: ['nav']
     panes:  
       - rosrun rfid_node rfid_reader_ros.py 
-      - roslaunch mcdm_experiments INB3123_rfid_grid_real.launch map_folder:=$(rospack find mcdm_experiments)/maps/inb3123/map_real_sci
+      - roslaunch mcdm_experiments $TESTCODE_rfid_grid_real.launch 
       - rosrun rfid_grid_map tag_discovery_node.py
     check: "rostopic list | grep -q /tag_coverage"
 
   - name: ALIGN
     tags: ['experiment']
     panes:  
-      - roslaunch mcdm_experiments INB3123_goto_initial_pose.launch      
+      - roslaunch mcdm_experiments goto_initial_pose.launch initial_px:=$STARTING_POSE_PY initial_py:=$STARTING_POSE_PX initial_oz:=$STARTING_POSE_OZ initial_ow:=$STARTING_POSE_OW      
     check: "rostopic echo /move_base/status | grep -q reached"
 
   - name: MCDM

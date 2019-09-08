@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  MFC:
+    This file contains the configuration for creating a tag grid with visualization
+    and some ground truth.
+-->
+
+<launch>
+
+    <arg name="map_folder"    default="$(find mcdm_experiments)/maps/inb3123/map_real_sci"/>
+
+    <!--
+      Get regions from tiago map config and put them in rosparam server.
+      This is automatically done inside tiago, but if we don't use PAL nav stack
+      it will be missing
+    -->
+    <rosparam command="load" file="$(arg map_folder)/mmap.yaml" ns="mmap"/>
+
+    <include file="$(find rfid_grid_map)/launch/grid_debug.launch">
+        <arg name="tagID"                value="390100010000000000000002"/>
+        <arg name="object"               value="keys"/>
+        <arg name="tag_num"              value="2"/>
+        <arg name="worldTagPose"         value="0.628714978695 -6.88372659683 0.0 0.0 0.0 0.999846482984 0.0175217140702"/>
+    </include>
+
+    <include file="$(find rfid_grid_map)/launch/grid_debug.launch">
+        <arg name="tagID"                value="390100010000000000000004"/>
+        <arg name="object"               value="wallet"/>
+        <arg name="tag_num"              value="4"/>
+        <arg name="worldTagPose"         value="0.409220963717 -1.16597437859 0.0 0.0 0.0 0.999879787474 -0.0155051797948"/>
+    </include>
+
+    <include file="$(find rfid_grid_map)/launch/grid_debug.launch">
+        <arg name="tagID"                value="390100010000000000000005"/>
+        <arg name="object"               value="glasses"/>
+        <arg name="tag_num"              value="5"/>
+        <arg name="worldTagPose"         value=" -7.90397834778 0.320513248444 0.0 0.0 0.0 0.244737833762 0.969589290744"/>
+    </include>
+
+    <include file="$(find rfid_grid_map)/launch/grid_debug.launch">
+        <arg name="tagID"                value="390100010000000000000007"/>
+        <arg name="object"               value="mug"/>
+        <arg name="tag_num"              value="7"/>
+        <arg name="worldTagPose"         value="-10.5657444 4.7752199173 0.0 0.0 0.0 0.246486128508 0.969146319424"/>
+    </include>
+
+</launch>
