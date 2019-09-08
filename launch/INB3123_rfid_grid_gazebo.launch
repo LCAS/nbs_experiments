@@ -11,7 +11,7 @@
     <env name="ROSCONSOLE_CONFIG_FILE"
     value="$(find mcdm_experiments)/config/custom_rosconsole.conf"/>
 -->
-    <arg name="robot"           default="tiago"/>
+    <arg name="robot"           default="scitos"/>
 
     <arg name="map_folder" default="$(find mcdm_experiments)/maps/inb3123/map_sim"/>
 
@@ -119,7 +119,7 @@
         <arg name="weight_dec"      value="$(arg weight_dec)"/>
     </include>
 
-    <include file="$(find rfid_grid_map)/launch/grid_debug.launch">
+    <!--<include file="$(find rfid_grid_map)/launch/grid_debug.launch">
         <arg name="tagID"                value="390100010000000000000007"/>
         <arg name="object"               value="mug"/>
         <arg name="tag_num"              value="7"/>

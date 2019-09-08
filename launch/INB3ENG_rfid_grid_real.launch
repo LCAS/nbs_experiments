@@ -17,34 +17,11 @@
     <rosparam command="load" file="$(arg map_folder)/mmap.yaml" ns="mmap"/>
 
     <include file="$(find rfid_grid_map)/launch/grid_debug.launch">
-        <arg name="tagID"                value="390100010000000000000001"/>
-        <arg name="object"               value="remote"/>
-        <arg name="tag_num"              value="1"/>
-        <arg name="worldTagPose"         value="-3.14103651047 -10.3362846375 0.0 0.0 0.0 0.216935152294 0.976186016955"/>
-    </include>
-
-    <include file="$(find rfid_grid_map)/launch/grid_debug.launch">
-        <arg name="tagID"                value="390100010000000000000003"/>
-        <arg name="object"               value="pillbox"/>
-        <arg name="tag_num"              value="3"/>
-        <arg name="worldTagPose"         value="-4.98300457001 -5.45692253113 0.0 0.0 0.0 0.207619396492 0.978209684168"/>
-    </include>
-
-    <include file="$(find rfid_grid_map)/launch/grid_debug.launch">
-        <arg name="tagID"                value="390100010000000000000006"/>
-        <arg name="object"               value="umbrella"/>
-        <arg name="tag_num"              value="6"/>
-        <arg name="worldTagPose"         value="-3.98994207382 6.55581569672 0.0 0.0 0.0 -0.508122167693 0.861285006661"/>
-    </include>
-
-    <!--
-    <include file="$(find rfid_grid_map)/launch/grid_debug.launch">
         <arg name="tagID"                value="390100010000000000000002"/>
         <arg name="object"               value="keys"/>
         <arg name="tag_num"              value="2"/>
         <arg name="worldTagPose"         value="0.628714978695 -6.88372659683 0.0 0.0 0.0 0.999846482984 0.0175217140702"/>
     </include>
-
 
     <include file="$(find rfid_grid_map)/launch/grid_debug.launch">
         <arg name="tagID"                value="390100010000000000000004"/>
@@ -60,12 +37,11 @@
         <arg name="worldTagPose"         value=" -7.90397834778 0.320513248444 0.0 0.0 0.0 0.244737833762 0.969589290744"/>
     </include>
 
-
     <include file="$(find rfid_grid_map)/launch/grid_debug.launch">
         <arg name="tagID"                value="390100010000000000000007"/>
         <arg name="object"               value="mug"/>
         <arg name="tag_num"              value="7"/>
         <arg name="worldTagPose"         value="-10.5657444 4.7752199173 0.0 0.0 0.0 0.246486128508 0.969146319424"/>
     </include>
--->
+
 </launch>
