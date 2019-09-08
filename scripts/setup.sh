@@ -24,14 +24,12 @@ STARTING_POSE_PX="-8.798"
 STARTING_POSE_OZ="-0.999"
 STARTING_POSE_OW="0.012"
 
+# ........................................................................................
 #TESTCODE=INB3ENG
 # LOC_MAP_YAML="$(rospack find mcdm_experiments)/maps/inb3eng/scitos_map_real/map.yaml"
 # NAV_MAP_YAML="$(rospack find mcdm_experiments)/maps/inb3eng/scitos_map_real_mcdm/map.yaml"
 
-# STARTING_POSE_PY="-5.585"
-# STARTING_POSE_PX="-8.798"
-# STARTING_POSE_OZ="-0.999"
-# STARTING_POSE_OW="0.012"
-
-
-
+# STARTING_POSE_PY="-33.70"
+# STARTING_POSE_PX="6.36"
+# STARTING_POSE_OZ="0.682"
+# STARTING_POSE_OW="0.731"

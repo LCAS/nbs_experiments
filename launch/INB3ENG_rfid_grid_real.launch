@@ -20,28 +20,27 @@
         <arg name="tagID"                value="390100010000000000000002"/>
         <arg name="object"               value="keys"/>
         <arg name="tag_num"              value="2"/>
-        <arg name="worldTagPose"         value="0.628714978695 -6.88372659683 0.0 0.0 0.0 0.999846482984 0.0175217140702"/>
+        <arg name="worldTagPose"         value="-36.2910118103 20.4882831573  0.5  0.0  0.0  0.683244769791  0.730189416901"/>
     </include>
 
     <include file="$(find rfid_grid_map)/launch/grid_debug.launch">
         <arg name="tagID"                value="390100010000000000000004"/>
         <arg name="object"               value="wallet"/>
         <arg name="tag_num"              value="4"/>
-        <arg name="worldTagPose"         value="0.409220963717 -1.16597437859 0.0 0.0 0.0 0.999879787474 -0.0155051797948"/>
+        <arg name="worldTagPose"         value="-34.8339729309 42.921875 0.5 0.0 0.0 0.697887779055 0.716207126358 "/>
     </include>
 
     <include file="$(find rfid_grid_map)/launch/grid_debug.launch">
         <arg name="tagID"                value="390100010000000000000005"/>
         <arg name="object"               value="glasses"/>
         <arg name="tag_num"              value="5"/>
-        <arg name="worldTagPose"         value=" -7.90397834778 0.320513248444 0.0 0.0 0.0 0.244737833762 0.969589290744"/>
+        <arg name="worldTagPose"         value="-36.5920791626 66.2422409058 0.5 0.0 0.0 1.0 0.0 "/>
     </include>
 
     <include file="$(find rfid_grid_map)/launch/grid_debug.launch">
         <arg name="tagID"                value="390100010000000000000007"/>
         <arg name="object"               value="mug"/>
         <arg name="tag_num"              value="7"/>
-        <arg name="worldTagPose"         value="-10.5657444 4.7752199173 0.0 0.0 0.0 0.246486128508 0.969146319424"/>
+        <arg name="worldTagPose"         value="-29.9831962585 67.1762771606 0.5 0.0 0.0 0.0 1.0"/>
     </include>
-
 </launch>
