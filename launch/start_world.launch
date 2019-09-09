@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  MFC:  starts gazebo with INB3123 model
+  MFC:  starts gazebo with one of our world files
 -->
 
 <launch>
+  <arg name="world_file" default="$(find mcdm_experiments)/worlds/INB3123/INB3123.world"/>
   <arg name="gui" default="true"/>
   <!-- this makes world mesh available to gazebo -->
   <env name="GAZEBO_MODEL_PATH" value="$(find mcdm_experiments)/models/"/>
 
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
-    <arg name="world_name" value="$(find mcdm_experiments)/worlds/INB3123/INB3123.world"/>
+    <arg name="world_name" value="$(arg world_file)"/>
     <arg name="paused" value="false"/>
     <arg name="use_sim_time" value="true"/>
     <arg name="gui" value="$(arg gui)"/>

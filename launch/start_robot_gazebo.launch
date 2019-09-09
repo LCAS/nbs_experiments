@@ -5,11 +5,14 @@
 <launch>
   <arg name="robot"  default="scitos"/>
   <arg name="gzpose" default="-x 0.17 -y 0.14 -z 0.09 -R 0.0 -P 0.0 -Y 0.0"/>
+  <arg name="world_file" default="$(find mcdm_experiments)/worlds/INB3123/INB3123.world"/>
+
   <arg name="gui" value="true"/>
 
   <!-- start up world -->
-  <include file="$(find mcdm_experiments)/launch/INB3123_world.launch">
-    <arg name="gui" value="$(arg gui)"/>
+  <include file="$(find mcdm_experiments)/launch/start_world.launch">
+     <arg name="world_file" value="$(arg world_file)"/>
+     <arg name="gui" value="$(arg gui)"/>
   </include>
   
   <!-- create robot -->

@@ -48,7 +48,7 @@
     <!-- Simulation nodes -->
     <group  if="$(arg is_sim)">
         <!--Create gazebo world and simulated robot -->
-        <include file="$(find mcdm_experiments)/launch/robot_gazebo_INB3123.launch">
+        <include file="$(find mcdm_experiments)/launch/start_robot_gazebo.launch">
           <arg name="robot" value="$(arg robot)"/>
         </include>
         <node name="relay_map" pkg="topic_tools" type="relay" args="/map /vo_map"/>
