@@ -15,7 +15,7 @@ Panels:
         - /Mapping1/Map1
         - /RFID1
       Splitter Ratio: 0.558773398
-    Tree Height: 1057
+    Tree Height: 366
   - Class: rviz/Selection
     Name: Selection
   - Class: rviz/Tool Properties
@@ -192,19 +192,9 @@ Visualization Manager:
             {}
           Update Interval: 0
           Value: false
-        - 6DOF: false
-          Alpha: 1
-          Axis: false
-          Class: rviz_plugin_covariance/Odometry
-          Color: 204; 51; 204
+        - Class: rviz_plugin_covariance/Odometry
           Enabled: false
           Name: Odometry
-          Orientation: false
-          Position: false
-          Scale: 1
-          Topic: /mobile_base_controller/odom
-          Unreliable: false
-          Value: false
         - Class: rviz/MarkerArray
           Enabled: true
           Marker Topic: inertial_mass_markers
@@ -781,11 +771,14 @@ Visualization Manager:
       Value: false
       Visibility:
         Control:
-          "": true
+          Move: true
+          Path: true
           Value: true
         Grid: true
         Localization:
-          "": true
+          Localization Quality: true
+          Pose: true
+          Pose Graph: true
           Value: true
         MCDM:
           Next Goal: true
@@ -793,44 +786,15 @@ Visualization Manager:
           nav grid: true
           plan grid: true
         Mapping:
-          Map: true
-          Map (with Virtual Obstacles): true
-          SLAM Graph Edges: true
-          SLAM Graph Vertices: true
-          Trajectory: true
+          "": true
           Value: true
         Planning:
-          Base:
-            Global:
-              Costmap: true
-              Plan:
-                Global Planner: true
-                Navfn: true
-                Value: true
-              Potential: true
-              Value: true
-              Voxel Grid: true
-            Goal: true
-            Local:
-              Cost: true
-              Costmap: true
-              Plan:
-                DWA: true
-                Pal: true
-                Trajectory: true
-                Value: true
-              Trajectories: true
-              Value: true
+          "":
+            "": true
             Value: true
           Value: true
         RFID:
-          Object 1: true
-          Object 2: true
-          Object 3: true
-          Object 4: true
-          Object 5: true
-          Object 6: true
-          Object 7: true
+          "": true
           Value: true
         Robot:
           Dynamic Footprint: true
@@ -1024,34 +988,29 @@ Visualization Manager:
   Value: true
   Views:
     Current:
-      Class: rviz/Orbit
-      Distance: 11.5366869
+      Angle: -0.0899999738
+      Class: rviz/TopDownOrtho
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
-      Focal Point:
-        X: -13.5363903
-        Y: -14.9429359
-        Z: 1.10078442
-      Focal Shape Fixed Size: true
-      Focal Shape Size: 0.0500000007
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 1.56979632
-      Target Frame: <Fixed Frame>
-      Value: Orbit (rviz)
-      Yaw: 3.06911898
+      Scale: 28.5439548
+      Target Frame: base_footprint
+      Value: TopDownOrtho (rviz)
+      X: 0.656733036
+      Y: 4.54879856
     Saved: ~
 Window Geometry:
   Displays:
     collapsed: true
-  Height: 1363
+  Height: 691
   Hide Left Dock: true
   Hide Right Dock: true
-  QMainWindow State: 000000ff00000000fd0000000400000000000003a8000004b0fc0200000009fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000006100fffffffb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c0061007900730000000041000004b0000000d700fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb0000001c0043006f006d00700072006500730073006500640020004d0061007001000002f5000000c90000000000000000fb000000080052004700420044000000028a000000ff0000001600ffffff000000010000010f00000396fc0200000004fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730000000028000000c10000006100fffffffb0000001e0054006f006f006c002000500072006f00700065007200740069006500730000000028000000a30000000000000000fb0000000a0056006900650077007300000000ef000002cf000000ad00fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000009fe0000003efc0100000002fb0000000800540069006d00650100000000000009fe0000030000fffffffb0000000800540069006d00650100000000000004500000000000000000000009fe000004b000000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd0000000400000000000003a8000004b0fc0200000009fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c0061007900730000000041000004b0000000c600fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb0000001c0043006f006d00700072006500730073006500640020004d0061007001000002f5000000c90000000000000000fb000000080052004700420044000000028a000000ff0000001600ffffff000000010000010f00000153fc0200000004fb0000001e0054006f006f006c002000500072006f0070006500720074006900650073000000003a0000006b0000005c00fffffffb0000001e0054006f006f006c002000500072006f00700065007200740069006500730000000028000000a30000000000000000fb0000000a0056006900650077007300000000ab000000e20000009e00fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000004000000003efc0100000002fb0000000800540069006d00650000000000000004000000024400fffffffb0000000800540069006d00650100000000000004500000000000000000000003fe0000025f00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   RGBD:
     collapsed: false
   Selection:
@@ -1062,6 +1021,6 @@ Window Geometry:
     collapsed: true
   Views:
     collapsed: true
-  Width: 2558
-  X: 1920
+  Width: 1022
+  X: 0
   Y: 24
