@@ -12,7 +12,6 @@ Panels:
         - /Planning1/Local1
         - /Planning1/Local1/ActiveGlobalPlan1
         - /Planning1/Local1/LocalPlan1
-        - /Localization1
         - /RFID1
       Splitter Ratio: 0.446646333
     Tree Height: 1056
@@ -203,12 +202,12 @@ Visualization Manager:
               Class: rviz/Map
               Color Scheme: costmap
               Draw Behind: false
-              Enabled: false
+              Enabled: true
               Name: Costmap
               Topic: /move_base/local_costmap/costmap
               Unreliable: false
               Use Timestamp: false
-              Value: false
+              Value: true
             - Alpha: 1
               Buffer Length: 1
               Class: rviz/Path
@@ -306,12 +305,12 @@ Visualization Manager:
           Class: rviz/Map
           Color Scheme: map
           Draw Behind: false
-          Enabled: false
+          Enabled: true
           Name: Loc Map
           Topic: /loc_map
           Unreliable: false
           Use Timestamp: false
-          Value: false
+          Value: true
       Enabled: true
       Name: Localization
     - Class: rviz/Group
@@ -649,7 +648,7 @@ Visualization Manager:
   Value: true
   Views:
     Current:
-      Angle: 0.075000003
+      Angle: 0.0100000296
       Class: rviz/TopDownOrtho
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
@@ -659,11 +658,11 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Scale: 62.8880768
+      Scale: 54.4922523
       Target Frame: base_link
       Value: TopDownOrtho (rviz)
-      X: 2.0031724
-      Y: 1.49615216
+      X: 3.72926784
+      Y: -0.723069131
     Saved: ~
 Window Geometry:
   Displays:

@@ -73,7 +73,7 @@
           <geometry>
             <mesh>
               <uri>model://INB3ENG.dae</uri>
-              <scale>0.25 0.25 0.25</scale>
+              <scale>0.24 0.24 0.25</scale>
             </mesh>
           </geometry>
         </visual>
@@ -81,7 +81,7 @@
           <geometry>
             <mesh>
               <uri>model://INB3ENG.dae</uri>
-              <scale>0.25 0.25 0.25</scale>
+              <scale>0.24 0.24 0.25</scale>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -120,7 +120,7 @@
     </scene>
     <gui fullscreen='0'>
       <camera name='user_camera'>
-        <pose frame=''>-17.1353 34.7268 104.822 8e-06 1.5698 1.60524</pose>
+        <pose frame=''>-40.7916 6.63743 12.7075 0 1.0738 -0.358836</pose>
         <view_controller>orbit</view_controller>
         <projection_type>perspective</projection_type>
       </camera>
@@ -136,16 +136,16 @@
     <magnetic_field>6e-06 2.3e-05 -4.2e-05</magnetic_field>
     <atmosphere type='adiabatic'/>
     <wind/>
-    <state world_name='INB3ENG lab'>
-      <sim_time>0 0</sim_time>
-      <real_time>0 0</real_time>
-      <wall_time>1562000436 602095740</wall_time>
-      <iterations>0</iterations>
+    <state world_name='INB3ENG'>
+      <sim_time>1939 878000000</sim_time>
+      <real_time>439 718747784</real_time>
+      <wall_time>1568110619 271164147</wall_time>
+      <iterations>419510</iterations>
       <model name='INB3ENG_mesh'>
-        <pose frame=''>-32.3096 6.15522 0 0 -0 0</pose>
+        <pose frame=''>-32.0446 6.2941 0 0 -0 0.00843</pose>
         <scale>1 1 1</scale>
         <link name='body'>
-          <pose frame=''>-32.3096 6.15522 0 0 -0 0</pose>
+          <pose frame=''>-32.0446 6.2941 0 0 -0 0.00843</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 0 0 -0 0</acceleration>
           <wrench>0 0 0 0 -0 0</wrench>

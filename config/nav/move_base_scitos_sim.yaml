@@ -1,0 +1,121 @@
+GlobalPlanner: {
+  allow_unknown: false,
+  cost_factor: 5.0,
+  default_tolerance: 0.75,
+  visualize_potential: true,
+  use_dijkstra: true,
+  use_quadratic: true,
+  use_grid_path: false,
+  old_navfn_behavior: false,
+  lethal_cost: 253,
+  neutral_cost: 150,
+  cost_factor: 3.0,
+  publish_potential: true,
+  orientation_mode: 0,
+  orientation_window_size: 1
+  }
+EBandPlannerROS: {
+  Ctrl_Rate: 20,
+  differential_drive: true,
+  max_acceleration: 0.5,
+  max_vel_lin: 0.5,
+  min_vel_lin: 0.02,
+  max_vel_th: 0.2,
+  min_vel_th: 0.0,
+  xy_goal_tolerance: 0.05,
+  yaw_goal_tolerance: 0.5,
+  costmap_weight: 20.0,
+  }
+aggressive_reset:
+  layer_names: [obstacle_laser_layer]
+  reset_distance: 1.84
+alternative_goals_markers: false
+alternative_goals_thresh: 0.5
+base_global_planner: global_planner/GlobalPlanner
+base_local_planner: eband_local_planner/EBandPlannerROS
+clearing_rotation_allowed: true
+conservative_reset:
+  layer_names: [obstacle_laser_layer]
+  reset_distance: 3.0
+conservative_reset_dist: 3.0
+controller_frequency: 10.0
+controller_patience: 3.0
+global_costmap:
+  footprint: '[]'
+  footprint_padding: 0.01
+  global_frame: map
+  height: 10
+  inflation_layer: {cost_scaling_factor: 25.0, enabled: true, inflation_radius: 0.01}
+  map_type: costmap
+  obstacle_laser_layer:
+    base_scan: {clearing: true, data_type: LaserScan, expected_update_rate: 0.3, inf_is_valid: true,
+      marking: true, max_obstacle_height: 0.4, min_obstacle_height: -0.1, observation_persistence: 1.0,
+      obstacle_range: 5.0, raytrace_range: 6.0, sensor_frame: base_laser_link, topic: scan}
+    combination_method: 1
+    enabled: true
+    max_obstacle_height: 2.0
+    observation_sources: base_scan
+  obstacle_laser_layer_footprint: {enabled: true}
+  origin_x: 0.0
+  origin_y: 0.0
+  plugins:
+  - {name: static_layer, type: 'costmap_2d::StaticLayer'}
+  #- {name: obstacle_laser_layer, type: 'costmap_2d::ObstacleLayer'}
+  - {name: inflation_layer, type: 'costmap_2d::InflationLayer'}
+  publish_frequency: 4.0
+  resolution: 0.05
+  robot_base_frame: base_footprint
+  robot_radius: 0.0275
+  static_layer: {enabled: true, map_topic: map}
+  track_unknown_space: true
+  transform_tolerance: 0.2
+  unknown_cost_value: 255
+  update_frequency: 1.7
+  width: 10
+local_costmap:
+  footprint: '[]'
+  footprint_padding: 0.01
+  global_frame: odom
+  height: 10
+  inflation_layer: {cost_scaling_factor: 2.0, enabled: true, inflation_radius: 0.02}
+  map_type: costmap
+  obstacle_laser_layer:
+    base_scan: {clearing: true, data_type: LaserScan, expected_update_rate: 4, inf_is_valid: true,
+      marking: true, max_obstacle_height: 0.4, min_obstacle_height: -0.1, observation_persistence: 0.0,
+      obstacle_range: 5.0, raytrace_range: 6.0, sensor_frame: base_laser_link, topic: scan}
+    combination_method: 0
+    enabled: true
+    max_obstacle_height: 2.0
+    observation_sources: base_scan
+  obstacle_laser_layer_footprint: {enabled: true}
+  origin_x: 0.0
+  origin_y: 0.0
+  plugins:
+  #- {name: obstacle_laser_layer, type: 'costmap_2d::ObstacleLayer'}
+  - {name: static_layer, type: 'costmap_2d::StaticLayer'}
+  - {name: inflation_layer, type: 'costmap_2d::InflationLayer'}
+  publish_frequency: 4.0
+  resolution: 0.025
+  robot_base_frame: base_footprint
+  robot_radius: 0.0275
+  static_layer: {enabled: true, map_topic: map}
+  rolling_window: true
+  static_map: false
+  transform_tolerance: 0.2
+  update_frequency: 8.0
+  width: 10
+oscillation_distance: 0.2
+oscillation_timeout: 10.0
+planner_frequency: 0.0
+planner_patience: 0.1
+recovery_behavior_enabled: true
+recovery_behaviors:
+- {name: super_conservative_reset, type: clear_costmap_recovery/ClearCostmapRecovery}
+- {name: conservative_reset, type: clear_costmap_recovery/ClearCostmapRecovery}
+- {name: aggressive_reset, type: clear_costmap_recovery/ClearCostmapRecovery}
+restore_defaults: false
+search_alternative_goals: true
+shutdown_costmaps: true
+super_conservative_reset:
+  layer_names: [obstacle_laser_layer]
+  reset_distance: 5.0

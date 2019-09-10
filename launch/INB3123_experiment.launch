@@ -1,74 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-    MFC: This is the main launcher for INB3123 experiments.
-    If used in real robot, remember to  stop tiago's own navigation stack:
-            -  in chrome, at  10.5.42.42:8080 # or whatever tiago wifi ip be...
-            -  statup tab, stop
-                  enrichme
-                  localizer
-                  map_configuration_server
-                  map_server
-                  move_base
-                  navigation_sm
-            roslaunch mcdm_experiments INB3123_experiment.launch is_sim:=false
+    MFC: This is the main launcher for simulated INB3123 experiments.
 -->
 <launch>
     <!-- tiago or scitos -->
     <arg name="robot"           default="scitos"/>
 
-    <arg name="is_sim"           default="true"/>
-
     <!-- Define move base params here -->
     <rosparam command="load"  file="$(find mcdm_experiments)/config/move_base_teb.yaml" ns="move_base" if="$(eval robot == 'tiago')"/>
-    <rosparam command="load"  file="$(find mcdm_experiments)/config/move_base_scitos.yaml" ns="move_base" if="$(eval robot == 'scitos')"/>
+    <rosparam command="load"  file="$(find mcdm_experiments)/config/nav/move_base_scitos_sim.yaml" ns="move_base" if="$(eval robot == 'scitos')"/>
 
     <!--SIM ARGS -->
-    <arg name="rviz"           default="true" if="$(arg is_sim)"/>
-    <arg name="loc_map_yaml"   default="$(find mcdm_experiments)/maps/inb3123/map_sim/map.yaml" if="$(arg is_sim)"/>
-    <arg name="nav_map_yaml"   default="$(find mcdm_experiments)/maps/inb3123/map_sim_mcdm/map_ric.yaml" if="$(arg is_sim)"/>
-    <arg name="map_2_loc_map_pose"   default="0.25 0.15 0.0 0.0 0.0 0.0 1.0" if="$(arg is_sim)"/>
-    <arg name="use_fake_localization" default="true" if="$(arg is_sim)"/>
-
-    <!-- Same yaml is in a different package in robot -->
-    <arg name="amcl_cfg" default="$(find pal_navigation_cfg_tiago)/config/localization/amcl.yaml" if="$(arg is_sim)"/>
-
-    <!--REAL ARGS -->
-    <arg name="rviz"           default="false" unless="$(arg is_sim)"/>
-    <arg name="loc_map_yaml"   default="$(env HOME)/.pal/maps/configurations/INB3123/map.yaml" unless="$(arg is_sim)"/>
-    <arg name="nav_map_yaml"   default="$(env HOME)/.pal/maps/configurations/INB3123_mcdm/map.yaml" unless="$(arg is_sim)"/>
-    <arg name="map_2_loc_map_pose"   default="0.0 0.0 0.0 0.0 0.0 0.0 1.0" unless="$(arg is_sim)"/>
-    <arg name="use_fake_localization" default="false" unless="$(arg is_sim)"/>
-    <!-- Same yaml is in a different package in simulation -->
-    <arg name="amcl_cfg" default="$(find tiago_2dnav)/config/localization/amcl.yaml" unless="$(arg is_sim)"/>
+    <arg name="rviz"           default="true"/>
+    <arg name="loc_map_yaml"   default="$(find mcdm_experiments)/maps/inb3123/map_real_sci/cropped.yaml"/>
+    <arg name="nav_map_yaml"   default="$(find mcdm_experiments)/maps/inb3123/map_real_sci_mcdm/cropped.yaml"/>
+    <arg name="map_2_loc_map_pose"   default="0.0 0.0 0.0 0.0 0.0 0.0 1.0"/>
+    <arg name="use_fake_localization" default="true"/>
 
     <!--Args not likely to change -->
-    <arg name="odom"           default="mobile_base_controller/odom"/>
-    <arg name="cmd_vel"        default="nav_vel"/>
+    <arg name="odom"           default="ground_truth_odom"/>
+    
+    <!--Create gazebo world and simulated robot -->
+    <include file="$(find mcdm_experiments)/launch/start_robot_gazebo.launch">
+      <arg name="robot" value="$(arg robot)"/>
+      <arg name="world_file" value="$(find mcdm_experiments)/worlds/empty.world"/>
+      <arg name="gzpose" value="-x -15.2 -y -14.23 -z 0.09 -R 0.0 -P 0.0 -Y 1.54"/>
+    </include>
+    
 
-    <!-- Simulation nodes -->
-    <group  if="$(arg is_sim)">
-        <!--Create gazebo world and simulated robot -->
-        <include file="$(find mcdm_experiments)/launch/start_robot_gazebo.launch">
-          <arg name="robot" value="$(arg robot)"/>
-        </include>
-        <node name="relay_map" pkg="topic_tools" type="relay" args="/map /vo_map"/>
-
-        <include file="$(find tiago_laser_sensors)/launch/rgbd_cloud_laser.launch">
-            <arg name="cloud" value="/xtion/depth_registered/points"  if="$(eval robot == 'tiago')"/>
-            <arg name="cloud" value="/xtion/depth_registered/points"  if="$(eval robot == 'scitos')"/>
-        </include>
-
-        <node name="rviz" pkg="rviz" type="rviz" if="$(arg rviz)"
-        args="-d $(find mcdm_experiments)/config/inb_sim.rviz"/>
-
-
-    </group>
+    <node name="rviz" pkg="rviz" type="rviz" if="$(arg rviz)" args="-d $(find mcdm_experiments)/config/inb3123_sim.rviz"/>
 
     <!-- Remove laser self colision -->
-    <!-- remap original laser  -->
-    <node pkg="laser_filters" type="scan_to_scan_filter_chain" name="self_collision_filter">
-  		<rosparam command="load" file="$(find mcdm_experiments)/config/laser_filter.yaml" />
-  	</node>
+    <include file="$(find mcdm_experiments)/launch/scitos/remove_edges_laser.launch"/>
+     
 
     <!-- .......................... Localization ........................... -->
     <node name="loc_map_server" pkg="map_server" type="map_server" args="$(arg loc_map_yaml)"  output="screen">
@@ -76,40 +40,11 @@
         <param name="frame_id" value="loc_map"/>
     </node>
 
-    <group unless="$(arg use_fake_localization)">
-      <node pkg="amcl" type="amcl" name="amcl" output="screen">
-          <remap from="map" to="loc_map"/>
-          <rosparam file="$(env HOME)/.pal/pose.yaml" command="load"/>
-          <rosparam file="$(arg amcl_cfg)" command="load"/>
-          <remap from="scan" to="scan_filtered"/>
-          <rosparam param="global_frame_id" subst_value="True">loc_map</rosparam>
-          <rosparam param="gui_publish_rate" subst_value="True">30</rosparam>
-          <param name="use_map_topic" value="true"/>
-          <param name="first_map_only" value="true"/>
-      </node>
-
-      <!--
-          Localization adjustments tested only in simulation
-          TODO: check if they are needed in real robot too
-      -->
-      <group if="$(arg is_sim)">
-        <rosparam param="/amcl/odom_alpha1" subst_value="True">0.4</rosparam>
-        <rosparam param="/amcl/odom_alpha1" subst_value="True">0.04</rosparam>
-        <rosparam param="/amcl/odom_alpha1" subst_value="True">1.6</rosparam>
-        <rosparam param="/amcl/odom_alpha1" subst_value="True">0.04</rosparam>
-        <rosparam param="/amcl/min_particles" subst_value="True">1000</rosparam>
-        <rosparam param="/amcl/update_min_a" subst_value="True">!degrees 5.0</rosparam>
-      </group>
-
-    </group>
-
-    <group if="$(arg use_fake_localization)">
       <node pkg="fake_localization" type="fake_localization" respawn="false" name="fake_loc">
            <remap from="base_pose_ground_truth" to="/ground_truth_odom" />
            <param name="odom_frame_id" type="string" value="odom"/>
            <param name="base_frame_id" type="string" value="base_link"/>
       </node>
-    </group>
 
     <!-- ............................ Navigation ........................... -->
     <node name="nav_map_server" pkg="map_server" type="map_server" args="$(arg nav_map_yaml)"  output="screen">
@@ -121,7 +56,6 @@
     <!-- Planning -->
     <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
       <remap from="odom"    to="$(arg odom)"/>
-      <remap from="cmd_vel" to="$(arg cmd_vel)"/>
     </node>
 
 </launch>
