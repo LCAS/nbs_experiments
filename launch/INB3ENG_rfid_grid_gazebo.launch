@@ -18,8 +18,8 @@
     <node pkg="gazebo_rfid_node" type="wirelessNodeMonitor" name="rfid_node_sim" >
          <param name="ros_rfid_topic_name" value="/lastTag"/>
          <param name="ros_rfid_frame_id" value="lastTag"/>
-         <param name="gazebo_wireless_node_topic_name" value="/gazebo/INB3ENG/scitos/base_footprint/tiago_rfid_reader_sensor/transceiver" if="$(eval robot == 'scitos')"/>
-         <param name="gazebo_wireless_node_topic_name" value="/gazebo/INB3ENG/tiago/torso_lift_link/tiago_rfid_reader_sensor/transceiver" if="$(eval robot == 'tiago')"/>
+         <param name="gazebo_wireless_node_topic_name" value="/gazebo/defaul/scitos/base_footprint/tiago_rfid_reader_sensor/transceiver" if="$(eval robot == 'scitos')"/>
+         <param name="gazebo_wireless_node_topic_name" value="/gazebo/defaul/tiago/torso_lift_link/tiago_rfid_reader_sensor/transceiver" if="$(eval robot == 'tiago')"/>
     </node>
 
     <include file="$(find mcdm_experiments)/launch/INB3ENG_rfid_grid_real.launch">
