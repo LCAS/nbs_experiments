@@ -14,8 +14,9 @@ Panels:
         - /Planning1/Local1/LocalPlan1
         - /Localization1
         - /RFID1
+        - /PointStamped1
       Splitter Ratio: 0.446646333
-    Tree Height: 1056
+    Tree Height: 1046
   - Class: rviz/Selection
     Name: Selection
   - Class: rviz/Tool Properties
@@ -625,6 +626,16 @@ Visualization Manager:
           Name: gridmaps
       Enabled: true
       Name: RFID
+    - Alpha: 1
+      Class: rviz/PointStamped
+      Color: 255; 255; 0
+      Enabled: true
+      History Length: 1
+      Name: PointStamped
+      Radius: 0.5
+      Topic: /goal_pt
+      Unreliable: false
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -649,7 +660,7 @@ Visualization Manager:
   Value: true
   Views:
     Current:
-      Angle: 0.075000003
+      Angle: 0.179999903
       Class: rviz/TopDownOrtho
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
@@ -677,9 +688,9 @@ Window Geometry:
   Time:
     collapsed: false
   Tool Properties:
-    collapsed: false
+    collapsed: true
   Views:
-    collapsed: false
-  Width: 2558
-  X: 1920
-  Y: 24
+    collapsed: true
+  Width: 1280
+  X: 1280
+  Y: 0
