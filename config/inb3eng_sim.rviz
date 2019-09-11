@@ -14,6 +14,8 @@ Panels:
         - /Planning1/Local1/LocalPlan1
         - /Localization1
         - /RFID1
+        - /RFID1/Tag groundtruth poses1
+        - /RFID1/gridmaps1
       Splitter Ratio: 0.446646333
     Tree Height: 1056
   - Class: rviz/Selection
@@ -447,21 +449,6 @@ Visualization Manager:
               Axes Radius: 0.100000001
               Class: rviz/Pose
               Color: 255; 25; 0
-              Enabled: false
-              Head Length: 0.300000012
-              Head Radius: 0.100000001
-              Name: remote_1
-              Shaft Length: 1
-              Shaft Radius: 0.0500000007
-              Shape: Arrow
-              Topic: /poses/390100010000000000000001
-              Unreliable: false
-              Value: false
-            - Alpha: 1
-              Axes Length: 1
-              Axes Radius: 0.100000001
-              Class: rviz/Pose
-              Color: 255; 25; 0
               Enabled: true
               Head Length: 0.300000012
               Head Radius: 0.100000001
@@ -472,21 +459,6 @@ Visualization Manager:
               Topic: /poses/390100010000000000000002
               Unreliable: false
               Value: true
-            - Alpha: 1
-              Axes Length: 1
-              Axes Radius: 0.100000001
-              Class: rviz/Pose
-              Color: 255; 25; 0
-              Enabled: false
-              Head Length: 0.300000012
-              Head Radius: 0.100000001
-              Name: pillbox_3
-              Shaft Length: 1
-              Shaft Radius: 0.0500000007
-              Shape: Arrow
-              Topic: /poses/390100010000000000000003
-              Unreliable: false
-              Value: false
             - Alpha: 1
               Axes Length: 1
               Axes Radius: 0.100000001
@@ -522,21 +494,6 @@ Visualization Manager:
               Axes Radius: 0.100000001
               Class: rviz/Pose
               Color: 255; 25; 0
-              Enabled: false
-              Head Length: 0.300000012
-              Head Radius: 0.100000001
-              Name: umbrella_6
-              Shaft Length: 1
-              Shaft Radius: 0.0500000007
-              Shape: Arrow
-              Topic: /poses/390100010000000000000006
-              Unreliable: false
-              Value: false
-            - Alpha: 1
-              Axes Length: 1
-              Axes Radius: 0.100000001
-              Class: rviz/Pose
-              Color: 255; 25; 0
               Enabled: true
               Head Length: 0.300000012
               Head Radius: 0.100000001
@@ -554,16 +511,6 @@ Visualization Manager:
             - Alpha: 0.699999988
               Class: rviz/Map
               Color Scheme: map
-              Draw Behind: true
-              Enabled: false
-              Name: remote_1
-              Topic: /grid_390100010000000000000001/grid_map_visualization/occupancy_grid
-              Unreliable: false
-              Use Timestamp: false
-              Value: false
-            - Alpha: 0.699999988
-              Class: rviz/Map
-              Color Scheme: map
               Draw Behind: false
               Enabled: true
               Name: keys_2
@@ -571,16 +518,6 @@ Visualization Manager:
               Unreliable: false
               Use Timestamp: false
               Value: true
-            - Alpha: 0.699999988
-              Class: rviz/Map
-              Color Scheme: map
-              Draw Behind: false
-              Enabled: false
-              Name: pillbox_3
-              Topic: /grid_390100010000000000000003/grid_map_visualization/occupancy_grid
-              Unreliable: false
-              Use Timestamp: false
-              Value: false
             - Alpha: 1
               Class: rviz/Map
               Color Scheme: costmap
@@ -605,23 +542,13 @@ Visualization Manager:
               Class: rviz/Map
               Color Scheme: map
               Draw Behind: false
-              Enabled: false
-              Name: umbrella_6
-              Topic: /grid_390100010000000000000006/grid_map_visualization/occupancy_grid
-              Unreliable: false
-              Use Timestamp: false
-              Value: false
-            - Alpha: 0.699999988
-              Class: rviz/Map
-              Color Scheme: map
-              Draw Behind: false
               Enabled: true
               Name: mug_7
               Topic: /grid_390100010000000000000007/grid_map_visualization/occupancy_grid
               Unreliable: false
               Use Timestamp: false
               Value: true
-          Enabled: true
+          Enabled: false
           Name: gridmaps
       Enabled: true
       Name: RFID
@@ -649,7 +576,7 @@ Visualization Manager:
   Value: true
   Views:
     Current:
-      Angle: 0.075000003
+      Angle: -0.034999989
       Class: rviz/TopDownOrtho
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
@@ -659,11 +586,11 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Scale: 62.8880768
+      Scale: 17.2621841
       Target Frame: base_link
       Value: TopDownOrtho (rviz)
-      X: 2.0031724
-      Y: 1.49615216
+      X: 12.2054567
+      Y: 30.1536446
     Saved: ~
 Window Geometry:
   Displays:
