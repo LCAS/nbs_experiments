@@ -32,6 +32,4 @@
         <arg name="world_tf"        value="$(arg world_tf)"/>        
     </include>
 
-
-
 </launch>
