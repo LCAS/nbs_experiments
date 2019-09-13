@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  MFC:
+    This file contains the configuration for creating a tag grid with visualization
+    and some ground truth.
+-->
+
+<launch>
+
+    <arg name="map_folder"    default="$(find mcdm_experiments)/maps/inb3123/map_real_sci"/>
+    <arg name="is_sim"               default="false"/>
+    <arg name="detectRadius"         default="0.75"/> <!-- detectRadius == b -->
+    <arg name="cone_range"           default="1.5"/> <!-- cone_range == a -->
+    <arg name="weight_inc"           default="0.1"/>
+    <arg name="weight_dec"           default="0.002"/>
+
+    <!--
+      Get regions from tiago map config and put them in rosparam server.
+      This is automatically done inside tiago, but if we don't use PAL nav stack
+      it will be missing
+    -->
+    <rosparam command="load" file="$(arg map_folder)/mmap.yaml" ns="mmap"/>
+
+    <include file="$(find rfid_grid_map)/launch/grid_debug.launch">
+        <arg name="tagID"                value="390100010000000000000002"/>
+        <arg name="object"               value="keys"/>
+        <arg name="tag_num"              value="2"/>
+        <arg name="worldTagPose"         value="-36.2910118103 20.4882831573  0.5  0.0  0.0  0.683244769791  0.730189416901"/>
+        <arg name="is_sim"               value="$(arg is_sim)"/>
+        <arg name="detectRadius"    value="$(arg detectRadius)"/>
+        <arg name="cone_range"      value="$(arg cone_range)"/>
+        <arg name="weight_inc"      value="$(arg weight_inc)"/>
+        <arg name="weight_dec"      value="$(arg weight_dec)"/>
+    </include>
+
+    <include file="$(find rfid_grid_map)/launch/grid_debug.launch">
+        <arg name="tagID"                value="390100010000000000000004"/>
+        <arg name="object"               value="wallet"/>
+        <arg name="tag_num"              value="4"/>
+        <arg name="worldTagPose"         value="-34.8339729309 42.921875 0.5 0.0 0.0 0.697887779055 0.716207126358 "/>
+        <arg name="is_sim"               value="$(arg is_sim)"/>        
+        <arg name="detectRadius"    value="$(arg detectRadius)"/>
+        <arg name="cone_range"      value="$(arg cone_range)"/>
+        <arg name="weight_inc"      value="$(arg weight_inc)"/>
+        <arg name="weight_dec"      value="$(arg weight_dec)"/>
+    </include>
+
+    <include file="$(find rfid_grid_map)/launch/grid_debug.launch">
+        <arg name="tagID"                value="390100010000000000000005"/>
+        <arg name="object"               value="glasses"/>
+        <arg name="tag_num"              value="5"/>
+        <arg name="worldTagPose"         value="-36.5920791626 66.2422409058 0.5 0.0 0.0 1.0 0.0 "/>
+        <arg name="is_sim"               value="$(arg is_sim)"/>        
+        <arg name="detectRadius"    value="$(arg detectRadius)"/>
+        <arg name="cone_range"      value="$(arg cone_range)"/>
+        <arg name="weight_inc"      value="$(arg weight_inc)"/>
+        <arg name="weight_dec"      value="$(arg weight_dec)"/>
+    </include>
+
+    <include file="$(find rfid_grid_map)/launch/grid_debug.launch">
+        <arg name="tagID"                value="390100010000000000000007"/>
+        <arg name="object"               value="mug"/>
+        <arg name="tag_num"              value="7"/>
+        <arg name="worldTagPose"         value="-29.9831962585 67.1762771606 0.5 0.0 0.0 0.0 1.0"/>        
+        <arg name="is_sim"               value="$(arg is_sim)"/>        
+        <arg name="detectRadius"    value="$(arg detectRadius)"/>
+        <arg name="cone_range"      value="$(arg cone_range)"/>
+        <arg name="weight_inc"      value="$(arg weight_inc)"/>
+        <arg name="weight_dec"      value="$(arg weight_dec)"/>
+    </include>
+
+<!-- NEW -->
+    <include file="$(find rfid_grid_map)/launch/grid_debug.launch">
+        <arg name="tagID"                value="390100010000000000000008"/>
+        <arg name="object"               value="thing8"/>
+        <arg name="tag_num"              value="8"/>
+        <arg name="worldTagPose"         value=" -40.4119033813 16.361749649  0.0 0.0 0.0 -0.735687768016  0.677320830916"/>        
+        <arg name="is_sim"               value="$(arg is_sim)"/>        
+        <arg name="detectRadius"    value="$(arg detectRadius)"/>
+        <arg name="cone_range"      value="$(arg cone_range)"/>
+        <arg name="weight_inc"      value="$(arg weight_inc)"/>
+        <arg name="weight_dec"      value="$(arg weight_dec)"/>
+    </include>
+
+    <include file="$(find rfid_grid_map)/launch/grid_debug.launch">
+        <arg name="tagID"                value="390100010000000000000009"/>
+        <arg name="object"               value="thing9"/>
+        <arg name="tag_num"              value="9"/>
+        <arg name="worldTagPose"         value="-34.9578018188 10.2343235016 0.0 0.0 0.0 -0.0336144061254 0.999434876168"/>        
+        <arg name="is_sim"               value="$(arg is_sim)"/>        
+        <arg name="detectRadius"    value="$(arg detectRadius)"/>
+        <arg name="cone_range"      value="$(arg cone_range)"/>
+        <arg name="weight_inc"      value="$(arg weight_inc)"/>
+        <arg name="weight_dec"      value="$(arg weight_dec)"/>
+    </include>
+ 
+    <include file="$(find rfid_grid_map)/launch/grid_debug.launch">
+        <arg name="tagID"                value="390100010000000000000010"/>
+        <arg name="object"               value="thing10"/>
+        <arg name="tag_num"              value="10"/>
+        <arg name="worldTagPose"         value="-31.3474082947 18.5885467529 0.0 0.0 0.0 -0.707697295302  0.706515773512"/>        
+        <arg name="is_sim"               value="$(arg is_sim)"/>        
+        <arg name="detectRadius"    value="$(arg detectRadius)"/>
+        <arg name="cone_range"      value="$(arg cone_range)"/>
+        <arg name="weight_inc"      value="$(arg weight_inc)"/>
+        <arg name="weight_dec"      value="$(arg weight_dec)"/>
+    </include>
+ 
+
+    <include file="$(find rfid_grid_map)/launch/grid_debug.launch">
+        <arg name="tagID"                value="390100010000000000000011"/>
+        <arg name="object"               value="thing11"/>
+        <arg name="tag_num"              value="11"/>
+        <arg name="worldTagPose"         value="-37.2463226318 25.6093597412 0.0 0.0 0.0 -0.745018338711  0.667043982796"/>        
+        <arg name="is_sim"               value="$(arg is_sim)"/>        
+        <arg name="detectRadius"    value="$(arg detectRadius)"/>
+        <arg name="cone_range"      value="$(arg cone_range)"/>
+        <arg name="weight_inc"      value="$(arg weight_inc)"/>
+        <arg name="weight_dec"      value="$(arg weight_dec)"/>
+    </include>
+ 
+
+    <include file="$(find rfid_grid_map)/launch/grid_debug.launch">
+        <arg name="tagID"                value="390100010000000000000012"/>
+        <arg name="object"               value="thing12"/>
+        <arg name="tag_num"              value="12"/>
+        <arg name="worldTagPose"         value="-38.5316886902 37.7653083801 0.0 0.0 0.0  0.999673269049  0.0255608127723"/>        
+        <arg name="is_sim"               value="$(arg is_sim)"/>        
+        <arg name="detectRadius"    value="$(arg detectRadius)"/>
+        <arg name="cone_range"      value="$(arg cone_range)"/>
+        <arg name="weight_inc"      value="$(arg weight_inc)"/>
+        <arg name="weight_dec"      value="$(arg weight_dec)"/>
+    </include>
+ 
+    <include file="$(find rfid_grid_map)/launch/grid_debug.launch">
+        <arg name="tagID"                value="39010001000000000000000x"/>
+        <arg name="object"               value="thingX"/>
+        <arg name="tag_num"              value="x"/>
+        <arg name="worldTagPose"         value="-29.874423980  36.4355735779 0.0 0.0 0.0  0.999434850597  0.0336151663912"/>        
+        <arg name="is_sim"               value="$(arg is_sim)"/>        
+        <arg name="detectRadius"    value="$(arg detectRadius)"/>
+        <arg name="cone_range"      value="$(arg cone_range)"/>
+        <arg name="weight_inc"      value="$(arg weight_inc)"/>
+        <arg name="weight_dec"      value="$(arg weight_dec)"/>
+    </include>
+    
+
+
+
+
+</launch>

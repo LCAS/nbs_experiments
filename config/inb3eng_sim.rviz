@@ -13,7 +13,6 @@ Panels:
         - /Planning1/Local1/ActiveGlobalPlan1
         - /Planning1/Local1/LocalPlan1
         - /Localization1
-        - /RFID1
         - /RFID1/Tag groundtruth poses1
         - /RFID1/gridmaps1
       Splitter Ratio: 0.446646333
@@ -308,12 +307,12 @@ Visualization Manager:
           Class: rviz/Map
           Color Scheme: map
           Draw Behind: false
-          Enabled: false
+          Enabled: true
           Name: Loc Map
           Topic: /loc_map
           Unreliable: false
           Use Timestamp: false
-          Value: false
+          Value: true
       Enabled: true
       Name: Localization
     - Class: rviz/Group
@@ -504,6 +503,81 @@ Visualization Manager:
               Topic: /poses/390100010000000000000007
               Unreliable: false
               Value: true
+            - Alpha: 1
+              Axes Length: 1
+              Axes Radius: 0.100000001
+              Class: rviz/Pose
+              Color: 255; 25; 0
+              Enabled: true
+              Head Length: 0.300000012
+              Head Radius: 0.100000001
+              Name: Object_8
+              Shaft Length: 1
+              Shaft Radius: 0.0500000007
+              Shape: Arrow
+              Topic: /poses/390100010000000000000008
+              Unreliable: false
+              Value: true
+            - Alpha: 1
+              Axes Length: 1
+              Axes Radius: 0.100000001
+              Class: rviz/Pose
+              Color: 255; 25; 0
+              Enabled: true
+              Head Length: 0.300000012
+              Head Radius: 0.100000001
+              Name: Object_9
+              Shaft Length: 1
+              Shaft Radius: 0.0500000007
+              Shape: Arrow
+              Topic: /poses/390100010000000000000009
+              Unreliable: false
+              Value: true
+            - Alpha: 1
+              Axes Length: 1
+              Axes Radius: 0.100000001
+              Class: rviz/Pose
+              Color: 255; 25; 0
+              Enabled: true
+              Head Length: 0.300000012
+              Head Radius: 0.100000001
+              Name: Object_10
+              Shaft Length: 1
+              Shaft Radius: 0.0500000007
+              Shape: Arrow
+              Topic: /poses/390100010000000000000010
+              Unreliable: false
+              Value: true
+            - Alpha: 1
+              Axes Length: 1
+              Axes Radius: 0.100000001
+              Class: rviz/Pose
+              Color: 255; 25; 0
+              Enabled: true
+              Head Length: 0.300000012
+              Head Radius: 0.100000001
+              Name: Object_11
+              Shaft Length: 1
+              Shaft Radius: 0.0500000007
+              Shape: Arrow
+              Topic: /poses/390100010000000000000011
+              Unreliable: false
+              Value: true
+            - Alpha: 1
+              Axes Length: 1
+              Axes Radius: 0.100000001
+              Class: rviz/Pose
+              Color: 255; 25; 0
+              Enabled: true
+              Head Length: 0.300000012
+              Head Radius: 0.100000001
+              Name: Object_12
+              Shaft Length: 1
+              Shaft Radius: 0.0500000007
+              Shape: Arrow
+              Topic: /poses/390100010000000000000012
+              Unreliable: false
+              Value: true
           Enabled: true
           Name: Tag groundtruth poses
         - Class: rviz/Group
@@ -586,11 +660,11 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Scale: 17.2621841
+      Scale: 21.1691437
       Target Frame: base_link
       Value: TopDownOrtho (rviz)
-      X: 12.2054567
-      Y: 30.1536446
+      X: 5.92310905
+      Y: 35.2818756
     Saved: ~
 Window Geometry:
   Displays:

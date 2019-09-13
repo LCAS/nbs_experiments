@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  MFC:
+    This file contains the configuration for creating a tag grid with visualization
+    and some ground truth.
+-->
+
+<launch>
+
+    <arg name="robot"           default="scitos"/>
+
+    <arg name="detectRadius"         default="0.75"/> <!-- detectRadius == b -->
+    <arg name="cone_range"           default="1.5"/> <!-- cone_range == a -->
+    <arg name="weight_inc"           default="0.1"/>
+    <arg name="weight_dec"           default="0.002"/>
+
+    <!-- GAZEBO-ROS bridge for Tiago RFID reader -->
+    <node pkg="gazebo_rfid_node" type="wirelessNodeMonitor" name="rfid_node_sim" >
+         <param name="ros_rfid_topic_name" value="/lastTag"/>
+         <param name="ros_rfid_frame_id" value="lastTag"/>
+         <param name="gazebo_wireless_node_topic_name" value="/gazebo/default/scitos/base_footprint/tiago_rfid_reader_sensor/transceiver" if="$(eval robot == 'scitos')"/>
+         <param name="gazebo_wireless_node_topic_name" value="/gazebo/default/tiago/torso_lift_link/tiago_rfid_reader_sensor/transceiver" if="$(eval robot == 'tiago')"/>
+    </node>
+
+    <include file="$(find mcdm_experiments)/launch/INB3ENG_rfid_grid_real_2.launch">
+        <arg name="is_sim"               value="true"/>
+        <arg name="detectRadius"    value="$(arg detectRadius)"/>
+        <arg name="cone_range"      value="$(arg cone_range)"/>
+        <arg name="weight_inc"      value="$(arg weight_inc)"/>
+        <arg name="weight_dec"      value="$(arg weight_dec)"/>
+    </include>
+
+
+</launch>
