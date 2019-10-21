@@ -120,7 +120,7 @@
     </scene>
     <gui fullscreen='0'>
       <camera name='user_camera'>
-        <pose frame=''>-14.1814 -12.0751 7.10912 0 1.5338 -0.318556</pose>
+        <pose frame=''>-6.20203 3.6224 23.6536 1e-05 1.5698 -1.12255</pose>
         <view_controller>orbit</view_controller>
         <projection_type>perspective</projection_type>
       </camera>
@@ -136,16 +136,12 @@
     <magnetic_field>6e-06 2.3e-05 -4.2e-05</magnetic_field>
     <atmosphere type='adiabatic'/>
     <wind/>
-    <state world_name='INB3123 lab'>
-      <sim_time>0 0</sim_time>
-      <real_time>0 0</real_time>
-      <wall_time>1562000436 602095740</wall_time>
-      <iterations>0</iterations>
+    <state world_name='INB3123'>
       <model name='INB3123_mesh'>
-        <pose frame=''>-14.28 -13.75 0 0 -0 2.63876</pose>
+        <pose frame=''>-0.187449 -0.214538 0 0 0 -0.014919</pose>
         <scale>1 1 1</scale>
         <link name='body'>
-          <pose frame=''>-14.28 -13.75 0 0 -0 2.63876</pose>
+          <pose frame=''>-0.187449 -0.214538 0 0 0 -0.014919</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 0 0 -0 0</acceleration>
           <wrench>0 0 0 0 -0 0</wrench>
