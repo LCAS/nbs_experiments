@@ -24,9 +24,9 @@
          <param name="ros_rfid_topic_name" value="/lastTag"/>
          <param name="ros_rfid_frame_id" value="lastTag"/>
          <param name="gazebo_wireless_node_topic_name" value="$(arg gazebo_wireless_node_topic_name)"/>
-
     </node>
 
+    <!-- Same config for real robot ! -->
     <include file="$(find mcdm_experiments)/launch/INB3123_rfid_grid_real.launch">
         <arg name="is_sim"          value="true"/>
         <arg name="detectRadius"    value="$(arg detectRadius)"/>
