@@ -15,12 +15,16 @@
     <arg name="weight_dec"           default="0.002"/>
     <arg name="world_tf"             default="loc_map"/>        
 
+    <arg name="gazebo_wireless_node_topic_name" default="/gazebo/INB3123/scitos/base_footprint/tiago_rfid_reader_sensor/transceiver" if="$(eval robot == 'scitos')"/>
+    <arg name="gazebo_wireless_node_topic_name" default="/gazebo/default/tiago/torso_lift_link/tiago_rfid_reader_sensor/transceiver" if="$(eval robot == 'tiago')"/>
+
+
     <!-- GAZEBO-ROS bridge for Tiago RFID reader -->
     <node pkg="gazebo_rfid_node" type="wirelessNodeMonitor" name="rfid_node_sim" >
          <param name="ros_rfid_topic_name" value="/lastTag"/>
          <param name="ros_rfid_frame_id" value="lastTag"/>
-         <param name="gazebo_wireless_node_topic_name" value="/gazebo/default/scitos/base_footprint/tiago_rfid_reader_sensor/transceiver" if="$(eval robot == 'scitos')"/>
-         <param name="gazebo_wireless_node_topic_name" value="/gazebo/default/tiago/torso_lift_link/tiago_rfid_reader_sensor/transceiver" if="$(eval robot == 'tiago')"/>
+         <param name="gazebo_wireless_node_topic_name" value="$(arg gazebo_wireless_node_topic_name)"/>
+
     </node>
 
     <include file="$(find mcdm_experiments)/launch/INB3123_rfid_grid_real.launch">
