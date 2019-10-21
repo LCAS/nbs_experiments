@@ -61,4 +61,10 @@
         <arg name="world_tf"             value="$(arg world_tf)"/>                
     </include> 
 
+    <!-- How many tags have we seen from the total set? -->
+    <node pkg="rfid_grid_map" type="tag_discovery_node.py" name="tag_discovery_counter" >
+         <param name="detected_tag_topic_name" value="/lastTag"/>         
+         <param name="tag_discovery_coverage_topic_name" value="/tag_coverage"/>
+    </node>
+
 </launch>
