@@ -10,6 +10,22 @@ find_package(catkin REQUIRED COMPONENTS)
 # find_package(Boost REQUIRED COMPONENTS system)
 
 
+
+##################################
+## Update the GAZEBO_MODEL_PATH ##
+##################################
+
+if(CMAKE_HOST_UNIX)
+  catkin_add_env_hooks(90.gazebo_models_mcdm SHELLS sh DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/env-hooks)
+else()
+  message(FATAL_ERROR "Only UNIX builds supported.")
+#  catkin_add_env_hooks(90.gazebo_models_oru SHELLS bat DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/env-hooks)
+endif()
+
+
+
+
+
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
 ## See http://ros.org/doc/api/catkin/html/user_guide/setup_dot_py.html
@@ -138,6 +154,19 @@ include_directories(
 #############
 ## Install ##
 #############
+
+
+install(DIRECTORY
+  models
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+)
+
+install(PROGRAMS
+  scripts/download_all_gazebo_org_models.sh
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+
+
 
 # all install targets should use catkin DESTINATION variables
 # See http://ros.org/doc/api/catkin/html/adv_user_guide/variables.html
