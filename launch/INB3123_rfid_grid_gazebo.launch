@@ -7,13 +7,15 @@
 
 <launch>
 
-    <arg name="robot"           default="scitos"/>
-
+    <arg name="robot"           default="scitos"/>  
     <arg name="detectRadius"         default="0.75"/> <!-- detectRadius == b -->
     <arg name="cone_range"           default="1.5"/> <!-- cone_range == a -->
     <arg name="weight_inc"           default="0.1"/>
     <arg name="weight_dec"           default="0.002"/>
-    <arg name="world_tf"             default="loc_map"/>        
+    <arg name="world_tf"             default="loc_map"/>
+    <arg name="sigma_power"          value="5.92"/>
+    <arg name="rfidgrid_resolution"  value="0.05"/> 
+    <arg name="with_visualizer"      value="true"/>    
 
     <arg name="gazebo_wireless_node_topic_name" default="/gazebo/INB3123/scitos/base_footprint/tiago_rfid_reader_sensor/transceiver" if="$(eval robot == 'scitos')"/>
     <arg name="gazebo_wireless_node_topic_name" default="/gazebo/default/tiago/torso_lift_link/tiago_rfid_reader_sensor/transceiver" if="$(eval robot == 'tiago')"/>
@@ -33,7 +35,13 @@
         <arg name="cone_range"      value="$(arg cone_range)"/>
         <arg name="weight_inc"      value="$(arg weight_inc)"/>
         <arg name="weight_dec"      value="$(arg weight_dec)"/>
-        <arg name="world_tf"        value="$(arg world_tf)"/>        
+        <arg name="world_tf"        value="$(arg world_tf)"/>    
+        <arg name="sigma_power"          value="$(arg sigma_power)"/>
+        <arg name="rfidgrid_resolution"  value="$(arg rfidgrid_resolution)"/> 
+        <arg name="with_visualizer"      value="$(arg with_visualizer)"/>        
     </include>
+
+    <!-- Launch viewZois: for display -->
+    <node name="viewZois_node" pkg="rfid_grid_map" type="viewZois"  />
 
 </launch>

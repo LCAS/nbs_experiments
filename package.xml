@@ -13,6 +13,9 @@
   <run_depend>teb_local_planner</run_depend>
   <run_depend>gazebo_worlds_oru</run_depend>
   <run_depend>gazebo_models_oru</run_depend>
+  <run_depend>strands_movebase</run_depend>
+  <run_depend>global_planner</run_depend>
+  <run_depend>eband_local_planner</run_depend>
   <export>
   </export>
 </package>
