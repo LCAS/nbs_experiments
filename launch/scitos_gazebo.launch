@@ -12,8 +12,9 @@
 
   <arg name="model_name" default="scitos"/>
 
-  <!-- Robot model -->
+  <!-- CUSTOM! Robot model scitos_state_publisher -->
   <include file="$(find scitos_description)/launch/upload_scitos.launch"/>
+
 
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
 
