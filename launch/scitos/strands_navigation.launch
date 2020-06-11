@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <launch>
-  <arg name="map"             default="$(find mcdm_experiments)/maps/inb3123/map_real_sci_mcdm/cropped.yaml"/>
-  <arg name="loc_map_yaml"    default="$(find mcdm_experiments)/maps/inb3123/map_real_sci/cropped.yaml"/>
-  <arg name="amcl_cfg"        default="$(find mcdm_experiments)/config/amcl_scitos_real.yaml"/>
-  <arg name="move_base_cfg"        default="$(find mcdm_experiments)/config/move_base_scitos_real.yaml"/>
+  <arg name="map"             default="$(find nbs_experiments)/maps/inb3123/map_real_sci_mcdm/cropped.yaml"/>
+  <arg name="loc_map_yaml"    default="$(find nbs_experiments)/maps/inb3123/map_real_sci/cropped.yaml"/>
+  <arg name="amcl_cfg"        default="$(find nbs_experiments)/config/amcl_scitos_real.yaml"/>
+  <arg name="move_base_cfg"        default="$(find nbs_experiments)/config/move_base_scitos_real.yaml"/>
   <arg name="map_2_loc_map_pose"   default="0.0 0.0 0.0 0.0 0.0 0.0 1.0"/>
 
   <arg name="laser_angle_cutoff" default="10.0"/>
@@ -16,21 +16,21 @@
   </node>
 
   <!-- .......................... Localization ........................... -->
-  <include file="$(find mcdm_experiments)/launch/scitos/loc_map_server.launch">
+  <include file="$(find nbs_experiments)/launch/scitos/loc_map_server.launch">
       <arg name="loc_map_yaml"         value="$(arg loc_map_yaml)"/>
       <arg name="map_2_loc_map_pose"   value="$(arg map_2_loc_map_pose)"/>
   </include>
 
-  <include file="$(find mcdm_experiments)/launch/scitos/amcl.launch">
+  <include file="$(find nbs_experiments)/launch/scitos/amcl.launch">
       <arg name="amcl_cfg"         value="$(arg amcl_cfg)"/>
   </include>
   
   <!-- ............................ Navigation ........................... -->
-  <include file="$(find mcdm_experiments)/launch/scitos/loc_map_server.launch">
+  <include file="$(find nbs_experiments)/launch/scitos/loc_map_server.launch">
       <arg name="map"         value="$(arg map)"/>
   </include>
 
-  <include file="$(find mcdm_experiments)/launch/scitos/move_base.launch">
+  <include file="$(find nbs_experiments)/launch/scitos/move_base.launch">
       <arg name="move_base_cfg"         value="$(arg move_base_cfg)"/>
   </include>
 

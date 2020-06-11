@@ -14,24 +14,24 @@ windows:
     tags: ['robot', 'nav']
     panes:
       - roslaunch strands_bringup strands_robot.launch with_mux:=false js:=/dev/input/js0 with_magnetic_barrier:=false
-      - roslaunch mcdm_experiments remove_edges_laser.launch
+      - roslaunch nbs_experiments remove_edges_laser.launch
       - watch -n 2 rosparam dump ~/.ros/pose.yaml /amcl
     check: "rostopic list | grep -q /move_base/scan_obstacle"
 
   - name: NAVIGATION
     tags: ['nav']
     panes:
-      - roslaunch mcdm_experiments loc_map_server.launch loc_map_yaml:=$LOC_MAP_YAML
-      - roslaunch mcdm_experiments amcl.launch 
-      - roslaunch mcdm_experiments nav_map_server.launch map:=$NAV_MAP_YAML
-      - roslaunch mcdm_experiments move_base.launch  
+      - roslaunch nbs_experiments loc_map_server.launch loc_map_yaml:=$LOC_MAP_YAML
+      - roslaunch nbs_experiments amcl.launch 
+      - roslaunch nbs_experiments nav_map_server.launch map:=$NAV_MAP_YAML
+      - roslaunch nbs_experiments move_base.launch  
     check: "rosnode list | grep -q move_base"
 
   - name: RFID
     tags: ['nav']
     panes:  
       - rosrun rfid_node rfid_reader_ros.py 
-      - roslaunch mcdm_experiments "$TESTCODE"_rfid_grid_real.launch 
+      - roslaunch nbs_experiments "$TESTCODE"_rfid_grid_real.launch 
       - rosrun rfid_grid_map tag_discovery_node.py
     check: "rostopic list | grep -q /tag_coverage"
 
@@ -39,7 +39,7 @@ windows:
     tags: ['experiment']
     skip: true
     panes:  
-      - roslaunch mcdm_experiments goto_initial_pose.launch initial_px:=$STARTING_POSE_PX initial_py:=$STARTING_POSE_PY initial_oz:=$STARTING_POSE_OZ initial_ow:=$STARTING_POSE_OW      
+      - roslaunch nbs_experiments goto_initial_pose.launch initial_px:=$STARTING_POSE_PX initial_py:=$STARTING_POSE_PY initial_oz:=$STARTING_POSE_OZ initial_ow:=$STARTING_POSE_OW      
     check: "rostopic echo /move_base/status | grep -q reached"
 
   - name: MCDM

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package>
-  <name>mcdm_experiments</name>
+  <name>nbs_experiments</name>
   <version>0.0.0</version>
   <description>MCDM experiments (real/simulated)</description>
 

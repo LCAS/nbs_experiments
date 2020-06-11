@@ -45,7 +45,7 @@
 ################################################################################
 #                           Experiment setup packages                          #
 ################################################################################
-- git: {local-name: lcas/mcdm_experiments,            uri: 'https://github.com/MFernandezCarmona/mcdm_experiments.git', version: 'master'}
+- git: {local-name: lcas/nbs_experiments,            uri: 'https://github.com/MFernandezCarmona/nbs_experiments.git', version: 'master'}
 - git: {local-name: lcas/record_ros,                  uri: 'https://github.com/pulver22/record_ros.git', version: 'master'}
 ################################################################################
 #                           MCDM packages                                      #

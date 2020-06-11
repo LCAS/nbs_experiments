@@ -22,7 +22,7 @@
          <param name="gazebo_wireless_node_topic_name" value="/gazebo/default/tiago/torso_lift_link/tiago_rfid_reader_sensor/transceiver" if="$(eval robot == 'tiago')"/>
     </node>
 
-    <include file="$(find mcdm_experiments)/launch/INB3ENG_rfid_grid_real_2.launch">
+    <include file="$(find nbs_experiments)/launch/INB3ENG_rfid_grid_real_2.launch">
         <arg name="is_sim"               value="true"/>
         <arg name="detectRadius"    value="$(arg detectRadius)"/>
         <arg name="cone_range"      value="$(arg cone_range)"/>

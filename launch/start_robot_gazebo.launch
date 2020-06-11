@@ -5,25 +5,25 @@
 <launch>
   <arg name="robot"  default="scitos"/>
   <arg name="gzpose" default="-x 0.17 -y 0.14 -z 0.09 -R 0.0 -P 0.0 -Y 0.0"/>
-  <arg name="world_file" default="$(find mcdm_experiments)/worlds/INB3123/INB3123.world"/>
+  <arg name="world_file" default="$(find nbs_experiments)/worlds/INB3123/INB3123.world"/>
 
   <arg name="gui" value="true"/>
 
   <!-- start up world -->
-  <include file="$(find mcdm_experiments)/launch/start_world.launch">
+  <include file="$(find nbs_experiments)/launch/start_world.launch">
      <arg name="world_file" value="$(arg world_file)"/>
      <arg name="gui" value="$(arg gui)"/>
   </include>
   
   <!-- create robot -->
   <group  if="$(eval robot == 'tiago')">
-    <include file="$(find mcdm_experiments)/launch/tiago_gazebo.launch">
+    <include file="$(find nbs_experiments)/launch/tiago_gazebo.launch">
       <arg name="gzpose" value="$(arg gzpose)"/>
     </include>
   </group>
 
   <group  if="$(eval robot == 'scitos')">
-    <include file="$(find mcdm_experiments)/launch/scitos_gazebo.launch">
+    <include file="$(find nbs_experiments)/launch/scitos_gazebo.launch">
       <arg name="gzpose" value="$(arg gzpose)"/>
     </include>
   </group>

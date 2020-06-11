@@ -8,8 +8,8 @@
 
 <launch>
 
-    <include file="$(find mcdm_experiments)/launch/tiago_navigation_INB3123.launch">
-      <arg name="map"            default="$(find mcdm_experiments)/maps/inb3123/map_sim"/>
+    <include file="$(find nbs_experiments)/launch/tiago_navigation_INB3123.launch">
+      <arg name="map"            default="$(find nbs_experiments)/maps/inb3123/map_sim"/>
       <arg name="state"          default="mapping"/>
     </include>
 

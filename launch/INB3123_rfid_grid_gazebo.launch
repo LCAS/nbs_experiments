@@ -24,7 +24,7 @@
     </node>
 
     <!-- Same config for real robot ! -->
-    <include file="$(find mcdm_experiments)/launch/INB3123_rfid_grid_real.launch">
+    <include file="$(find nbs_experiments)/launch/INB3123_rfid_grid_real.launch">
         <arg name="is_sim"          value="true"/>
         <arg name="world_tf"        value="$(arg world_tf)"/>    
         <arg name="sigma_power"          value="$(arg sigma_power)"/>

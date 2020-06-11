@@ -7,7 +7,7 @@
 
 <launch>
 
-    <arg name="map_folder"    default="$(find mcdm_experiments)/maps/inb3123/map_real_sci"/>
+    <arg name="map_folder"    default="$(find nbs_experiments)/maps/inb3123/map_real_sci"/>
     <arg name="is_sim"               default="false"/>
     <arg name="detectRadius"         default="0.75"/> <!-- detectRadius == b -->
     <arg name="cone_range"           default="1.5"/> <!-- cone_range == a -->

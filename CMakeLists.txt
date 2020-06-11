@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(mcdm_experiments)
+project(nbs_experiments)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)

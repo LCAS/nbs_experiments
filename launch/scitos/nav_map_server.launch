@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-    <arg name="map"             default="$(find mcdm_experiments)/maps/inb3123/map_real_sci_mcdm/cropped.yaml"/>
+    <arg name="map"             default="$(find nbs_experiments)/maps/inb3123/map_real_sci_mcdm/cropped.yaml"/>
 
     <node name="map_server" pkg="map_server" type="map_server" args="$(arg map)"/>
 

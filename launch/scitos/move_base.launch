@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <launch>
 
-  <arg name="move_base_cfg"        default="$(find mcdm_experiments)/config/move_base_scitos_real_orig.yaml"/>
+  <arg name="move_base_cfg"        default="$(find nbs_experiments)/config/move_base_scitos_real_orig.yaml"/>
 
   <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen" clear_params="true">
       <remap from="/move_base/local_costmap/voxel_grid" to="/voxel_grid"/>

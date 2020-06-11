@@ -7,13 +7,13 @@
     <arg name="robot"           default="scitos"/>
 
     <!-- Define move base params here -->
-    <rosparam command="load"  file="$(find mcdm_experiments)/config/move_base_teb.yaml" ns="move_base" if="$(eval robot == 'tiago')"/>
-    <rosparam command="load"  file="$(find mcdm_experiments)/config/nav/move_base_scitos_sim.yaml" ns="move_base" if="$(eval robot == 'scitos')"/>
+    <rosparam command="load"  file="$(find nbs_experiments)/config/move_base_teb.yaml" ns="move_base" if="$(eval robot == 'tiago')"/>
+    <rosparam command="load"  file="$(find nbs_experiments)/config/nav/move_base_scitos_sim.yaml" ns="move_base" if="$(eval robot == 'scitos')"/>
 
     <!--SIM ARGS -->
     <arg name="rviz"           default="true"/>
-    <arg name="loc_map_yaml"   default="$(find mcdm_experiments)/maps/inb3eng/scitos_map_real/map.yaml"/>
-    <arg name="nav_map_yaml"   default="$(find mcdm_experiments)/maps/inb3eng/scitos_map_real_mcdm/map.yaml"/>
+    <arg name="loc_map_yaml"   default="$(find nbs_experiments)/maps/inb3eng/scitos_map_real/map.yaml"/>
+    <arg name="nav_map_yaml"   default="$(find nbs_experiments)/maps/inb3eng/scitos_map_real_mcdm/map.yaml"/>
     <arg name="map_2_loc_map_pose"   default="0.25 0.15 0.0 0.0 0.0 0.0 1.0"/>
     <arg name="use_fake_localization" default="true"/>
 
@@ -21,17 +21,17 @@
     <arg name="cmd_vel"        default="nav_vel"/>
 
     <!--Create gazebo world and simulated robot -->
-    <include file="$(find mcdm_experiments)/launch/start_robot_gazebo.launch">
+    <include file="$(find nbs_experiments)/launch/start_robot_gazebo.launch">
       <arg name="robot" value="$(arg robot)"/>
-      <arg name="world_file" value="$(find mcdm_experiments)/worlds/empty.world"/>
+      <arg name="world_file" value="$(find nbs_experiments)/worlds/empty.world"/>
       <arg name="gzpose" value="-x -33.44 -y 6.5 -z 0.09 -R 0.0 -P 0.0 -Y 1.54"/>
     </include>
     <node name="relay_map" pkg="topic_tools" type="relay" args="/map /vo_map"/>
 
-    <node name="rviz" pkg="rviz" type="rviz" if="$(arg rviz)"  args="-d $(find mcdm_experiments)/config/inb3eng_sim.rviz"/>
+    <node name="rviz" pkg="rviz" type="rviz" if="$(arg rviz)"  args="-d $(find nbs_experiments)/config/inb3eng_sim.rviz"/>
 
     <!-- Remove laser self colision -->
-    <include file="$(find mcdm_experiments)/launch/scitos/remove_edges_laser.launch"/>
+    <include file="$(find nbs_experiments)/launch/scitos/remove_edges_laser.launch"/>
      
 
     <!-- .......................... Localization ........................... -->

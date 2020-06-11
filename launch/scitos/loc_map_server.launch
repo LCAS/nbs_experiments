@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-  <arg name="loc_map_yaml"    default="$(find mcdm_experiments)/maps/inb3123/map_real_sci/cropped.yaml"/>  
+  <arg name="loc_map_yaml"    default="$(find nbs_experiments)/maps/inb3123/map_real_sci/cropped.yaml"/>  
   <arg name="map_2_loc_map_pose"   default="0.0 0.0 0.0 0.0 0.0 0.0 1.0"/>
 
         <node name="loc_map_server" pkg="map_server" type="map_server" args="$(arg loc_map_yaml)"  output="screen">
