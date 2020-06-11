@@ -56,7 +56,7 @@
          <param name="detected_tag_topic_name" value="/lastTag"/>        
          <rosparam param="tag_set">['390100010000000000000001', '390100010000000000000003', '390100010000000000000006']</rosparam>  
          <param name="tag_discovery_coverage_topic_name" value="/tag_coverage"/>
-    </node>
+    </node> -->
 
   <!-- grid launcher -->
   <include file="$(find rfid_grid_map)/launch/grid.launch">

@@ -12,7 +12,7 @@
     <arg name="sigma_power"          default="5.92"/>
     <arg name="rfidgrid_resolution"  default="0.05"/> 
 
-    <arg name="gazebo_wireless_node_topic_name" default="/gazebo/INB3123/scitos/base_footprint/tiago_rfid_reader_sensor/transceiver" if="$(eval robot == 'scitos')"/>
+    <arg name="gazebo_wireless_node_topic_name" default="/gazebo/default/scitos/base_footprint/tiago_rfid_reader_sensor/transceiver" if="$(eval robot == 'scitos')"/>
     <arg name="gazebo_wireless_node_topic_name" default="/gazebo/default/tiago/torso_lift_link/tiago_rfid_reader_sensor/transceiver" if="$(eval robot == 'tiago')"/>
 
 
@@ -32,6 +32,6 @@
     </include>
 
     <!-- Launch viewZois: for display -->
-    <node name="viewZois_node" pkg="rfid_grid_map" type="viewZois"  />
+    <!-- <node name="viewZois_node" pkg="rfid_grid_map" type="viewZois"  /> -->
 
 </launch>
