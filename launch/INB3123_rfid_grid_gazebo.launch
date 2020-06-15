@@ -10,7 +10,7 @@
     <arg name="robot"                default="scitos"/>  
     <arg name="world_tf"             default="loc_map"/>
     <arg name="sigma_power"          default="5.92"/>
-    <arg name="rfidgrid_resolution"  default="0.05"/> 
+    <arg name="rfidgrid_resolution"  default="0.25"/> 
 
     <arg name="gazebo_wireless_node_topic_name" default="/gazebo/default/scitos/base_footprint/tiago_rfid_reader_sensor/transceiver" if="$(eval robot == 'scitos')"/>
     <arg name="gazebo_wireless_node_topic_name" default="/gazebo/default/tiago/torso_lift_link/tiago_rfid_reader_sensor/transceiver" if="$(eval robot == 'tiago')"/>
