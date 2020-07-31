@@ -1,0 +1,127 @@
+---
+session: mcdm_multisim
+init_cmd: |
+  #exec /bin/bash
+  cd @TMULE_CONFIG_DIR@ || true
+  set -o pipefail
+  function export_default () {
+    var_name="$1"
+    var_default="$2"
+    eval $var_name="${!var_name:-$var_default}"
+    export $var_name
+    echo "  $0 -> $var_name=${!var_name}"
+  }
+
+  # source ROS
+  source "/opt/ros/$(rosversion -d)/setup.bash"
+  
+  # load robot-specific config file
+  export_default SCENARIO_NAME "sim_riseholme"
+
+  export_default CATKIN_WORKSPACE "$HOME/workspace/nbs_ws"
+  source $CATKIN_WORKSPACE/devel/setup.bash
+
+  # the gridmap to be used
+  export_default MAP "$(rospack find rasberry_navigation)/maps/riseholme_sim.yaml"
+  export_default NOGOMAP "$(rospack find rasberry_navigation)/maps/riseholme_sim_no_go.yaml"
+
+  # sim related
+  export_default USE_SIM true
+  export_default USE_RVIZ true
+  export_default USE_GUI true
+  export_default GAZEBO_WORLD $(rospack find rasberry_gazebo)/worlds/riseholme.world
+  export_default EKF_PUBLISH_TF false
+  export_default USE_CARROT false
+  export_default USE_IMU false
+  export_default USE_OMNI false
+  export_default SITE_NAME "riseholme"
+
+  # robot_1
+  export ROBOT_NO_1="019"
+  export ROBOT_NAME_1=thorvald_001
+  export ROBOT_MODEL_1=$(rospack find rasberry_bringup)/config/robot_${ROBOT_NO_1}.yaml
+  export ROBOT_MODEL_EXTRAS_1=$(rospack find gazebo_rfid_node)/urdf/sensor_modules/sensor_frames_lincoln_rfid.xacro
+  export ROBOT_POS_X_1=-1.0
+  export ROBOT_POS_Y_1=1.3
+  export ROBOT_POS_A_1=0.0
+
+  # robot_2
+  export ROBOT_NO_2="019"
+  export ROBOT_NAME_2=thorvald_002
+  export ROBOT_MODEL_2=$(rospack find rasberry_bringup)/config/robot_${ROBOT_NO_2}.yaml
+  export ROBOT_MODEL_EXTRAS_2=$(rospack find gazebo_rfid_node)/urdf/sensor_modules/sensor_frames_lincoln_rfid.xacro 
+  export ROBOT_POS_X_2=-1.0
+  export ROBOT_POS_Y_2=4.0
+  export ROBOT_POS_A_2=0.0
+
+  # tag 1
+  export TAG1_POSE="1.0 0.0 0.0 0.0 0.0 0.0 1.0"
+  export TAG1_NUM=0
+  export TAG1_ID=042 
+  
+  # tag 2
+  export TAG2_POSE="1.0 1.0 0.0 0.0 0.0 0.0 1.0"
+  export TAG2_ID=0112358
+  export TAG2_NUM=1
+  
+  # global tag params
+  export TAG_SET="$TAG1_ID,$TAG2_ID"
+  export RFID_RESOLUTION=0.1
+  export FID_READING_TIME=0.5 
+  export TAG_GAIN=25.2
+  export TAG_SENSITIVITY=-85.0
+
+
+# tags: core, nav, rfid
+
+windows:
+- name: robot_roscore
+  panes:
+  - roscore
+  check: "rostopic list"
+  tags: [core, nav ]
+
+- name: simulation
+  panes:
+  - roslaunch gazebo_ros empty_world.launch extra_gazebo_args:=" -s $(rospack find gazebo_rfid_node)/../../../../devel/lib/libgazebo_custom_sensor_preloader.so"  use_sim_time:=$USE_SIM gui:=$USE_GUI world_name:=$GAZEBO_WORLD
+  - roslaunch rasberry_bringup robot_bringup_multisim.launch robot_name:=$ROBOT_NAME_1 robot_model:=$ROBOT_MODEL_1 model_extras:=$ROBOT_MODEL_EXTRAS_1 with_teleoperation:=false start_pose_x:=$ROBOT_POS_X_1 start_pose_y:=$ROBOT_POS_Y_1 start_pose_Y:=$ROBOT_POS_A_1
+  - roslaunch rasberry_bringup robot_bringup_multisim.launch robot_name:=$ROBOT_NAME_2 robot_model:=$ROBOT_MODEL_2 model_extras:=$ROBOT_MODEL_EXTRAS_2 with_teleoperation:=false start_pose_x:=$ROBOT_POS_X_2 start_pose_y:=$ROBOT_POS_Y_2 start_pose_Y:=$ROBOT_POS_A_2
+  check: "rostopic list | grep -q odom"
+  tags: [core, nav ]
+
+- name: tags
+  panes:
+  - roslaunch rfid_grid_map grid_debug.launch tagID:=$TAG1_ID tag_gain:=$TAG_GAIN tag_sensitivity:=$TAG_SENSITIVITY tag_num:=$TAG1_NUM worldTagPose:="$TAG1_POSE" noRel:=true is_sim:=true
+  - roslaunch rfid_grid_map grid_debug.launch tagID:=$TAG2_ID tag_gain:=$TAG_GAIN tag_sensitivity:=$TAG_SENSITIVITY tag_num:=$TAG2_NUM worldTagPose:="$TAG2_POSE" noRel:=true is_sim:=true
+  - rosrun gazebo_rfid_node wirelessNodeMonitor __ns:=$ROBOT_NAME_1 __name:=rfid_reader _ros_rfid_topic_name:="/$ROBOT_NAME_1/lastTag" _ros_rfid_frame_id:="/$ROBOT_NAME_1/lastTag" _gazebo_wireless_node_topic_name:="/gazebo/default/$ROBOT_NAME_1/$ROBOT_NAME_1/base_link/rfid_reader_sensor/transceiver"
+  - rosrun gazebo_rfid_node wirelessNodeMonitor __ns:=$ROBOT_NAME_2 __name:=rfid_reader _ros_rfid_topic_name:="/$ROBOT_NAME_2/lastTag" _ros_rfid_frame_id:="/$ROBOT_NAME_2/lastTag" _gazebo_wireless_node_topic_name:="/gazebo/default/$ROBOT_NAME_2/$ROBOT_NAME_2/base_link/rfid_reader_sensor/transceiver"
+  check: "rostopic list | grep -q lastTag"
+  tags: [core, rfid ]
+
+- name: rfid_grid
+  panes:
+  - roslaunch rfid_grid_map grid_deploy.launch tag_set:=$TAG_SET  namespace:=$ROBOT_NAME_1  rfid_readings_topic_name:=/$ROBOT_NAME_1/lastTag robot_frame:=$ROBOT_NAME_1/base_link rfidgrid_resolution:=$RFID_RESOLUTION reading_time:=$RFID_READING_TIME
+  - roslaunch rfid_grid_map grid_deploy.launch tag_set:=$TAG_SET  namespace:=$ROBOT_NAME_2  rfid_readings_topic_name:=/$ROBOT_NAME_2/lastTag robot_frame:=$ROBOT_NAME_2/base_link rfidgrid_resolution:=$RFID_RESOLUTION reading_time:=$RFID_READING_TIME 
+  check: "rosnode list | grep -q rfid_grid_map_node"
+  tags: [rfid ]  
+
+- name: robot_local
+  panes:
+  - roslaunch rasberry_navigation map_server.launch map:="$MAP" use_no_go_map:=true no_go_map:=$NOGOMAP
+  - roslaunch rasberry_navigation rasberry_localisation_multisim.launch use_imu:="$USE_IMU" publish_tf:="$EKF_PUBLISH_TF" robot_name:=$ROBOT_NAME_1 initial_pose_x:=$ROBOT_POS_X_1 initial_pose_y:=$ROBOT_POS_Y_1 initial_pose_a:=$ROBOT_POS_A_1
+  - roslaunch rasberry_navigation rasberry_localisation_multisim.launch use_imu:="$USE_IMU" publish_tf:="$EKF_PUBLISH_TF" robot_name:=$ROBOT_NAME_2 initial_pose_x:=$ROBOT_POS_X_2 initial_pose_y:=$ROBOT_POS_Y_2 initial_pose_a:=$ROBOT_POS_A_2
+  check: "rostopic list | grep -q /map"
+  tags: [nav ]
+
+- name: robot_nav
+  panes:
+  - roslaunch rasberry_move_base move_base_dwa_multisim.launch use_carrot_planner:=$USE_CARROT robot_name:=$ROBOT_NAME_1 use_omni:=$USE_OMNI robot_no:=$ROBOT_NO_1
+  - roslaunch rasberry_move_base move_base_dwa_multisim.launch use_carrot_planner:=$USE_CARROT robot_name:=$ROBOT_NAME_2 use_omni:=$USE_OMNI robot_no:=$ROBOT_NO_2
+  check: "rostopic list | grep -q move_base"
+  tags: [nav ]
+
+- name: debug
+  panes:
+  - rviz -d $(rospack find nbs_experiments)/config/riseholme_sim.rviz
+  - rosservice call /thorvald_001/rfid_grid_map_node/thorvald_001/get_rfid_belief "{}"
+  - rosservice call /thorvald_002/rfid_grid_map_node/thorvald_001/get_rfid_belief "{}"
