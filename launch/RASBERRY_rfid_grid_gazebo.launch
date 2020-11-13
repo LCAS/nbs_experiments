@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  MFC:
+    This file contains the configuration for creating a tag grid with visualization
+    and some ground truth.
+-->
+
+<launch>
+
+    <arg name="robot"                default="thorvald"/>  
+    <arg name="world_tf"             default="map"/>
+    <arg name="sigma_power"          default="5.92"/>
+    <arg name="rfidgrid_resolution"  default="0.25"/> 
+
+    <arg name="gazebo_wireless_node_topic_name" default="/gazebo/default/thorvald_ii/base_link/_rfid_reader_sensor/transceiver"/>
+
+
+    <!-- GAZEBO-ROS bridge for Tiago RFID reader -->
+    <node pkg="gazebo_rfid_node" type="wirelessNodeMonitor" name="rfid_node_sim" >
+         <param name="ros_rfid_topic_name" value="/lastTag"/>
+         <param name="ros_rfid_frame_id" value="lastTag"/>
+         <param name="gazebo_wireless_node_topic_name" value="$(arg gazebo_wireless_node_topic_name)"/>
+    </node>
+
+    <!-- Same config for real robot ! -->
+    <include file="$(find nbs_experiments)/launch/RASBERRY_rfid_grid_real.launch">
+        <arg name="is_sim"          value="true"/>
+        <arg name="world_tf"        value="$(arg world_tf)"/>    
+        <arg name="sigma_power"          value="$(arg sigma_power)"/>
+        <arg name="rfidgrid_resolution"  value="$(arg rfidgrid_resolution)"/> 
+        <arg name="robot"                value="thorvald"/>  
+    </include>
+
+    <!-- Launch viewZois: for display -->
+    <!-- <node name="viewZois_node" pkg="rfid_grid_map" type="viewZois"  /> -->
+
+    <!-- Launch topological route planning-->
+    <node pkg="topological_navigation" type="get_simple_policy.py" name="get_simple_policy"/>
+
+</launch>

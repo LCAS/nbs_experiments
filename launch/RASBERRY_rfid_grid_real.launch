@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  MFC:
+    This file contains the configuration for creating the rfid grid map
+    and some ground truth for the relevant tags.
+-->
+
+<launch>
+
+    <arg name="map_folder"           default="$(find rasberry_gazebo)/config/gazebo"/>
+    <arg name="is_sim"               default="false"/>
+    <arg name="world_tf"             default="map"/>   
+    <arg name="sigma_power"          default="3.92"/>
+    <arg name="rfidgrid_resolution"  default="0.075"/> 
+    <arg name="robot"                default="thorvald"/>  
+    <!--
+      Get regions from tiago map config and put them in rosparam server.
+      This is automatically done inside tiago, but if we don't use PAL nav stack
+      it will be missing
+    -->
+    <!-- <rosparam command="load" file="$(arg map_folder)/models_AB.yaml" ns="mmap"/> -->
+
+    <include file="$(find rfid_grid_map)/launch/grid_debug.launch">
+        <arg name="tagID"                value="390100010000000000000001"/>
+        <!-- <arg name="object"               value="remote"/> -->
+        <arg name="tag_num"              value="1"/>
+        <!-- <arg name="worldTagPose"         value="-8.11473274231 -6.12305164337 0.5 0.0 0.0 0.996297119359 0.0859770315665"/>   -->
+        <arg name="worldTagPose"         value="4.77 -2.89 1.5 0.0 0.0 0 1.0 "/>  
+        <arg name="is_sim"               value="$(arg is_sim)"/>
+        <arg name="world_tf"             value="$(arg world_tf)"/>        
+    </include>
+
+    <include file="$(find rfid_grid_map)/launch/grid_debug.launch">
+        <arg name="tagID"                value="390100010000000000000003"/>
+        <!-- <arg name="object"               value="pillbox"/> -->
+        <arg name="tag_num"              value="3"/>
+        <!-- <arg name="worldTagPose"         value="-9.09205627441 -11.7656431198 0.5  0.0 0.0 0.996955915792 0.077967313459"/> -->
+        <arg name="worldTagPose"         value="17.37 -0.51 1.5 0.0 0.0 -1.0 0.0"/>
+        <arg name="is_sim"              value="$(arg is_sim)"/>        
+        <arg name="world_tf"             value="$(arg world_tf)"/>                
+    </include>
+
+
+    <include file="$(find rfid_grid_map)/launch/grid_debug.launch">
+        <arg name="tagID"                value="390100010000000000000006"/>
+        <!-- <arg name="object"               value="umbrella"/> -->
+        <arg name="tag_num"              value="6"/>
+        <!-- <arg name="worldTagPose"         value="-16.2617225647 -21.0958938599 0.5 0.0 0.0 0.668515746956 0.743697987137"/> -->
+        <arg name="worldTagPose"         value="14.4 7.03 1.5 0.0 0.0 0 1.0"/>
+        <arg name="is_sim"               value="$(arg is_sim)"/>        
+        <arg name="world_tf"             value="$(arg world_tf)"/>                
+    </include>  
+
+    <!-- How many tags have we seen from the total set? -->
+    <node pkg="rfid_grid_map" type="tag_discovery_node.py" name="tag_discovery_counter" >
+         <param name="detected_tag_topic_name" value="/lastTag"/>        
+         <rosparam param="tag_set">['390100010000000000000001', '390100010000000000000003', '390100010000000000000006']</rosparam>  
+         <param name="tag_discovery_coverage_topic_name" value="/tag_coverage"/>
+    </node> -->
+
+  <!-- grid launcher -->
+  <include file="$(find rfid_grid_map)/launch/grid.launch">
+    <arg name="rfidgrid_resolution"       value="$(arg rfidgrid_resolution)"/>
+    <arg name="sigma_power"               value="$(arg sigma_power)"/>
+    <arg name="namespace"                 value="$(arg robot)"/>
+  </include>
+
+</launch>
