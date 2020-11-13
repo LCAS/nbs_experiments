@@ -39,3 +39,5 @@ And finally the workspace:
     catkin build
 
 If all compiles, you should be able to install.
+
+Then you need to download and install the RASberry repository following the instruction [here](https://github.com/LCAS/RASberry/wiki/RASberry-Setup).

@@ -1,7 +1,7 @@
 ################################################################################
 #                           Experiment setup packages                          #
 ################################################################################
-#- git: {local-name: nbs_experiments,             uri: 'https://github.com/LCAS/nbs_experiments.git', version: 'melodic-devel'}
+- git: {local-name: nbs_experiments,             uri: 'https://github.com/LCAS/nbs_experiments.git', version: 'melodic-devel'}
 
 ################################################################################
 #                           MCDM packages                                      #
@@ -12,8 +12,4 @@
 #                           RFID                                               #
 ################################################################################
 - git: {local-name: RFID,                         uri: 'https://github.com/LCAS/RFID.git', version: 'melodic-devel'}
-################################################################################
-#                           RASBERRY                                             #
-################################################################################
-#- git: {local-name: RASberry,                uri: 'https://github.com/pulver22/RASberry.git', version: 'rfid'}
 
