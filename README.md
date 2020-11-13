@@ -1,9 +1,9 @@
 # nbs_experiments
-This repo contains maps and gazebo worlds for experiments. It's main use is to get an environment for mcdm experiments with Tiago and others.
+This repo contains maps and gazebo worlds for experiments. It's main use is to get an environment for mcdm experiments.
 
 
 # Simulation
-Main launcher is `INB3123_experiment.launch` which contains almost everything.
+Main launcher is `RASBERRY_rfid_grid_gazebo.launch` which contains almost everything.
 
 # Setting up LCAS software.
 If you still haven't set up this awesome software, you won't be able to go on. Please proceed with:
@@ -17,32 +17,25 @@ If you still haven't set up this awesome software, you won't be able to go on. P
 
 Or whatever new instructions Marc has kindly compiled for us [here](https://github.com/LCAS/rosdistro/wiki#using-the-l-cas-repository-if-you-just-want-to-use-our-software)
 
-# Installing Tiago in Kinetic with Gazebo8 compatibility
+# Installing the repo in melodic with gazebo9 compatibility
 
 
-Mostly we will use same instructions than in PAL tutorials (see [here](http://wiki.ros.org/Robots/TIAGo/Tutorials/Installation/TiagoSimulation)), but we will use our own rosinstall file from here. Follow these instructions:
+Follow these instructions:
 
-    source /opt/ros/kinetic/setup.bash
-    mkdir ~/workspace/tiago
-    cd ~/workspace/tiago
-    # Download file tiago_lcas.rosinstall from this repo
+    source /opt/ros/melodic/setup.bash
+    mkdir ~/workspace/
+    cd ~/workspace/
+    # Download file rasberry.rosinstall from this repo
 
-    rosinstall src /opt/ros/kinetic tiago_lcas.rosinstall
+    rosinstall src /opt/ros/melodic rasberry.rosinstall
 
     rosdep update
 
-    rosdep install -y --from-paths src --ignore-src --rosdistro kinetic --skip-keys="opencv2 opencv2-nonfree pal_laser_filters speed_limit  sensor_to_cloud hokuyo_node libdw-dev python-graphitesend-pip python-statsd pal_filters pal_vo_server pal_usb_utils pal_pcl pal_pcl_points_throttle_and_filter pal_karto pal_local_joint_control camera_calibration_files pal_startup_msgs pal-orbbec-openni2 dummy_actuators_manager pal_local_planner gravity_compensation_controller current_limit_controller dynamic_footprint dynamixel_cpp tf_lookup"
+    rosdep install -y --from-paths src --ignore-src --rosdistro melodic --skip-keys="opencv2 opencv2-nonfree pal_laser_filters speed_limit  sensor_to_cloud hokuyo_node libdw-dev python-graphitesend-pip python-statsd pal_filters pal_vo_server pal_usb_utils pal_pcl pal_pcl_points_throttle_and_filter pal_karto pal_local_joint_control camera_calibration_files pal_startup_msgs pal-orbbec-openni2 dummy_actuators_manager pal_local_planner gravity_compensation_controller current_limit_controller dynamic_footprint dynamixel_cpp tf_lookup"
 
-Now we are almost ready to compile the packages. First compile amtec (it fails sometimes, just retry compiling):
-
-    catkin build amtec -DCATKIN_ENABLE_TESTING=0 -DCMAKE_BUILD_TYPE=Debug
 
 And finally the workspace:
 
-    catkin build -DCATKIN_ENABLE_TESTING=0 -DCMAKE_BUILD_TYPE=Debug
+    catkin build
 
-
-
-    catkin build amtec
-
-If all compiles, you should be able to install
+If all compiles, you should be able to install.
