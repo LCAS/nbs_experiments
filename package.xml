@@ -2,7 +2,7 @@
 <package format="2">
   <name>nbs_experiments</name>
   <version>1.0.0</version>
-  <description>MCDM experiments (real/simulated)</description>
+  <description>NBS experiments (real/simulated)</description>
 
 
   <maintainer email="manolofc@gmail.com">Manuel Fernandez</maintainer>
@@ -23,6 +23,8 @@
   <depend>strands_movebase</depend>
   <depend>global_planner</depend>
   <depend>eband_local_planner</depend>
+  <depend>rasberry_bringup</depend>
+  <depend>gazebo_rfid_node</depend>
   <export>
   </export>
 </package>
