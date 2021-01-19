@@ -56,7 +56,19 @@
   <include file="$(find rfid_grid_map)/launch/grid.launch">
     <arg name="rfidgrid_resolution"       value="$(arg rfidgrid_resolution)"/>
     <arg name="sigma_power"               value="$(arg sigma_power)"/>
-    <arg name="namespace"                 value="$(arg robot)"/>
+    <arg name="namespace"                 value="$(arg robot)_left" />
+    <arg name="robot_frame"               value="rfid_reader_link_left" />
+    <arg name="rfid_belief_srv_name"      value="get_rfid_belief_left" />
+    <arg name="rfid_readings_topic_name"  value="/lastTag_left" />
+  </include>
+
+  <include file="$(find rfid_grid_map)/launch/grid.launch">
+    <arg name="rfidgrid_resolution"       value="$(arg rfidgrid_resolution)"/>
+    <arg name="sigma_power"               value="$(arg sigma_power)"/>
+    <arg name="namespace"                 value="$(arg robot)_right" />
+    <arg name="robot_frame"               value="rfid_reader_link_right" />
+    <arg name="rfid_belief_srv_name"      value="get_rfid_belief_right" />
+    <arg name="rfid_readings_topic_name"  value="/lastTag_right" />
   </include>
 
 </launch>
