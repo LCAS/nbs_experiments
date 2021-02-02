@@ -1,63 +1,114 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-root = "/home/pulver/Desktop/MCDM/mcdm/29-01-202116-37-00/"
+root = "/home/pulver/Desktop/MCDM/mcdm/"
+experiment_list = [ "29-01-202117-38-22/" , 
+                    "tmp_1/", 
+                    "tmp_2/"]
+
+
+def prepareData(data):
+    # Normalise lenght
+    max_len_index = np.max([x.shape[0] for x in data])
+    final = np.zeros(shape=(max_len_index, len(data) + 2, 2) )
+    for i in range(len(data)):
+        while data[i].shape[0] < max_len_index:
+            data[i] = np.vstack([data[i], data[i][-1,:]])
+        data[i] = data[i][:, 0, :]
+        final[:,i, 0] = data[i][:, 0]  # (:,:,0) if for the x
+        final[:,i, 1] = data[i][:, 1]  # (:,:,1) if for the y
+        # Calculate average and std dev 
+    final[:,-2, :] = np.average(final[:,0:-3, :], axis=1)
+    final[:,-1, :] = np.std(final[:,0:-3, :], axis=1)
+    # final = (timestamp, <run_1, run_2, run_3,..., avg, std>, <x, y>)
+    return final
+
+def plotTrajectory(data, label, color, marker):
+    #  Plot the trajectories
+    plt.plot(data[:,-2, 0], data[:,-2, 1], label=label, color=color,  marker=marker)
+    plt.fill_between(data[:,-2, 0], data[:, -2, 1]-data[:, -1, 1], data[:, -2, 1]+data[:, -1, 1], alpha=0.2, edgecolor=color, facecolor=color)
+    num_items = np.arange(0, len(data))
+    for i in range(len(data)):
+        plt.text(data[i,-2, 0], data[i,-2, 1], str(num_items[i]), color=color, fontsize=12)
+    
+    
+def computeDistance(pf_list, gt_list):
+    distance = np.zeros(shape=(pf_list[0].shape[0],pf_list[0].shape[1]+1, len(pf_list) ))
+    for run in range(len(gt_list)):
+        euclidean_distance = gt_list[run] - pf_list[run]
+        tmp = np.zeros((euclidean_distance.shape[0],euclidean_distance.shape[1]+1))
+        tmp[:,:-1] = euclidean_distance
+        euclidean_distance = tmp
+        euclidean_distance[:, -1] = np.sqrt(pow(euclidean_distance[:, 0], 2) + pow(euclidean_distance[:,1],2))
+        # distance_list.append(euclidean_distance)
+        distance[:,:,run] = euclidean_distance
+    result = np.zeros(shape=(len(distance), 3, 2))
+    # distance = (timestamp, <x, y, euclidean>, run)
+    # result = (timestamp, <x, y, euclidean>, <avg, std>)
+    result[:, :, 0] = np.average(distance, axis=2)
+    result[:, :, 1] = np.std(distance, axis=2)
+    return result
+
+def plotDistance(data, pos, y_label, label, color, axes):
+    #  Plot the trajectories
+    x = np.arange(1, data.shape[0] + 1, 1)
+    axs[pos].plot(x, data[:,-2], label=label, color=color)
+    axs[pos].fill_between(x, data[:, -2]-data[:, -1], data[:, -2]+data[:, -1], alpha=0.2, edgecolor=color, facecolor=color)
+    axs[pos].set_ylabel(y_label)
+
+                    
+run = len(experiment_list)
+gt_list = []
+gps_list = []
+pf_list = []
 tag = "1"
 
-gt  = np.genfromtxt(root + "gt_tag_pose_" + tag + ".csv", delimiter=",", skip_header=1)
-gps = np.genfromtxt(root + "gps_tag_pose_" + tag + ".csv", delimiter=",", skip_header=1)
-pf  = np.genfromtxt(root + "pf_tag_pose_" + tag + ".csv", delimiter=",", skip_header=1)
+for i in range(run):
+    tmp_gt = np.genfromtxt(open(root + experiment_list[i] + "gt_tag_pose_" + tag + ".csv"), delimiter=",", skip_header=1)
+    tmp_gps = np.genfromtxt(open(root + experiment_list[i] + "gps_tag_pose_" + tag + ".csv"), delimiter=",", skip_header=1)
+    tmp_pf = np.genfromtxt(open(root + experiment_list[i] + "pf_tag_pose_" + tag + ".csv"), delimiter=",", skip_header=1)
+    tmp_gt = np.expand_dims(tmp_gt, axis=1)  # Add one column needed later for stacking
+    tmp_gps = np.expand_dims(tmp_gps, axis=1)  # Add one column needed later for stacking
+    tmp_pf = np.expand_dims(tmp_pf, axis=1)  # Add one column needed later for stacking
+    gt_list.append(tmp_gt)
+    gps_list.append(tmp_gps)
+    pf_list.append(tmp_pf)
 
-assert gt.shape[0] == pf.shape[0]
-# NOTE: GPS signal can have more entry because at different rate
-num_items = np.arange(0, gt.shape[0])
-# print(gt[:,0])
-data_to_plot = 12
-start_index = 0
+gt = prepareData(gt_list)
+gps = prepareData(gps_list)
+pf = prepareData(pf_list)
 
-fig = plt.figure()
-
-# for rows in gt.shape[0]:
-plt.plot(gt[start_index:start_index+data_to_plot,0], gt[start_index:start_index+data_to_plot,1], color="r", marker="o", label="gt")
-plt.plot(gps[start_index:start_index+data_to_plot,0], gps[start_index:start_index+data_to_plot,1], color="g", marker="x", label="gps", alpha=0.2)
-plt.plot(pf[start_index:start_index+data_to_plot,0], pf[start_index:start_index+data_to_plot,1], color="b", marker="*", label="pf")
-
-for i in range(data_to_plot):
-    plt.text(gt[start_index+i,0], gt[start_index+i,1], str(num_items[i]), color="red", fontsize=12)
-    plt.text(pf[start_index+i,0], pf[start_index+i,1], str(num_items[i]), color="blue", fontsize=12)
-    plt.text(gps[start_index+i,0], gps[start_index+i,1], str(num_items[i]), color="green", fontsize=12)
+plotTrajectory(data=gps, label="gps", color="g", marker="x" )
+plotTrajectory(data=gt, label="gt", color="r", marker="o" )
+plotTrajectory(data=pf, label="pf", color="b", marker="*" )
 
 plt.legend()
 plt.title("Waypoint prediction", fontsize=14)
-plt.savefig(fname=root + "waypoints_prediction.png", dpi=300)
+plt.xlabel("X-distance[m]")
+plt.ylabel("Y-distance[m]")
+plt.savefig(fname="/home/pulver/Desktop/waypoints_prediction.png", dpi=300)
+# plt.show()
 
-# Clear figure and plot distance pf-gt
-plt.clf()
+rows = 3
+cols = 1
+parameters = {'axes.labelsize': 8,
+                'ytick.labelsize': 8, 
+                'xtick.labelsize': 8,
+                'legend.fontsize': 8}
+plt.rcParams.update(parameters)
+fig = plt.figure(figsize=(6,8))
+axs = fig.subplots(rows, cols, sharex=True, sharey=False)
+fig.suptitle("Tags localization error")
+plt.xlabel("NBS iterations")
+result = computeDistance(pf_list, gt_list)
 
-# distance = np.sqrt((x1 - x2)^2 + (y1 - y2)^2)
-euclidean_distance = gt - pf
-tmp = np.zeros((euclidean_distance.shape[0],euclidean_distance.shape[1]+1))
-tmp[:,:-1] = euclidean_distance
-euclidean_distance = tmp
-euclidean_distance[:, -1] = np.sqrt(pow(euclidean_distance[:, 0], 2) + pow(euclidean_distance[:,1],2))
-# euclidean_distance[:, 1] = np.sqrt(euclidean_distance[:, -1])
-timestamps = np.arange(start=1, stop=len(euclidean_distance)+1)
 
-fig, axs = plt.subplots(3, 1, sharex=True)
-fig.suptitle("Distance between prediction and ground truth", fontsize=14)
-axs[0].plot(timestamps, euclidean_distance[start_index:start_index+data_to_plot,0], color="r", marker="o", label="X-displacement[m]")
-axs[1].plot(timestamps, euclidean_distance[start_index:start_index+data_to_plot,1], color="b", marker="o", label="Y-displacement[m]")
-axs[2].plot(timestamps, euclidean_distance[start_index:start_index+data_to_plot,2], color="g", marker="o", label="Euclidean Distance [m]")
+plotDistance(result[:,0,:], pos=0, y_label="Displacement[m]", label="X", color="r", axes=axs)
+plotDistance(result[:,1,:], pos=1, y_label="Displacement[m]", label="Y", color="b", axes=axs)
+plotDistance(result[:,2,:], pos=2, y_label="Displacement[m]", label="Euclidean", color="g", axes=axs)
 
-axs[0].yaxis.set_label_position("right")
-axs[1].yaxis.set_label_position("right")
-axs[2].yaxis.set_label_position("right")
-axs[0].set_ylabel("X-displacement[m]", fontsize=8)
-axs[1].set_ylabel("Y-displacement[m]", fontsize=8)
-axs[2].set_ylabel("Euclidean distance[m]", fontsize=8)
-axs[2].set_xlabel("NBS iterations")
 
-# fig.tight_layout()
-# fig.legend(ncol=3,loc='upper center', bbox_to_anchor=(0.5, 0.95))
+# # fig.tight_layout()
+fig.legend(ncol=3,loc='upper center', bbox_to_anchor=(0.5, 0.95))
 
-fig.savefig(fname=root + "distance.png", dpi=300)
+fig.savefig(fname="/home/pulver/Desktop/distance.png", dpi=300)
