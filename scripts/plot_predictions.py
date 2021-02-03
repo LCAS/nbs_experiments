@@ -1,10 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
-
-root = "/home/pulver/Desktop/MCDM/mcdm/"
-experiment_list = [ "29-01-202117-38-22/" , 
-                    "tmp_1/", 
-                    "tmp_2/"]
+import os
+import argparse
 
 
 def prepareData(data):
@@ -56,59 +53,68 @@ def plotDistance(data, pos, y_label, label, color, axes):
     axs[pos].fill_between(x, data[:, -2]-data[:, -1], data[:, -2]+data[:, -1], alpha=0.2, edgecolor=color, facecolor=color)
     axs[pos].set_ylabel(y_label)
 
-                    
-run = len(experiment_list)
-gt_list = []
-gps_list = []
-pf_list = []
-tag = "1"
 
-for i in range(run):
-    tmp_gt = np.genfromtxt(open(root + experiment_list[i] + "gt_tag_pose_" + tag + ".csv"), delimiter=",", skip_header=1)
-    tmp_gps = np.genfromtxt(open(root + experiment_list[i] + "gps_tag_pose_" + tag + ".csv"), delimiter=",", skip_header=1)
-    tmp_pf = np.genfromtxt(open(root + experiment_list[i] + "pf_tag_pose_" + tag + ".csv"), delimiter=",", skip_header=1)
-    tmp_gt = np.expand_dims(tmp_gt, axis=1)  # Add one column needed later for stacking
-    tmp_gps = np.expand_dims(tmp_gps, axis=1)  # Add one column needed later for stacking
-    tmp_pf = np.expand_dims(tmp_pf, axis=1)  # Add one column needed later for stacking
-    gt_list.append(tmp_gt)
-    gps_list.append(tmp_gps)
-    pf_list.append(tmp_pf)
-
-gt = prepareData(gt_list)
-gps = prepareData(gps_list)
-pf = prepareData(pf_list)
-
-plotTrajectory(data=gps, label="gps", color="g", marker="x" )
-plotTrajectory(data=gt, label="gt", color="r", marker="o" )
-plotTrajectory(data=pf, label="pf", color="b", marker="*" )
-
-plt.legend()
-plt.title("Waypoint prediction", fontsize=14)
-plt.xlabel("X-distance[m]")
-plt.ylabel("Y-distance[m]")
-plt.savefig(fname="/home/pulver/Desktop/waypoints_prediction.png", dpi=300)
-# plt.show()
-
-rows = 3
-cols = 1
-parameters = {'axes.labelsize': 8,
-                'ytick.labelsize': 8, 
-                'xtick.labelsize': 8,
-                'legend.fontsize': 8}
-plt.rcParams.update(parameters)
-fig = plt.figure(figsize=(6,8))
-axs = fig.subplots(rows, cols, sharex=True, sharey=False)
-fig.suptitle("Tags localization error")
-plt.xlabel("NBS iterations")
-result = computeDistance(pf_list, gt_list)
+if __name__== "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--experiments", type=str, nargs="+", default=["03-02-2021-17-35-01"],
+                        help="Experiment name")
+    parser.add_argument("--root", type=str, default=os.environ['DATA_DIR'],
+                        help="Folder path")
+    args = parser.parse_args()
 
 
-plotDistance(result[:,0,:], pos=0, y_label="Displacement[m]", label="X", color="r", axes=axs)
-plotDistance(result[:,1,:], pos=1, y_label="Displacement[m]", label="Y", color="b", axes=axs)
-plotDistance(result[:,2,:], pos=2, y_label="Displacement[m]", label="Euclidean", color="g", axes=axs)
+    run = len(args.experiments)
+    gt_list = []
+    gps_list = []
+    pf_list = []
+    tag = "1"
+
+    for i in range(run):
+        tmp_gt = np.genfromtxt(open(os.path.join(args.root, args.experiments[i], "gt_tag_pose_" + tag + ".csv")), delimiter=",", skip_header=1)
+        tmp_gps = np.genfromtxt(open(os.path.join(args.root, args.experiments[i], "gps_tag_pose_" + tag + ".csv")), delimiter=",", skip_header=1)
+        tmp_pf = np.genfromtxt(open(os.path.join(args.root, args.experiments[i], "pf_tag_pose_" + tag + ".csv")), delimiter=",", skip_header=1)
+        tmp_gt = np.expand_dims(tmp_gt, axis=1)  # Add one column needed later for stacking
+        tmp_gps = np.expand_dims(tmp_gps, axis=1)  # Add one column needed later for stacking
+        tmp_pf = np.expand_dims(tmp_pf, axis=1)  # Add one column needed later for stacking
+        gt_list.append(tmp_gt)
+        gps_list.append(tmp_gps)
+        pf_list.append(tmp_pf)
+
+    gt = prepareData(gt_list)
+    gps = prepareData(gps_list)
+    pf = prepareData(pf_list)
+
+    plotTrajectory(data=gps, label="gps", color="g", marker="x" )
+    plotTrajectory(data=gt, label="gt", color="r", marker="o" )
+    plotTrajectory(data=pf, label="pf", color="b", marker="*" )
+
+    plt.legend()
+    plt.title("Waypoint prediction", fontsize=14)
+    plt.xlabel("X-distance[m]")
+    plt.ylabel("Y-distance[m]")
+    plt.savefig(fname=os.path.join(args.root, "waypoints_prediction.png"), dpi=300)
+    # plt.show()
+
+    rows = 3
+    cols = 1
+    parameters = {'axes.labelsize': 8,
+                    'ytick.labelsize': 8, 
+                    'xtick.labelsize': 8,
+                    'legend.fontsize': 8}
+    plt.rcParams.update(parameters)
+    fig = plt.figure(figsize=(6,8))
+    axs = fig.subplots(rows, cols, sharex=True, sharey=False)
+    fig.suptitle("Tags localization error")
+    plt.xlabel("NBS iterations")
+    result = computeDistance(pf_list, gt_list)
 
 
-# # fig.tight_layout()
-fig.legend(ncol=3,loc='upper center', bbox_to_anchor=(0.5, 0.95))
+    plotDistance(result[:,0,:], pos=0, y_label="Displacement[m]", label="X", color="r", axes=axs)
+    plotDistance(result[:,1,:], pos=1, y_label="Displacement[m]", label="Y", color="b", axes=axs)
+    plotDistance(result[:,2,:], pos=2, y_label="Displacement[m]", label="Euclidean", color="g", axes=axs)
 
-fig.savefig(fname="/home/pulver/Desktop/distance.png", dpi=300)
+
+    # # fig.tight_layout()
+    fig.legend(ncol=3,loc='upper center', bbox_to_anchor=(0.5, 0.95))
+
+    fig.savefig(fname=os.path.join(args.root, "distance.png"), dpi=300)
