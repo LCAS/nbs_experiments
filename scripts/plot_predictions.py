@@ -15,22 +15,22 @@ def prepareData(data):
         final[:,i, 0] = data[i][:, 0]  # (:,:,0) if for the x
         final[:,i, 1] = data[i][:, 1]  # (:,:,1) if for the y
         # Calculate average and std dev 
-    final[:,-2, :] = np.average(final[:,0:-3, :], axis=1)
-    final[:,-1, :] = np.std(final[:,0:-3, :], axis=1)
+    final[:,-2, :] = np.average(final[:,0:-2, :], axis=1)
+    final[:,-1, :] = np.std(final[:,0:-2, :], axis=1)
     # final = (timestamp, <run_1, run_2, run_3,..., avg, std>, <x, y>)
     return final
 
-def plotTrajectory(data, label, color, marker):
+def plotTrajectory(data, traj, label, color, marker):
     #  Plot the trajectories
-    plt.plot(data[:,-2, 0], data[:,-2, 1], label=label, color=color,  marker=marker)
-    plt.fill_between(data[:,-2, 0], data[:, -2, 1]-data[:, -1, 1], data[:, -2, 1]+data[:, -1, 1], alpha=0.2, edgecolor=color, facecolor=color)
+    plt.plot(data[:, traj, 0], data[:, traj, 1], label=label, color=color,  marker=marker)
+    # plt.fill_between(data[:,-2, 0], data[:, -2, 1]-data[:, -1, 1], data[:, -2, 1]+data[:, -1, 1], alpha=0.2, edgecolor=color, facecolor=color)
     num_items = np.arange(0, len(data))
     for i in range(len(data)):
         plt.text(data[i,-2, 0], data[i,-2, 1], str(num_items[i]), color=color, fontsize=12)
     
     
 def computeDistance(pf_list, gt_list):
-    distance = np.zeros(shape=(pf_list[0].shape[0],pf_list[0].shape[1]+1, len(pf_list) ))
+    distance = np.zeros(shape=(pf_list[0].shape[0], pf_list[0].shape[1]+1, len(pf_list) ))
     for run in range(len(gt_list)):
         euclidean_distance = gt_list[run] - pf_list[run]
         tmp = np.zeros((euclidean_distance.shape[0],euclidean_distance.shape[1]+1))
@@ -42,8 +42,8 @@ def computeDistance(pf_list, gt_list):
     result = np.zeros(shape=(len(distance), 3, 2))
     # distance = (timestamp, <x, y, euclidean>, run)
     # result = (timestamp, <x, y, euclidean>, <avg, std>)
-    result[:, :, 0] = np.average(distance, axis=2)
-    result[:, :, 1] = np.std(distance, axis=2)
+    result[:, :, 0] = np.average(np.absolute(distance), axis=2)
+    result[:, :, 1] = np.std(np.absolute(distance), axis=2)
     return result
 
 def plotDistance(data, pos, y_label, label, color, axes):
@@ -84,9 +84,11 @@ if __name__== "__main__":
     gps = prepareData(gps_list)
     pf = prepareData(pf_list)
 
-    plotTrajectory(data=gps, label="gps", color="g", marker="x" )
-    plotTrajectory(data=gt, label="gt", color="r", marker="o" )
-    plotTrajectory(data=pf, label="pf", color="b", marker="*" )
+    # Plot only one trajectory out of the batch considered
+    random_traj_index = np.random.randint(low=0, high=run)
+    plotTrajectory(data=gps, traj=random_traj_index, label="gps", color="g", marker="x" )
+    plotTrajectory(data=gt, traj=random_traj_index, label="gt", color="r", marker="o" )
+    plotTrajectory(data=pf, traj=random_traj_index, label="pf", color="b", marker="*" )
 
     plt.legend()
     plt.title("Waypoint prediction", fontsize=14)
