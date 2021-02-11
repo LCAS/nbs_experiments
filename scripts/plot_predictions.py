@@ -62,6 +62,11 @@ if __name__== "__main__":
                         help="Folder path")
     args = parser.parse_args()
 
+    # folder to save results
+    out_folder = os.path.join(args.root, "out_" + "_".join(args.experiments))
+    if not os.path.exists(out_folder):
+        os.makedirs(out_folder)
+    print("I will save the plots to {}".format(out_folder))
 
     run = len(args.experiments)
     gt_list = []
@@ -94,7 +99,7 @@ if __name__== "__main__":
     plt.title("Waypoint prediction", fontsize=14)
     plt.xlabel("X-distance[m]")
     plt.ylabel("Y-distance[m]")
-    plt.savefig(fname=os.path.join(args.root, "waypoints_prediction.png"), dpi=300)
+    plt.savefig(fname=os.path.join(out_folder, "waypoints_prediction.png"), dpi=300)
     # plt.show()
 
     rows = 3
@@ -119,4 +124,4 @@ if __name__== "__main__":
     # # fig.tight_layout()
     fig.legend(ncol=3,loc='upper center', bbox_to_anchor=(0.5, 0.95))
 
-    fig.savefig(fname=os.path.join(args.root, "distance.png"), dpi=300)
+    fig.savefig(fname=os.path.join(out_folder, "distance.png"), dpi=300)
