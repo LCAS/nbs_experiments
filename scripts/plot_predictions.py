@@ -84,6 +84,7 @@ if __name__== "__main__":
         gt_list.append(tmp_gt)
         gps_list.append(tmp_gps)
         pf_list.append(tmp_pf)
+        print("Experiment {}: size {}".format(args.experiments[i], tmp_gps.shape))
 
     gt = prepareData(gt_list)
     gps = prepareData(gps_list)
