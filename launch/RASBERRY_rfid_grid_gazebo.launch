@@ -11,6 +11,7 @@
     <arg name="world_tf"             default="map"/>
     <arg name="sigma_power"          default="5.92"/>
     <arg name="rfidgrid_resolution"  default="0.25"/> 
+    <arg name="num_pickers"          default="1"/>
 
     <arg name="gazebo_wireless_node_topic_name" default="/gazebo/default/thorvald_ii/base_link/_rfid_reader_sensor/transceiver"/>
 
@@ -29,6 +30,7 @@
         <arg name="sigma_power"          value="$(arg sigma_power)"/>
         <arg name="rfidgrid_resolution"  value="$(arg rfidgrid_resolution)"/> 
         <arg name="robot"                value="thorvald"/>  
+        <arg name="num_pickers"          value="$(arg num_pickers)"/>
     </include>
 
     <!-- Launch viewZois: for display -->
