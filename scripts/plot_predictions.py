@@ -5,12 +5,12 @@ import argparse
 
 
 def prepareData(data):
-    # Normalise lenght
-    max_len_index = np.max([x.shape[0] for x in data])
-    final = np.zeros(shape=(max_len_index, len(data) + 2, 2) )
+    # Normalise length to keep the shortest trajectory
+    min_len = np.min([x.shape[0] for x in data])
+    final = np.zeros(shape=(min_len, len(data) + 2, 2) )
     for i in range(len(data)):
-        while data[i].shape[0] < max_len_index:
-            data[i] = np.vstack([data[i], data[i][-1,:]])
+        while data[i].shape[0] > min_len:
+            data[i] = data[i][:min_len, ...]
         data[i] = data[i][:, 0, :]
         final[:,i, 0] = data[i][:, 0]  # (:,:,0) if for the x
         final[:,i, 1] = data[i][:, 1]  # (:,:,1) if for the y
@@ -26,7 +26,7 @@ def plotTrajectory(data, traj, label, color, marker):
     # plt.fill_between(data[:,-2, 0], data[:, -2, 1]-data[:, -1, 1], data[:, -2, 1]+data[:, -1, 1], alpha=0.2, edgecolor=color, facecolor=color)
     num_items = np.arange(0, len(data))
     for i in range(len(data)):
-        plt.text(data[i,-2, 0], data[i,-2, 1], str(num_items[i]), color=color, fontsize=12)
+        plt.text(data[i, traj, 0], data[i, traj, 1], str(num_items[i]), color=color, fontsize=12)
     
     
 def computeDistance(pf_list, gt_list):
