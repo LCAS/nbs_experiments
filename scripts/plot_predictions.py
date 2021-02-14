@@ -89,6 +89,15 @@ if __name__== "__main__":
     gps = prepareData(gps_list)
     pf = prepareData(pf_list)
 
+    # We want to save on disk the average and std value just computed 
+    # for then comparing it with different methods
+    gt_final  = gt[:, -2:, :]
+    gps_final = gps[:, -2, :]
+    pf_final  = pf[:, -2:, :]
+    np.save(out_folder + "/gt_final.csv", gt_final)
+    np.save(out_folder + "/gps_final.csv", gps_final)
+    np.save(out_folder + "/pf_final.csv", pf_final)
+
     # Plot only one trajectory out of the batch considered
     random_traj_index = np.random.randint(low=0, high=run)
     plotTrajectory(data=gps, traj=random_traj_index, label="gps", color="g", marker="x" )
