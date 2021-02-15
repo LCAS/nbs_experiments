@@ -12,7 +12,8 @@
     <arg name="world_tf"             default="map"/>   
     <arg name="sigma_power"          default="3.92"/>
     <arg name="rfidgrid_resolution"  default="0.075"/> 
-    <arg name="robot"                default="thorvald"/>  
+    <arg name="robot"                default="thorvald"/>
+    <arg name="num_pickers"          default="1"/>
     <!--
       Get regions from tiago map config and put them in rosparam server.
       This is automatically done inside tiago, but if we don't use PAL nav stack
@@ -28,35 +29,49 @@
         <arg name="world_tf"             value="$(arg world_tf)"/>        
     </include>
 
-    <!-- <include file="$(find rfid_grid_map)/launch/grid_debug.launch">
-        <arg name="tagID"                value="3"/>
-        <arg name="tag_num"              value="3"/>
-        <arg name="worldTagPose"         value="17.37 -0.51 1.5 0.0 0.0 -1.0 0.0"/>
+    <include file="$(find rfid_grid_map)/launch/grid_debug.launch" if="$(eval num_pickers >= 2)">
+        <arg name="tagID"                value="2"/>
+        <arg name="tag_num"              value="2"/>
+        <arg name="worldTagPose"         value="4.77 -2.89 0 0.0 0.0 0 1.57"/>
         <arg name="is_sim"              value="$(arg is_sim)"/>        
         <arg name="world_tf"             value="$(arg world_tf)"/>                
-    </include> -->
+    </include>
 
 
-    <!-- <include file="$(find rfid_grid_map)/launch/grid_debug.launch">
-        <arg name="tagID"                value="6"/>
-        <arg name="tag_num"              value="6"/>
-        <arg name="worldTagPose"         value="14.4 7.03 1.5 0.0 0.0 0 1.0"/>
+    <include file="$(find rfid_grid_map)/launch/grid_debug.launch"  if="$(eval num_pickers >= 3)">
+        <arg name="tagID"                value="3"/>
+        <arg name="tag_num"              value="3"/>
+        <arg name="worldTagPose"         value="4.77 -2.89 0 0.0 0.0 0 1.57"/>
         <arg name="is_sim"               value="$(arg is_sim)"/>        
         <arg name="world_tf"             value="$(arg world_tf)"/>                
-    </include>   -->
+    </include>  
 
     <!-- How many tags have we seen from the total set? -->
-    <node pkg="rfid_grid_map" type="tag_discovery_node.py" name="tag_discovery_counter" >
+    <node pkg="rfid_grid_map" type="tag_discovery_node.py" name="tag_discovery_counter" if="$(eval num_pickers == 1)" >
          <param name="detected_tag_topic_name" value="/lastTag"/>        
          <rosparam param="tag_set">['1']</rosparam>
          <param name="tag_discovery_coverage_topic_name" value="/tag_coverage"/>
-    </node> -->
+    </node> 
+
+    <node pkg="rfid_grid_map" type="tag_discovery_node.py" name="tag_discovery_counter" if="$(eval num_pickers == 2)">
+         <param name="detected_tag_topic_name" value="/lastTag"/>        
+         <rosparam param="tag_set">['1', '2']</rosparam>
+         <param name="tag_discovery_coverage_topic_name" value="/tag_coverage"/>
+    </node> 
+
+    <node pkg="rfid_grid_map" type="tag_discovery_node.py" name="tag_discovery_counter" if="$(eval num_pickers >= 3)">
+         <param name="detected_tag_topic_name" value="/lastTag"/>        
+         <rosparam param="tag_set" >['1', '2', '3']</rosparam>
+         <param name="tag_discovery_coverage_topic_name" value="/tag_coverage"/>
+    </node> 
 
   <!-- grid launcher -->
   <include file="$(find rfid_grid_map)/launch/grid.launch">
     <arg name="rfidgrid_resolution"       value="$(arg rfidgrid_resolution)"/>
     <arg name="sigma_power"               value="$(arg sigma_power)"/>
     <arg name="namespace"                 value="$(arg robot)"/>
+    <arg name="rfid_fake_belief_srv_name"     value="get_rfid_fake_belief" />
+    <arg name="tag_set"     value="1" />
   </include>
 
 </launch>
