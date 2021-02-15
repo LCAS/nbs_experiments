@@ -12,6 +12,7 @@ def plotDistance(data, pos, y_label, label, color, axes):
     axs[pos].set_ylabel(y_label, fontsize=14)
     axs[pos].xaxis.set_major_locator(MaxNLocator(integer=True))
     axs[pos].set_xlim(min(x), max(x))
+    axs[pos].set_ylim(-3, 8)
 
 
 if __name__== "__main__":
@@ -33,13 +34,13 @@ if __name__== "__main__":
     # 2) RFID only
     # 3) lidar_RFID
     # and for all of them we need gt and pf data
-    lidar_result    = np.load(args.root + "lidar.npy")
-    rfid_result     = np.load(args.root + "rfid.npy")
-    combined_result = np.load(args.root + "combined.npy")
+    lidar_result    = np.load(args.root + "result_lidar.npy")
+    rfid_result     = np.load(args.root + "result_rfid.npy")
+    combined_result = np.load(args.root + "result_combined.npy")
 
     # For debug
-    rfid_result=np.random.normal(rfid_result,5.0)
-    combined_result=np.random.normal(combined_result,5.0)
+    # rfid_result=np.random.normal(rfid_result,5.0)
+    # combined_result=np.random.normal(combined_result,5.0)
     
     # TODO: Check that they sizes are the sames
     data = [lidar_result, rfid_result, combined_result]
@@ -48,6 +49,13 @@ if __name__== "__main__":
     min_len = np.min([x.shape[0] for x in data])
     # print(min_len)
     data = [x[:min_len] for x in data]
+
+    # Calculate metrics (MSE)
+    for i in range(len(data)):
+        print("----" + label_list[i] + "----")
+        mean_error = round(np.mean(data[i][:, 2, :]),2)
+        variance = round(np.std(data[i][:, 2, :]),2)
+        print("     Mean error: " + str(mean_error) + "(" + str(variance) + ")")
 
     # Set up plot
     rows = 3
