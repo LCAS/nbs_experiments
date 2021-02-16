@@ -60,6 +60,9 @@ if __name__== "__main__":
                         help="Experiment name")
     parser.add_argument("--root", type=str, default=os.environ['DATA_DIR'],
                         help="Folder path")
+    parser.add_argument("--tags", type=str, nargs="+", default=['0'],
+                        help="tag IDS to consider")
+
     args = parser.parse_args()
 
     # folder to save results
@@ -72,19 +75,20 @@ if __name__== "__main__":
     gt_list = []
     gps_list = []
     pf_list = []
-    tag = "1"
+    # tag = "1"
 
     for i in range(run):
-        tmp_gt = np.genfromtxt(open(os.path.join(args.root, args.experiments[i], "gt_tag_pose_" + tag + ".csv")), delimiter=",", skip_header=1)
-        tmp_gps = np.genfromtxt(open(os.path.join(args.root, args.experiments[i], "gps_tag_pose_" + tag + ".csv")), delimiter=",", skip_header=1)
-        tmp_pf = np.genfromtxt(open(os.path.join(args.root, args.experiments[i], "pf_tag_pose_" + tag + ".csv")), delimiter=",", skip_header=1)
-        tmp_gt = np.expand_dims(tmp_gt, axis=1)  # Add one column needed later for stacking
-        tmp_gps = np.expand_dims(tmp_gps, axis=1)  # Add one column needed later for stacking
-        tmp_pf = np.expand_dims(tmp_pf, axis=1)  # Add one column needed later for stacking
-        gt_list.append(tmp_gt)
-        gps_list.append(tmp_gps)
-        pf_list.append(tmp_pf)
-        print("Experiment {}: size {}".format(args.experiments[i], tmp_gps.shape))
+        for t in args.tags:
+            tmp_gt = np.genfromtxt(open(os.path.join(args.root, args.experiments[i], "gt_tag_pose_" + t + ".csv")), delimiter=",", skip_header=1)
+            tmp_gps = np.genfromtxt(open(os.path.join(args.root, args.experiments[i], "gps_tag_pose_" + t + ".csv")), delimiter=",", skip_header=1)
+            tmp_pf = np.genfromtxt(open(os.path.join(args.root, args.experiments[i], "pf_tag_pose_" + t + ".csv")), delimiter=",", skip_header=1)
+            tmp_gt = np.expand_dims(tmp_gt, axis=1)  # Add one column needed later for stacking
+            tmp_gps = np.expand_dims(tmp_gps, axis=1)  # Add one column needed later for stacking
+            tmp_pf = np.expand_dims(tmp_pf, axis=1)  # Add one column needed later for stacking
+            gt_list.append(tmp_gt)
+            gps_list.append(tmp_gps)
+            pf_list.append(tmp_pf)
+            print("Experiment {}_tag{}: size {}".format(args.experiments[i], t, tmp_gps.shape))
 
     gt = prepareData(gt_list)
     gps = prepareData(gps_list)
