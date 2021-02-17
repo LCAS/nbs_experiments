@@ -48,10 +48,13 @@ def computeDistance(pf_list, gt_list):
 
 def plotDistance(data, pos, y_label, label, color, axes):
     #  Plot the trajectories
-    x = np.arange(1, data.shape[0] + 1, 1)
+    x = np.arange(0, data.shape[0], 1)
     axs[pos].plot(x, data[:,-2], label=label, color=color)
     axs[pos].fill_between(x, data[:, -2]-data[:, -1], data[:, -2]+data[:, -1], alpha=0.2, edgecolor=color, facecolor=color)
-    axs[pos].set_ylabel(y_label)
+    axs[pos].set_ylabel(y_label, fontsize=14)
+    axs[pos].xaxis.set_major_locator(MaxNLocator(integer=True))
+    axs[pos].set_xlim(min(x), max(x))
+    axs[pos].set_ylim(-3, 8)
 
 
 if __name__== "__main__":
@@ -115,10 +118,10 @@ if __name__== "__main__":
                     'xtick.labelsize': 8,
                     'legend.fontsize': 8}
     plt.rcParams.update(parameters)
-    fig = plt.figure(figsize=(6,8))
+    fig = plt.figure(figsize=(12,8))
     axs = fig.subplots(rows, cols, sharex=True, sharey=False)
-    fig.suptitle("Tags localization error")
-    plt.xlabel("NBS iterations")
+    # fig.suptitle("Tags localization error")
+    plt.xlabel("NBS iterations", fontsize=14)
 
     result = computeDistance(pf_list, gt_list)
     # We want to save on disk the average and std value just computed 
@@ -126,12 +129,12 @@ if __name__== "__main__":
     np.save(out_folder + "/result", result)
 
 
-    plotDistance(result[:,0,:], pos=0, y_label="Displacement[m]", label="X", color="r", axes=axs)
-    plotDistance(result[:,1,:], pos=1, y_label="Displacement[m]", label="Y", color="b", axes=axs)
-    plotDistance(result[:,2,:], pos=2, y_label="Displacement[m]", label="Euclidean", color="g", axes=axs)
+    plotDistance(result[:,0,:], pos=0, y_label="X-error[m]", label="X", color="r", axes=axs)
+    plotDistance(result[:,1,:], pos=1, y_label="Y-error[m]", label="Y", color="b", axes=axs)
+    plotDistance(result[:,2,:], pos=2, y_label="Euclidean error[m]", label="Euclidean", color="g", axes=axs)
 
 
-    # # fig.tight_layout()
-    fig.legend(ncol=3,loc='upper center', bbox_to_anchor=(0.5, 0.95))
+    fig.tight_layout()
+    # fig.legend(ncol=3,loc='upper center', bbox_to_anchor=(0.5, 0.95))
 
     fig.savefig(fname=os.path.join(out_folder, "distance.png"), dpi=300)
