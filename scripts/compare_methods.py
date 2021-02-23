@@ -6,13 +6,46 @@ from matplotlib.ticker import MaxNLocator
 
 def plotDistance(data, pos, y_label, label, color, axes):
     #  Plot the trajectories
+    # Now data are plotted for every seconds, we may want to subsample them for every minute
+    # print(data.shape)
+    # data = data[0::6]
+    # print(data.shape)
+    # data = data[0::60]
+    # print(data.shape)
     x = np.arange(0, data.shape[0] , 1)
-    axs[pos].plot(x, data[:,-2], label=label, color=color)
-    axs[pos].fill_between(x, data[:, -2]-data[:, -1], data[:, -2]+data[:, -1], alpha=0.05, edgecolor=color, facecolor=color)
+    axs[pos].plot(x, data[:,0], label=label, color=color)
+    axs[pos].fill_between(x, data[:, 0]-data[:, 1], data[:, 0]+data[:, 1], alpha=0.05, edgecolor=color, facecolor=color)
     axs[pos].set_ylabel(y_label, fontsize=14)
     axs[pos].xaxis.set_major_locator(MaxNLocator(integer=True))
     axs[pos].set_xlim(min(x), max(x))
-    axs[pos].set_ylim(-1, 5)
+    axs[pos].set_ylim(-1, 25)
+    if (pos==1):
+        axs[pos].set_ylim(-1, 7)
+
+def calculateMetricsAndPlot(data, ylabel, label_list, color_list, axs, axs_pos):
+    # Calculate metrics (MSE)
+    if (axs_pos == 0):
+        print("=== TOPOLOGICAL DISTANCE ===")
+    else:
+        print("=== EUCLIDEAN DISTANCE ===")
+    for i in range(len(data)):
+        print("----" + label_list[i] + "----")
+        mean_error = round(np.mean(data[i][:, 0]),2)
+        variance = round(np.std(data[i][:, 0]),2)
+        print("     Mean error: " + str(mean_error) + "(" + str(variance) + ")")
+
+    
+    
+    for i in range(len(data)):
+        # plotDistance(data[i][:,0,:], pos=0, y_label="X-error[m]",          label=label_list[i], color=color_list[i], axes=axs)
+        # plotDistance(data[i][:,1,:], pos=1, y_label="Y-error[m]",          label=label_list[i], color=color_list[i], axes=axs)
+        plotDistance(data[i], pos=axs_pos, y_label=ylabel,  label=label_list[i], color=color_list[i], axes=axs)
+
+def normalizeLenData(data):
+    min_len = np.min([x.shape[0] for x in data])
+    # print(min_len)
+    data = [x[:min_len] for x in data]
+    return data
 
 
 if __name__== "__main__":
@@ -34,32 +67,22 @@ if __name__== "__main__":
     # 2) RFID only
     # 3) lidar_RFID
     # and for all of them we need gt and pf data
-    lidar_result    = np.load(args.root + "result_lidar.npy")
-    rfid_result     = np.load(args.root + "result_rfid.npy")
-    combined_result = np.load(args.root + "result_combined.npy")
-    estimated_node_result = np.load(args.root + "result_3p_estimated_node.npy")
+    # gps_connected_result    = np.load(args.root + "result_gps_connected.npy")
+    # gps_unconnected_result    = np.load(args.root + "result_gps_unconnected.npy")
+    # lidar_result    = np.load(args.root + "result_lidar.npy")
+    # rfid_result     = np.load(args.root + "result_rfid.npy")
+    topo_combined_result = np.load(args.root + "topo_result_combined.npy")
+    topo_estimated_node_result = np.load(args.root + "topo_result_exp3_estimated_node.npy")
+
+    combined_result = np.load(args.root + "metric_result_combined.npy")
+    estimated_node_result = np.load(args.root + "metric_result_exp3_estimated_node.npy")
+    
 
     # For debug
     # rfid_result=np.random.normal(rfid_result,5.0)
     # combined_result=np.random.normal(combined_result,5.0)
-    
-    # TODO: Check that they sizes are the sames
-    data = [lidar_result, rfid_result, combined_result]
-    label_list=["Lidar", "RFID", "Combined"]
-    color_list=["r", "b", "g"]
-    min_len = np.min([x.shape[0] for x in data])
-    # print(min_len)
-    data = [x[:min_len] for x in data]
-
-    # Calculate metrics (MSE)
-    for i in range(len(data)):
-        print("----" + label_list[i] + "----")
-        mean_error = round(np.mean(data[i][:, 2, :]),2)
-        variance = round(np.std(data[i][:, 2, :]),2)
-        print("     Mean error: " + str(mean_error) + "(" + str(variance) + ")")
-
     # Set up plot
-    rows = 3
+    rows = 2
     cols = 1
     parameters = {'axes.labelsize': 8,
                     'ytick.labelsize': 8, 
@@ -69,15 +92,25 @@ if __name__== "__main__":
     fig = plt.figure(figsize=(12,8))
     axs = fig.subplots(rows, cols, sharex=True, sharey=False)
     # fig.suptitle("Tags localization error")
-    plt.xlabel("NBS iterations", fontsize=14)
+    plt.xlabel("Minutes", fontsize=14)
+
     
-    for i in range(len(data)):
-        plotDistance(data[i][:,0,:], pos=0, y_label="X-error[m]",          label=label_list[i], color=color_list[i], axes=axs)
-        plotDistance(data[i][:,1,:], pos=1, y_label="Y-error[m]",          label=label_list[i], color=color_list[i], axes=axs)
-        plotDistance(data[i][:,2,:], pos=2, y_label="Euclidean error[m]",  label=label_list[i], color=color_list[i], axes=axs)
+    # TODO: Check that they sizes are the sames
+    # data = [gps_connected_result, gps_unconnected_result, lidar_result, rfid_result, combined_result]
+    topo_data = [topo_combined_result, topo_estimated_node_result]
+    metric_data = [combined_result, estimated_node_result]
+    # label_list=["GPS-connected", "GPS-unconnected", "Lidar", "RFID", "Combined"]
+    label_list = ["Combined", "estimatedNode",]
+    color_list=["r", "c", "purple", "r", "g"]
+    
+    topo_data = normalizeLenData(topo_data)
+    metric_data = normalizeLenData(metric_data)
 
+    calculateMetricsAndPlot(topo_data, "Topological Error[m]", label_list, color_list, axs, 0)
+    calculateMetricsAndPlot(metric_data, "Euclidan Error[m]", label_list, color_list, axs, 1)
 
+    # plt.show()
     fig.tight_layout()
-    axs[0].legend(ncol=3,loc='upper right', fontsize=12) #, bbox_to_anchor=(0.5, 0.95))
+    axs[0].legend(ncol=2,loc='upper right', fontsize=12) #, bbox_to_anchor=(0.5, 0.95))
 
     fig.savefig(fname=os.path.join(out_folder, "distance.png"), dpi=300)

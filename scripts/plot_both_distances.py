@@ -16,7 +16,13 @@ def find_distance(n1, n2):
         key = n1 + n2
         if key in tdistances:
             return tdistances[key]
+    return None
 
+def find_eucliden_distance(n1, n2):
+    if tdistances is not None:
+        # print(n1)
+        # print(n2)
+        return np.sqrt(pow(n1[0]- n2[0], 2) + pow(n1[1] - n2[1],2))
     return None
 
 
@@ -63,6 +69,7 @@ if __name__ == "__main__":
 
     all_bags_times = []
     all_bags_distances = []
+    all_bags_topo_distances = []
     all_bags_gtnodes = []
     all_bags_enodes = []
     all_bags_nbssteps = []
@@ -71,6 +78,7 @@ if __name__ == "__main__":
         print(bag_names[i])
         times = []
         distances = []
+        topo_distances = []
         gtnodes = []
         enodes = []
         nbssteps = []
@@ -78,19 +86,25 @@ if __name__ == "__main__":
         last_gtnode = None
         last_enode = None
         nbs_step = False
+        last_enode_pose = None
+        tpose = None
         for j, (topic, msg, ts) in enumerate(bag.read_messages(topics=['/tag_1/estimated_node', '/poses/1', '/thorvald/rfid_grid_map_node/rfid_belief_maps'])):
             # update time
             if last_time is None:
                 last_time = ts
             elif (last_time + step_size) >= ts:
                 if not (last_gtnode is None or last_enode is None):
-                    distance = find_distance(last_enode, last_gtnode)
+                    # distance = find_distance(last_enode, last_gtnode)
+                    topo_distance = find_distance(last_enode, last_gtnode)
+                    distance = find_eucliden_distance(last_enode_pose, tpose)
                     if distance is None:
                         print("Distance not found {} {}".format(
                             last_enode, last_gtnode))
                         distances.append(np.nan)
+                        topo_distances.append(np.nan)
                     else:
                         distances.append(int(distance))
+                        topo_distances.append(int(topo_distance))
                     times.append(j*step_size.secs)
                     gtnodes.append(last_gtnode)
                     enodes.append(last_enode)
@@ -103,14 +117,19 @@ if __name__ == "__main__":
                 last_gtnode = node_names[closest]
             elif topic == '/tag_1/estimated_node':
                 last_enode = msg.data
+                index = node_names.index(last_enode)
+                last_enode_pose = node_positions[index]
             elif topic == '/thorvald/rfid_grid_map_node/rfid_belief_maps':
                 nbs_step = True
 
         if len(distances) > 0:
             avg_distance = np.average(distances)
+            avg_topo_distance = np.average(topo_distances)
             print("\taverage_distance {}".format(avg_distance))
+            print("\taverage_topo_distance {}".format(avg_topo_distance))
 
             all_bags_distances.append(np.array(distances))
+            all_bags_topo_distances.append(np.array(topo_distances))
             all_bags_times.append(np.array(times))
             all_bags_gtnodes.append(np.array(gtnodes))
             all_bags_enodes.append(np.array(enodes))
@@ -122,6 +141,7 @@ if __name__ == "__main__":
     min_size = min([t.shape[0] for t in all_bags_times])
     for i in range(len(all_bags_times)):
         all_bags_distances[i] = all_bags_distances[i][:min_size]
+        all_bags_topo_distances[i] = all_bags_topo_distances[i][:min_size]
         all_bags_times[i] = all_bags_times[i][:min_size]
         all_bags_gtnodes[i] = all_bags_gtnodes[i][:min_size]
         all_bags_enodes[i] = all_bags_enodes[i][:min_size]
@@ -129,34 +149,29 @@ if __name__ == "__main__":
 
     averages = np.average(all_bags_distances, axis=0)
     stds = np.std(all_bags_distances, axis=0)
+
+    topo_averages = np.average(all_bags_topo_distances, axis=0)
+    topo_stds = np.std(all_bags_topo_distances, axis=0)
         
 
-    fig = plt.figure(figsize=(12, 8))
-    plt.plot(all_bags_times[0], averages, label='label', color='r')
-    plt.fill_between(all_bags_times[0], averages-stds, averages +
-                          stds, alpha=0.2, edgecolor='r', facecolor='r')
-    # plt.set_ylabel(y_label, fontsize=14)
-    # plt.xaxis.set_major_locator(MaxNLocator(integer=True))
-    
-    # plt.set_xlim(min(all_bags_times[0]), max(all_bags_times[0]))
-    # axs[pos].set_ylim(-3, 8)
-    # plotDistance(result[:, 0, :], pos=0, y_label="X-error[m]",
-                #  label="X", color="r") 
-    # plt.legend()
-    # plt.title("Topological distance estimation vs ground truth", fontsize=14)
-    # plt.xlabel("X-distance[m]")
-    # plt.ylabel("Nodes")
+    # fig = plt.figure(figsize=(12, 8))
+    # plt.plot(all_bags_times[0], averages, label='label', color='r')
+    # plt.fill_between(all_bags_times[0], averages-stds, averages +
+    #                       stds, alpha=0.2, edgecolor='r', facecolor='r')
     plt.show()
     plt.savefig(fname=os.path.join(out_folder, bag_names[i].replace(".bag", ".png")), dpi=300)
-    # plotTrajectory(data=gt, traj=random_traj_index,
-    #             label="gt", color="r", marker="o")
-    # plotTrajectory(data=pf, traj=random_traj_index,
-    #             label="pf", color="b", marker="*")
     
     print("\t\tTOTAL AVERAGE: {}".format(np.average(all_bags_distances)))
+    print("\t\tTOTAL TOPO AVERAGE: {}".format(np.average(all_bags_topo_distances)))
 
     averages = np.expand_dims(averages, axis=1)
     stds = np.expand_dims(stds, axis=1)
     result = np.concatenate((averages, stds), axis=1)
+    np.save(out_folder + "/metric_result", result)
+
+    topo_averages = np.expand_dims(topo_averages, axis=1)
+    topo_stds = np.expand_dims(topo_stds, axis=1)
+    result = np.concatenate((topo_averages, topo_stds), axis=1)
     np.save(out_folder + "/topo_result", result)
+
 
