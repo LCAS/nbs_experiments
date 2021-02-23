@@ -7,20 +7,25 @@ from matplotlib.ticker import MaxNLocator
 def plotDistance(data, pos, y_label, label, color, axes):
     #  Plot the trajectories
     # Now data are plotted for every seconds, we may want to subsample them for every minute
-    # print(data.shape)
+    print(data.shape)
+    # exit(0)
     # data = data[0::6]
     # print(data.shape)
     # data = data[0::60]
     # print(data.shape)
-    x = np.arange(0, data.shape[0] , 1)
+    # data = data[0::10]
+    x = np.arange(0, data.shape[0] , 1)/6.0
+    # print(data.shape)
+    # exit(0)
     axs[pos].plot(x, data[:,0], label=label, color=color)
     axs[pos].fill_between(x, data[:, 0]-data[:, 1], data[:, 0]+data[:, 1], alpha=0.05, edgecolor=color, facecolor=color)
-    axs[pos].set_ylabel(y_label, fontsize=14)
+    axs[pos].set_ylabel(y_label, fontsize=16)
     axs[pos].xaxis.set_major_locator(MaxNLocator(integer=True))
     axs[pos].set_xlim(min(x), max(x))
-    axs[pos].set_ylim(-1, 25)
-    if (pos==1):
-        axs[pos].set_ylim(-1, 7)
+    axs[pos].set_ylim(0, 25)
+    axs[pos].set_xlim(0, int(max(x)))
+    if (pos==0):
+        axs[pos].set_ylim(0, 7)
 
 def calculateMetricsAndPlot(data, ylabel, label_list, color_list, axs, axs_pos):
     # Calculate metrics (MSE)
@@ -67,15 +72,19 @@ if __name__== "__main__":
     # 2) RFID only
     # 3) lidar_RFID
     # and for all of them we need gt and pf data
-    # gps_connected_result    = np.load(args.root + "result_gps_connected.npy")
-    # gps_unconnected_result    = np.load(args.root + "result_gps_unconnected.npy")
-    # lidar_result    = np.load(args.root + "result_lidar.npy")
-    # rfid_result     = np.load(args.root + "result_rfid.npy")
+    topo_gps_connected_result    = np.load(args.root + "topo_result_gps_connected.npy")
+    topo_gps_unconnected_result    = np.load(args.root + "topo_result_gps_unconnected.npy")
+    topo_lidar_result    = np.load(args.root + "topo_result_lidar.npy")
+    topo_rfid_result     = np.load(args.root + "topo_result_rfid.npy")
     topo_combined_result = np.load(args.root + "topo_result_combined.npy")
-    topo_estimated_node_result = np.load(args.root + "topo_result_exp3_estimated_node.npy")
+    # topo_estimated_node_result = np.load(args.root + "topo_result_exp3_estimated_node.npy")
 
+    gps_connected_result    = np.load(args.root + "metric_result_gps_connected.npy")
+    gps_unconnected_result    = np.load(args.root + "metric_result_gps_unconnected.npy")
+    lidar_result    = np.load(args.root + "metric_result_lidar.npy")
+    rfid_result     = np.load(args.root + "metric_result_rfid.npy")
     combined_result = np.load(args.root + "metric_result_combined.npy")
-    estimated_node_result = np.load(args.root + "metric_result_exp3_estimated_node.npy")
+    # estimated_node_result = np.load(args.root + "metric_result_exp3_estimated_node.npy")
     
 
     # For debug
@@ -91,23 +100,25 @@ if __name__== "__main__":
     plt.rcParams.update(parameters)
     fig = plt.figure(figsize=(12,8))
     axs = fig.subplots(rows, cols, sharex=True, sharey=False)
+    ax = plt.gca()
+    ax.tick_params(axis = 'both',  labelsize = 12)
     # fig.suptitle("Tags localization error")
-    plt.xlabel("Minutes", fontsize=14)
+    plt.xlabel("Minutes", fontsize=16)
 
     
     # TODO: Check that they sizes are the sames
     # data = [gps_connected_result, gps_unconnected_result, lidar_result, rfid_result, combined_result]
-    topo_data = [topo_combined_result, topo_estimated_node_result]
-    metric_data = [combined_result, estimated_node_result]
+    topo_data = [topo_gps_connected_result, topo_gps_unconnected_result, topo_lidar_result, topo_rfid_result, topo_combined_result]
+    metric_data = [gps_connected_result, gps_unconnected_result, lidar_result, rfid_result, combined_result]
     # label_list=["GPS-connected", "GPS-unconnected", "Lidar", "RFID", "Combined"]
-    label_list = ["Combined", "estimatedNode",]
-    color_list=["r", "c", "purple", "r", "g"]
+    label_list = ["Khan et al.[3] - connected", "Khan et al.[3] - unconnected", "LIDAR+GPS", "RFID+GPS", "RFID+LIDAR+GPS(ours)"]
+    color_list=["b", "c", "purple", "r", "g"]
     
     topo_data = normalizeLenData(topo_data)
     metric_data = normalizeLenData(metric_data)
 
-    calculateMetricsAndPlot(topo_data, "Topological Error[m]", label_list, color_list, axs, 0)
-    calculateMetricsAndPlot(metric_data, "Euclidan Error[m]", label_list, color_list, axs, 1)
+    calculateMetricsAndPlot(topo_data, "Topological Error[nodes]", label_list, color_list, axs, 1)
+    calculateMetricsAndPlot(metric_data, "Euclidan Error[m]", label_list, color_list, axs, 0)
 
     # plt.show()
     fig.tight_layout()
