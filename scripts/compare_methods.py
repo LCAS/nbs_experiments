@@ -116,4 +116,4 @@ if __name__== "__main__":
     fig.tight_layout()
     axs[0].legend(ncol=2,loc='upper right', fontsize=12) #, bbox_to_anchor=(0.5, 0.95))
 
-    fig.savefig(fname=os.path.join(out_folder, "distance.png"), dpi=300)
+    fig.savefig(fname=os.path.join(out_folder, "distance.pdf"), dpi=300)
