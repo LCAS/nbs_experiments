@@ -6,14 +6,7 @@ from matplotlib.ticker import MaxNLocator
 
 def plotDistance(data, pos, y_label, label, color, axes):
     #  Plot the trajectories
-    # Now data are plotted for every seconds, we may want to subsample them for every minute
-    print(data.shape)
-    # exit(0)
-    # data = data[0::6]
-    # print(data.shape)
-    # data = data[0::60]
-    # print(data.shape)
-    # data = data[0::10]
+    # Now data are plotted for every ten seconds, we may want to subsample them for every minute
     x = np.arange(0, data.shape[0] , 1)/6.0
     # print(data.shape)
     # exit(0)
@@ -24,6 +17,8 @@ def plotDistance(data, pos, y_label, label, color, axes):
     axs[pos].set_xlim(min(x), max(x))
     axs[pos].set_ylim(0, 25)
     axs[pos].set_xlim(0, int(max(x)))
+    axs[pos].tick_params(axis='both', which='major', labelsize=14)
+    axs[pos].tick_params(axis='both', which='minor', labelsize=14)
     if (pos==0):
         axs[pos].set_ylim(0, 7)
 
@@ -100,9 +95,6 @@ if __name__== "__main__":
     plt.rcParams.update(parameters)
     fig = plt.figure(figsize=(12,8))
     axs = fig.subplots(rows, cols, sharex=True, sharey=False)
-    ax = plt.gca()
-    ax.tick_params(axis = 'both',  labelsize = 12)
-    # fig.suptitle("Tags localization error")
     plt.xlabel("Minutes", fontsize=16)
 
     
