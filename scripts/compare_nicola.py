@@ -13,7 +13,7 @@ def plotDistance(data, pos, y_label, label, color, axes):
     # print(data.shape)
     # data = data[0::60]
     # print(data.shape)
-    x = np.arange(0, data.shape[0], 1)
+    x = np.arange(0, data.shape[0], 1, dtype=float) / 6.0
     axs[pos].plot(x, data[:, 0], label=label, color=color)
     axs[pos].fill_between(x, data[:, 0]-data[:, 1], data[:, 0] +
                           data[:, 1], alpha=0.05, edgecolor=color, facecolor=color)
@@ -91,7 +91,7 @@ if __name__ == "__main__":
     # fig.suptitle("Tags localization error")
     plt.xlabel("Minutes", fontsize=14)
     label_list = ["TPF", "BayesFilter", ]
-    color_list = ["r", "c", "purple", "r", "g"]
+    color_list = ["b", "r", "#6666ff", "#ff6666"]
     for tagi in range(3):
         topo_combined_result = np.load(args.root + "topo_result{}.npy".format(tagi))
         topo_estimated_node_result = np.load(
@@ -114,7 +114,7 @@ if __name__ == "__main__":
         metric_data = normalizeLenData(metric_data)
 
         calculateMetricsAndPlot(
-            topo_data, "Topological Error[m]", label_list, color_list, axs, 0)
+            topo_data, "Topological Error[nodes]", label_list, color_list, axs, 0)
         calculateMetricsAndPlot(
             metric_data, "Euclidan Error[m]", label_list, color_list, axs, 1)
 

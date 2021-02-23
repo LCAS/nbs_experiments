@@ -125,6 +125,7 @@ if __name__ == "__main__":
         if len(distances) > 0:
             avg_distance = np.average(distances)
             avg_topo_distance = np.average(topo_distances)
+            print("\tsize {}".format(np.array(distances).shape))
             print("\taverage_distance {}".format(avg_distance))
             print("\taverage_topo_distance {}".format(avg_topo_distance))
 
