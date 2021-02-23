@@ -73,7 +73,7 @@ if __name__ == "__main__":
     all_bags_gtnodes = []
     all_bags_enodes = []
     all_bags_nbssteps = []
-    step_size = rospy.Duration(secs=10) #second
+    step_size = rospy.Duration(secs=10) #seconds
     for i, bag in enumerate(bags):
         print(bag_names[i])
         times = []
@@ -92,7 +92,7 @@ if __name__ == "__main__":
             # update time
             if last_time is None:
                 last_time = ts
-            elif (last_time + step_size) >= ts:
+            elif ts.to_sec() >= (last_time.to_sec() + step_size.secs):
                 if not (last_gtnode is None or last_enode is None):
                     # distance = find_distance(last_enode, last_gtnode)
                     topo_distance = find_distance(last_enode, last_gtnode)
@@ -110,7 +110,7 @@ if __name__ == "__main__":
                     enodes.append(last_enode)
                     nbssteps.append(nbs_step)
                     nbs_step = False
-                last_time = ts
+                last_time = rospy.Time(secs=ts.secs, nsecs=ts.nsecs)
             if topic == '/poses/1':
                 tpose = np.array([msg.pose.pose.position.x, msg.pose.pose.position.y])
                 closest = np.argmin(np.sqrt(np.sum((np.array(node_positions) - tpose) ** 2, axis=1)))
