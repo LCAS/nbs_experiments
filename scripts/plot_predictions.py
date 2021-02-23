@@ -21,14 +21,22 @@ def prepareData(data):
     # final = (timestamp, <run_1, run_2, run_3,..., avg, std>, <x, y>)
     return final
 
-def plotTrajectory(data, traj, label, color, marker):
+def plotTrajectory(data, traj, label, color, marker, axes):
     #  Plot the trajectories
-    plt.plot(data[:, traj, 0], data[:, traj, 1], label=label, color=color,  marker=marker)
+    axes.plot(data[:, traj, 0], data[:, traj, 1], label=label, color=color,  marker=marker)
     # plt.fill_between(data[:,-2, 0], data[:, -2, 1]-data[:, -1, 1], data[:, -2, 1]+data[:, -1, 1], alpha=0.2, edgecolor=color, facecolor=color)
     num_items = np.arange(0, len(data))
     for i in range(len(data)):
-        plt.text(data[i, traj, 0], data[i, traj, 1], str(num_items[i]), color=color, fontsize=12)
-    
+        axes.text(data[i, traj, 0], data[i, traj, 1], str(num_items[i]), color=color, fontsize=12)
+    axes.set_xlim(min(data[:, traj, 0])-2, max(data[:, traj, 0])+2)
+    axes.set_ylim(min(data[:, traj, 1])-2, max(data[:, traj, 1])+2)
+    #set aspect ratio to 1
+    # ratio = 1.0
+    # x_left, x_right = axes.get_xlim()
+    # y_low, y_high = axes.get_ylim()
+    # axes.set_aspect(abs((x_right-x_left)/(y_low-y_high))*ratio)
+    axes.set_aspect(1)
+
     
 def computeDistance(pf_list, gt_list):
     distance = np.zeros(shape=(pf_list[0].shape[0], pf_list[0].shape[1]+1, len(pf_list) ))
@@ -83,6 +91,7 @@ if __name__== "__main__":
 
     for i in range(run):
         for t in args.tags:
+            tag_id = int(t)+1
             tmp_gt = np.genfromtxt(open(os.path.join(args.root, args.experiments[i], "gt_tag_pose_" + t + ".csv")), delimiter=",", skip_header=1)
             tmp_gps = np.genfromtxt(open(os.path.join(args.root, args.experiments[i], "gps_tag_pose_" + t + ".csv")), delimiter=",", skip_header=1)
             tmp_pf = np.genfromtxt(open(os.path.join(args.root, args.experiments[i], "pf_tag_pose_" + t + ".csv")), delimiter=",", skip_header=1)
@@ -101,9 +110,10 @@ if __name__== "__main__":
 
     # Plot only one trajectory out of the batch considered
     random_traj_index = np.random.randint(low=0, high=run)
-    plotTrajectory(data=gps, traj=random_traj_index, label="gps", color="g", marker="x" )
-    plotTrajectory(data=gt, traj=random_traj_index, label="gt", color="r", marker="o" )
-    plotTrajectory(data=pf, traj=random_traj_index, label="pf", color="b", marker="*" )
+    fig, ax = plt.subplots()
+    plotTrajectory(data=gps, traj=random_traj_index, label="gps", color="g", marker="x", axes=ax)
+    plotTrajectory(data=gt, traj=random_traj_index, label="gt", color="r", marker="o", axes=ax)
+    plotTrajectory(data=pf, traj=random_traj_index, label="pf", color="b", marker="*", axes=ax)
 
     plt.legend()
     plt.title("Waypoint prediction", fontsize=14)

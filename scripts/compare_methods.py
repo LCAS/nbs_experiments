@@ -8,11 +8,11 @@ def plotDistance(data, pos, y_label, label, color, axes):
     #  Plot the trajectories
     x = np.arange(0, data.shape[0] , 1)
     axs[pos].plot(x, data[:,-2], label=label, color=color)
-    axs[pos].fill_between(x, data[:, -2]-data[:, -1], data[:, -2]+data[:, -1], alpha=0.1, edgecolor=color, facecolor=color)
+    axs[pos].fill_between(x, data[:, -2]-data[:, -1], data[:, -2]+data[:, -1], alpha=0.05, edgecolor=color, facecolor=color)
     axs[pos].set_ylabel(y_label, fontsize=14)
     axs[pos].xaxis.set_major_locator(MaxNLocator(integer=True))
     axs[pos].set_xlim(min(x), max(x))
-    axs[pos].set_ylim(-3, 8)
+    axs[pos].set_ylim(-1, 5)
 
 
 if __name__== "__main__":
@@ -37,6 +37,7 @@ if __name__== "__main__":
     lidar_result    = np.load(args.root + "result_lidar.npy")
     rfid_result     = np.load(args.root + "result_rfid.npy")
     combined_result = np.load(args.root + "result_combined.npy")
+    estimated_node_result = np.load(args.root + "result_3p_estimated_node.npy")
 
     # For debug
     # rfid_result=np.random.normal(rfid_result,5.0)
