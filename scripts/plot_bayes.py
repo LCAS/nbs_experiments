@@ -259,12 +259,18 @@ if __name__ == "__main__":
     
     print("TPF:")
     print("\t\tTOTAL AVERAGE: {}".format(np.nanmean(all_bags_distances)))
+    print("\t\tTOTAL STD: {}".format(np.nanstd(all_bags_distances)))
     print("\t\tTOTAL TOPO AVERAGE: {}".format(
         np.nanmean(all_bags_topo_distances)))
+    print("\t\tTOTAL TOPO STD: {}".format(
+        np.nanstd(all_bags_topo_distances)))
     print("Bayes filter:")
     print("\t\tTOTAL AVERAGE: {}".format(np.nanmean(all_bags_bayesdistances)))
+    print("\t\tTOTAL STD: {}".format(np.nanstd(all_bags_bayesdistances)))
     print("\t\tTOTAL TOPO AVERAGE: {}".format(
         np.nanmean(all_bags_topo_bayesdistances)))
+    print("\t\tTOTAL TOPO STD: {}".format(
+        np.nanstd(all_bags_topo_bayesdistances)))
 
     for tagi in range(3):
         averages = np.nanmean(all_bags_distances[tagi::3], axis=0)
