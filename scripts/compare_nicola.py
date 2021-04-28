@@ -97,7 +97,7 @@ if __name__ == "__main__":
     # fig.suptitle("Tags localization error")
 
     plt.xlabel("Minutes", fontsize=14)
-    label_list = ["LIDAR+GPS+RFID(ours)", "Dondrup et al.[24]"]
+    label_list = ["Next-Best-Sense", "Estimated Node"]
     pickers_label_list = [
         ["picker1", "picker1"],
         ["picker2", "picker2"],
@@ -110,51 +110,51 @@ if __name__ == "__main__":
     tot_topo_estimated_node_result = []
     tot_combined_result = []
     tot_estimated_node_result = []
-    for tagi in range(3):
+    # for tagi in range(3):
             
-        topo_combined_result = np.load(args.root + "topo_result{}.npy".format(tagi))
-        topo_estimated_node_result = np.load(
-            args.root + "bayes_topo_result{}.npy".format(tagi))
+    #     topo_combined_result = np.load(args.root + "topo_result{}.npy".format(tagi))
+    #     topo_estimated_node_result = np.load(
+    #         args.root + "bayes_topo_result{}.npy".format(tagi))
 
-        combined_result = np.load(args.root + "metric_result{}.npy".format(tagi))
-        estimated_node_result = np.load(
-            args.root + "bayes_metric_result{}.npy".format(tagi))
+    #     combined_result = np.load(args.root + "metric_result{}.npy".format(tagi))
+    #     estimated_node_result = np.load(
+    #         args.root + "bayes_metric_result{}.npy".format(tagi))
 
-        # if len(tot_topo_combined_result) == 0:
-        #     tot_topo_combined_result = topo_combined_result
-        #     tot_topo_estimated_node_result = topo_estimated_node_result
-        #     tot_combined_result = combined_result
-        #     tot_estimated_node_result = estimated_node_result
-        # else:
-        #     tot_topo_combined_result = np.hstack((tot_topo_combined_result, topo_combined_result))
-        #     tot_topo_estimated_node_result = np.hstack((tot_topo_estimated_node_result, topo_estimated_node_result))
-        #     tot_combined_result = np.hstack((tot_combined_result, combined_result))
-        #     tot_estimated_node_result = np.hstack((tot_estimated_node_result, estimated_node_result))
+    #     # if len(tot_topo_combined_result) == 0:
+    #     #     tot_topo_combined_result = topo_combined_result
+    #     #     tot_topo_estimated_node_result = topo_estimated_node_result
+    #     #     tot_combined_result = combined_result
+    #     #     tot_estimated_node_result = estimated_node_result
+    #     # else:
+    #     #     tot_topo_combined_result = np.hstack((tot_topo_combined_result, topo_combined_result))
+    #     #     tot_topo_estimated_node_result = np.hstack((tot_topo_estimated_node_result, topo_estimated_node_result))
+    #     #     tot_combined_result = np.hstack((tot_combined_result, combined_result))
+    #     #     tot_estimated_node_result = np.hstack((tot_estimated_node_result, estimated_node_result))
 
-        # TODO: Check that they sizes are the sames
-        # data = [gps_connected_result, gps_unconnected_result, lidar_result, rfid_result, combined_result]
-        topo_data = [topo_combined_result, topo_estimated_node_result]
-        metric_data = [combined_result, estimated_node_result]
-        # label_list=["GPS-connected", "GPS-unconnected", "Lidar", "RFID", "Combined"]
+    #     # TODO: Check that they sizes are the sames
+    #     # data = [gps_connected_result, gps_unconnected_result, lidar_result, rfid_result, combined_result]
+    #     topo_data = [topo_combined_result, topo_estimated_node_result]
+    #     metric_data = [combined_result, estimated_node_result]
+    #     # label_list=["GPS-connected", "GPS-unconnected", "Lidar", "RFID", "Combined"]
 
 
-        topo_data = normalizeLenData(topo_data)
-        metric_data = normalizeLenData(metric_data)
+    #     topo_data = normalizeLenData(topo_data)
+    #     metric_data = normalizeLenData(metric_data)
 
-        # calculateMetricsAndPlot(
-        #     topo_data, "Topological Error[nodes]", pickers_label_list[tagi], pickers_color_list, pickers_style[tagi], axs, 0)
-        # calculateMetricsAndPlot(
-        #     metric_data, "Euclidan Error[m]", pickers_label_list[tagi], pickers_color_list, pickers_style[tagi], axs, 1)
+    #     # calculateMetricsAndPlot(
+    #     #     topo_data, "Topological Error[nodes]", pickers_label_list[tagi], pickers_color_list, pickers_style[tagi], axs, 0)
+    #     # calculateMetricsAndPlot(
+    #     #     metric_data, "Euclidan Error[m]", pickers_label_list[tagi], pickers_color_list, pickers_style[tagi], axs, 1)
         
     tot_topo_combined_result = np.load(
-        args.root + "topo_result{}.npy".format("tot"))
+        args.root + "topo_result{}.npy".format("_nbs"))
     tot_topo_estimated_node_result = np.load(
-        args.root + "bayes_topo_result{}.npy".format("tot"))
+        args.root + "topo_result{}.npy".format("_estimated_node"))
 
     tot_combined_result = np.load(
-        args.root + "metric_result{}.npy".format("tot"))
+        args.root + "metric_result{}.npy".format("_nbs"))
     tot_estimated_node_result = np.load(
-        args.root + "bayes_metric_result{}.npy".format("tot"))
+        args.root + "metric_result{}.npy".format("_estimated_node"))
     # TODO: Check that they sizes are the sames
     # data = [gps_connected_result, gps_unconnected_result, lidar_result, rfid_result, combined_result]
     topo_data = [tot_topo_combined_result, tot_topo_estimated_node_result]

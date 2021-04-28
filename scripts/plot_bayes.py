@@ -272,37 +272,37 @@ if __name__ == "__main__":
     print("\t\tTOTAL TOPO STD: {}".format(
         np.nanstd(all_bags_topo_bayesdistances)))
 
-    for tagi in range(3):
-        averages = np.nanmean(all_bags_distances[tagi::3], axis=0)
-        stds = np.nanstd(all_bags_distances[tagi::3], axis=0)
+    # for tagi in range(3):
+    #     averages = np.nanmean(all_bags_distances[tagi::3], axis=0)
+    #     stds = np.nanstd(all_bags_distances[tagi::3], axis=0)
 
-        topo_averages = np.nanmean(all_bags_topo_distances[tagi::3], axis=0)
-        topo_stds = np.nanstd(all_bags_topo_distances[tagi::3], axis=0)
+    #     topo_averages = np.nanmean(all_bags_topo_distances[tagi::3], axis=0)
+    #     topo_stds = np.nanstd(all_bags_topo_distances[tagi::3], axis=0)
 
-        bayesaverages = np.nanmean(all_bags_bayesdistances[tagi::3], axis=0)
-        bayesstds = np.nanstd(all_bags_bayesdistances[tagi::3], axis=0)
-        bayestopo_averages = np.nanmean(all_bags_topo_bayesdistances[tagi::3], axis=0)
-        bayestopo_stds = np.nanstd(all_bags_topo_bayesdistances[tagi::3], axis=0)
+    #     bayesaverages = np.nanmean(all_bags_bayesdistances[tagi::3], axis=0)
+    #     bayesstds = np.nanstd(all_bags_bayesdistances[tagi::3], axis=0)
+    #     bayestopo_averages = np.nanmean(all_bags_topo_bayesdistances[tagi::3], axis=0)
+    #     bayestopo_stds = np.nanstd(all_bags_topo_bayesdistances[tagi::3], axis=0)
 
-        averages = np.expand_dims(averages, axis=1)
-        stds = np.expand_dims(stds, axis=1)
-        result = np.concatenate((averages, stds), axis=1)
-        np.save(out_folder + "/metric_result{}".format(tagi), result)
+    #     averages = np.expand_dims(averages, axis=1)
+    #     stds = np.expand_dims(stds, axis=1)
+    #     result = np.concatenate((averages, stds), axis=1)
+    #     np.save(out_folder + "/metric_result{}".format(tagi), result)
 
-        topo_averages = np.expand_dims(topo_averages, axis=1)
-        topo_stds = np.expand_dims(topo_stds, axis=1)
-        result = np.concatenate((topo_averages, topo_stds), axis=1)
-        np.save(out_folder + "/topo_result{}".format(tagi), result)
+    #     topo_averages = np.expand_dims(topo_averages, axis=1)
+    #     topo_stds = np.expand_dims(topo_stds, axis=1)
+    #     result = np.concatenate((topo_averages, topo_stds), axis=1)
+    #     np.save(out_folder + "/topo_result{}".format(tagi), result)
 
-        bayesaverages = np.expand_dims(bayesaverages, axis=1)
-        bayesstds = np.expand_dims(bayesstds, axis=1)
-        result = np.concatenate((bayesaverages, bayesstds), axis=1)
-        np.save(out_folder + "/bayes_metric_result{}".format(tagi), result)
+    #     bayesaverages = np.expand_dims(bayesaverages, axis=1)
+    #     bayesstds = np.expand_dims(bayesstds, axis=1)
+    #     result = np.concatenate((bayesaverages, bayesstds), axis=1)
+    #     np.save(out_folder + "/bayes_metric_result{}".format(tagi), result)
 
-        bayestopo_averages = np.expand_dims(bayestopo_averages, axis=1)
-        bayestopo_stds = np.expand_dims(bayestopo_stds, axis=1)
-        result = np.concatenate((bayestopo_averages, bayestopo_stds), axis=1)
-        np.save(out_folder + "/bayes_topo_result{}".format(tagi), result)
+    #     bayestopo_averages = np.expand_dims(bayestopo_averages, axis=1)
+    #     bayestopo_stds = np.expand_dims(bayestopo_stds, axis=1)
+    #     result = np.concatenate((bayestopo_averages, bayestopo_stds), axis=1)
+    #     np.save(out_folder + "/bayes_topo_result{}".format(tagi), result)
 
     averages = np.nanmean(all_bags_distances, axis=0)
     stds = np.nanstd(all_bags_distances, axis=0)

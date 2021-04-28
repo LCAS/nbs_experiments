@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    MFC: This is the main launcher for simulated engineering experiments.
+-->
+<launch>
+    <!-- tiago or scitos -->
+    <arg name="robot"           default="scitos"/>
+
+    <!-- Define move base params here -->
+    <rosparam command="load"  file="$(find nbs_experiments)/config/move_base_teb.yaml" ns="move_base" if="$(eval robot == 'tiago')"/>
+    <rosparam command="load"  file="$(find nbs_experiments)/config/nav/move_base_scitos_sim.yaml" ns="move_base" if="$(eval robot == 'scitos')"/>
+
+    <!--SIM ARGS -->
+    <arg name="rviz"           default="true"/>
+    <arg name="loc_map_yaml"   default="$(find nbs_experiments)/maps/oxford/lab-2020-11-18.yaml"/>
+    <arg name="nav_map_yaml"   default="$(find nbs_experiments)/maps/oxford/lab-2020-11-18.yaml"/>
+    <arg name="map_2_loc_map_pose"   default="0.0 0.0 0.0 0.0 0.0 0.0 1.0"/>
+    <arg name="use_fake_localization" default="true"/>
+
+    <!--Args not likely to change -->
+    <arg name="cmd_vel"        default="nav_vel"/>
+
+    <!--Create gazebo world and simulated robot -->
+    <include file="$(find nbs_experiments)/launch/start_robot_gazebo.launch">
+      <arg name="robot" value="$(arg robot)"/>
+      <arg name="world_file" value="$(find nbs_experiments)/worlds/empty.world"/>
+      <arg name="gzpose" value="-x 0 -y 0 -z 0 -R 0.0 -P 0.0 -Y 0"/>
+    </include>
+    <node name="relay_map" pkg="topic_tools" type="relay" args="/map /vo_map"/>
+
+    <node name="rviz" pkg="rviz" type="rviz" if="$(arg rviz)"  args="-d $(find nbs_experiments)/config/ori_sim.rviz"/>
+
+    <!-- Remove laser self colision -->
+    <include file="$(find nbs_experiments)/launch/scitos/remove_edges_laser.launch"/>
+     
+
+    <!-- .......................... Localization ........................... -->
+    <node name="loc_map_server" pkg="map_server" type="map_server" args="$(arg loc_map_yaml)"  output="screen">
+        <remap from="map" to ="loc_map"/>
+        <param name="frame_id" value="loc_map"/>
+    </node>
+
+      <node pkg="fake_localization" type="fake_localization" respawn="false" name="fake_loc">
+           <remap from="base_pose_ground_truth" to="/ground_truth_odom" />
+           <param name="odom_frame_id" type="string" value="odom"/>
+           <param name="base_frame_id" type="string" value="base_link"/>
+      </node>
+
+    <!-- ............................ Navigation ........................... -->
+    <node name="nav_map_server" pkg="map_server" type="map_server" args="$(arg nav_map_yaml)"  output="screen">
+    </node>
+
+    <node pkg="tf" type="static_transform_publisher" name="map_2_loc_map_tfb"
+        args="$(arg map_2_loc_map_pose) map loc_map 1000"/>
+
+    <!-- Planning -->
+    <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+      <remap from="cmd_vel" to="$(arg cmd_vel)"/>
+    </node>
+
+    <!-- ............................ TopoNavigation ........................... -->
+    <include file="$(find mongodb_store)/launch/mongodb_store.launch">
+      <arg name="db_path" value="/home/pulver/mongodb"/>
+    </include>
+
+    <include file="$(find topological_navigation)/launch/minimal_topological_navigation.launch">
+      <arg name="map" value="lab-2020-11-18"/>
+    </include>
+
+    <!-- <include file="$(find rasberry_navigation)/launch/topological_navigation_robot.launch">
+      <arg name="map" value="lab-2020-11-18"/>
+      <arg name="reconfigure_edges" value="false"/>
+    </include> -->
+    
+</launch>

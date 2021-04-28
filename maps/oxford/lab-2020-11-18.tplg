@@ -1,0 +1,468 @@
+- meta:
+    map: unused
+    node: WayPoint3
+    pointset: lab-2020-11-18
+    published_at: 2020-11-18 15:29:46.684000+00:00
+    timestamp: 1605713386684056997
+  node:
+    edges:
+    - action: move_base
+      edge_id: Batteries_BlueZone
+      inflation_radius: 0.0
+      map_2d: unused
+      node: BlueZone
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: move_base
+      edge_id: Batteries_BigDoor
+      inflation_radius: 0.0
+      map_2d: unused
+      node: BigDoor
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: move_base
+      edge_id: Batteries_Workshop
+      inflation_radius: 0.0
+      map_2d: unused
+      node: Workshop
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: move_base
+      edge_id: Batteries_Printers
+      inflation_radius: 0.0
+      map_2d: unused
+      node: Printers
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    localise_by_topic: ''
+    map: unused
+    name: Batteries
+    pointset: lab-2020-11-18
+    pose:
+      orientation:
+        w: 0.920007646084
+        x: 2.38861765922e-08
+        y: 2.54945886624e-09
+        z: -0.39190068841
+      position:
+        x: -3.57560300827
+        y: -2.1000328064
+        z: 0.0
+    verts:
+    - x: 0.692909657955
+      y: 0.287012577057
+    - x: 0.287012577057
+      y: 0.692909657955
+    - x: -0.287012577057
+      y: 0.692909657955
+    - x: -0.692909657955
+      y: 0.287012577057
+    - x: -0.692909657955
+      y: -0.287012577057
+    - x: -0.287012577057
+      y: -0.692909657955
+    - x: 0.287012577057
+      y: -0.692909657955
+    - x: 0.692909657955
+      y: -0.287012577057
+    xy_goal_tolerance: 0.3
+    yaw_goal_tolerance: 0.1
+- meta:
+    map: unused
+    node: WayPoint1
+    pointset: lab-2020-11-18
+    published_at: 2020-11-18 15:29:37.685000+00:00
+    timestamp: 1605713377685506105
+  node:
+    edges:
+    - action: move_base
+      edge_id: BigDoor_BlueZone
+      inflation_radius: 0.0
+      map_2d: unused
+      node: BlueZone
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: move_base
+      edge_id: BigDoor_Batteries
+      inflation_radius: 0.0
+      map_2d: unused
+      node: Batteries
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    localise_by_topic: ''
+    map: unused
+    name: BigDoor
+    pointset: lab-2020-11-18
+    pose:
+      orientation:
+        w: 0.688760221004
+        x: 4.17031564837e-08
+        y: -3.06386360727e-10
+        z: -0.724989175797
+      position:
+        x: -1.05939126015
+        y: -6.07976388931
+        z: 0.0
+    verts:
+    - x: 0.692909657955
+      y: 0.287012577057
+    - x: 0.287012577057
+      y: 0.692909657955
+    - x: -0.287012577057
+      y: 0.692909657955
+    - x: -0.692909657955
+      y: 0.287012577057
+    - x: -0.692909657955
+      y: -0.287012577057
+    - x: -0.287012577057
+      y: -0.692909657955
+    - x: 0.287012577057
+      y: -0.692909657955
+    - x: 0.692909657955
+      y: -0.287012577057
+    xy_goal_tolerance: 0.3
+    yaw_goal_tolerance: 0.1
+- meta:
+    map: unused
+    node: WayPoint2
+    pointset: lab-2020-11-18
+    published_at: 2020-11-18 15:29:42.010000+00:00
+    timestamp: 1605713382010723114
+  node:
+    edges:
+    - action: move_base
+      edge_id: BlueZone_BigDoor
+      inflation_radius: 0.0
+      map_2d: unused
+      node: BigDoor
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: move_base
+      edge_id: BlueZone_Batteries
+      inflation_radius: 0.0
+      map_2d: unused
+      node: Batteries
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    localise_by_topic: ''
+    map: unused
+    name: BlueZone
+    pointset: lab-2020-11-18
+    pose:
+      orientation:
+        w: 1.0
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      position:
+        x: -1.00725412369
+        y: -3.00866246223
+        z: 0.0
+    verts:
+    - x: 0.692909657955
+      y: 0.287012577057
+    - x: 0.287012577057
+      y: 0.692909657955
+    - x: -0.287012577057
+      y: 0.692909657955
+    - x: -0.692909657955
+      y: 0.287012577057
+    - x: -0.692909657955
+      y: -0.287012577057
+    - x: -0.287012577057
+      y: -0.692909657955
+    - x: 0.287012577057
+      y: -0.692909657955
+    - x: 0.692909657955
+      y: -0.287012577057
+    xy_goal_tolerance: 0.3
+    yaw_goal_tolerance: 0.1
+- meta:
+    map: unused
+    node: WayPoint8
+    pointset: lab-2020-11-18
+    published_at: 2020-11-18 15:30:18.151000+00:00
+    timestamp: 1605713418151369094
+  node:
+    edges:
+    - action: move_base
+      edge_id: Electronics_Printers
+      inflation_radius: 0.0
+      map_2d: unused
+      node: Printers
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: move_base
+      edge_id: Electronics_Posters
+      inflation_radius: 0.0
+      map_2d: unused
+      node: Posters
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    localise_by_topic: ''
+    map: unused
+    name: Electronics
+    pointset: lab-2020-11-18
+    pose:
+      orientation:
+        w: 0.13624510169
+        x: -5.79925263366e-08
+        y: 1.39314790815e-08
+        z: 0.990675151348
+      position:
+        x: -8.54163169861
+        y: 4.38471698761
+        z: 0.0
+    verts:
+    - x: 0.692909657955
+      y: 0.287012577057
+    - x: 0.287012577057
+      y: 0.692909657955
+    - x: -0.287012577057
+      y: 0.692909657955
+    - x: -0.692909657955
+      y: 0.287012577057
+    - x: -0.692909657955
+      y: -0.287012577057
+    - x: -0.287012577057
+      y: -0.692909657955
+    - x: 0.287012577057
+      y: -0.692909657955
+    - x: 0.692909657955
+      y: -0.287012577057
+    xy_goal_tolerance: 0.3
+    yaw_goal_tolerance: 0.1
+- meta:
+    map: unused
+    node: WayPoint7
+    pointset: lab-2020-11-18
+    published_at: 2020-11-18 15:30:10.775000+00:00
+    timestamp: 1605713410775635004
+  node:
+    edges:
+    - action: move_base
+      edge_id: Office_Posters
+      inflation_radius: 0.0
+      map_2d: unused
+      node: Posters
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    localise_by_topic: ''
+    map: unused
+    name: Office
+    pointset: lab-2020-11-18
+    pose:
+      orientation:
+        w: 0.723718225956
+        x: -3.84815201926e-08
+        y: 5.96698745969e-10
+        z: 0.690095663071
+      position:
+        x: -3.32426166534
+        y: 7.76549863815
+        z: 0.0
+    verts:
+    - x: 0.692909657955
+      y: 0.287012577057
+    - x: 0.287012577057
+      y: 0.692909657955
+    - x: -0.287012577057
+      y: 0.692909657955
+    - x: -0.692909657955
+      y: 0.287012577057
+    - x: -0.692909657955
+      y: -0.287012577057
+    - x: -0.287012577057
+      y: -0.692909657955
+    - x: 0.287012577057
+      y: -0.692909657955
+    - x: 0.692909657955
+      y: -0.287012577057
+    xy_goal_tolerance: 0.3
+    yaw_goal_tolerance: 0.1
+- meta:
+    map: unused
+    node: WayPoint6
+    pointset: lab-2020-11-18
+    published_at: 2020-11-18 15:30:08.067000+00:00
+    timestamp: 1605713408067320108
+  node:
+    edges:
+    - action: move_base
+      edge_id: Posters_Printers
+      inflation_radius: 0.0
+      map_2d: unused
+      node: Printers
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: move_base
+      edge_id: Posters_Electronics
+      inflation_radius: 0.0
+      map_2d: unused
+      node: Electronics
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: move_base
+      edge_id: Posters_Office
+      inflation_radius: 0.0
+      map_2d: unused
+      node: Office
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    localise_by_topic: ''
+    map: unused
+    name: Posters
+    pointset: lab-2020-11-18
+    pose:
+      orientation:
+        w: 1.0
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      position:
+        x: -5.01836633682
+        y: 3.91076135635
+        z: 0.0
+    verts:
+    - x: 0.692909657955
+      y: 0.287012577057
+    - x: 0.287012577057
+      y: 0.692909657955
+    - x: -0.287012577057
+      y: 0.692909657955
+    - x: -0.692909657955
+      y: 0.287012577057
+    - x: -0.692909657955
+      y: -0.287012577057
+    - x: -0.287012577057
+      y: -0.692909657955
+    - x: 0.287012577057
+      y: -0.692909657955
+    - x: 0.692909657955
+      y: -0.287012577057
+    xy_goal_tolerance: 0.3
+    yaw_goal_tolerance: 0.1
+- meta:
+    map: unused
+    node: WayPoint5
+    pointset: lab-2020-11-18
+    published_at: 2020-11-18 15:30:04.710000+00:00
+    timestamp: 1605713404710424900
+  node:
+    edges:
+    - action: move_base
+      edge_id: Printers_Workshop
+      inflation_radius: 0.0
+      map_2d: unused
+      node: Workshop
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: move_base
+      edge_id: Printers_Batteries
+      inflation_radius: 0.0
+      map_2d: unused
+      node: Batteries
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: move_base
+      edge_id: Printers_Posters
+      inflation_radius: 0.0
+      map_2d: unused
+      node: Posters
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: move_base
+      edge_id: Printers_Electronics
+      inflation_radius: 0.0
+      map_2d: unused
+      node: Electronics
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    localise_by_topic: ''
+    map: unused
+    name: Printers
+    pointset: lab-2020-11-18
+    pose:
+      orientation:
+        w: 0.281235963106
+        x: 6.64735395617e-08
+        y: -3.67851948901e-09
+        z: -0.959638655186
+      position:
+        x: -5.78734064102
+        y: 1.17888844013
+        z: 0.0
+    verts:
+    - x: 0.692909657955
+      y: 0.287012577057
+    - x: 0.287012577057
+      y: 0.692909657955
+    - x: -0.287012577057
+      y: 0.692909657955
+    - x: -0.692909657955
+      y: 0.287012577057
+    - x: -0.692909657955
+      y: -0.287012577057
+    - x: -0.287012577057
+      y: -0.692909657955
+    - x: 0.287012577057
+      y: -0.692909657955
+    - x: 0.692909657955
+      y: -0.287012577057
+    xy_goal_tolerance: 0.3
+    yaw_goal_tolerance: 0.1
+- meta:
+    map: unused
+    node: WayPoint4
+    pointset: lab-2020-11-18
+    published_at: 2020-11-18 15:29:58.576000+00:00
+    timestamp: 1605713398576884031
+  node:
+    edges:
+    - action: move_base
+      edge_id: Workshop_Batteries
+      inflation_radius: 0.0
+      map_2d: unused
+      node: Batteries
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: move_base
+      edge_id: Workshop_Printers
+      inflation_radius: 0.0
+      map_2d: unused
+      node: Printers
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    localise_by_topic: ''
+    map: unused
+    name: Workshop
+    pointset: lab-2020-11-18
+    pose:
+      orientation:
+        w: 0.23634429276
+        x: 4.9453859674e-08
+        y: 7.01688929183e-09
+        z: -0.971669435501
+      position:
+        x: -5.49457788467
+        y: -2.01181483269
+        z: 0.0
+    verts:
+    - x: 0.692909657955
+      y: 0.287012577057
+    - x: 0.287012577057
+      y: 0.692909657955
+    - x: -0.287012577057
+      y: 0.692909657955
+    - x: -0.692909657955
+      y: 0.287012577057
+    - x: -0.692909657955
+      y: -0.287012577057
+    - x: -0.287012577057
+      y: -0.692909657955
+    - x: 0.287012577057
+      y: -0.692909657955
+    - x: 0.692909657955
+      y: -0.287012577057
+    xy_goal_tolerance: 0.3
+    yaw_goal_tolerance: 0.1

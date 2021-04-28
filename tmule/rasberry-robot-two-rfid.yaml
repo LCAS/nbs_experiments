@@ -1,0 +1,182 @@
+---
+session: rasberry_robot
+init_cmd: |
+  #exec /bin/bash
+  cd @TMULE_CONFIG_DIR@ || true
+  set -o pipefail
+  function export_default () {
+    var_name="$1"
+    var_default="$2"
+    eval $var_name="${!var_name:-$var_default}"
+    export $var_name
+    echo "  $0 -> $var_name=${!var_name}"
+  }
+
+  # source ROS
+  source "/opt/ros/$(rosversion -d)/setup.bash"
+  # search for VPN tun device:
+  default_iface=`route -n | grep "^10.8.0.0" | tr -s " " |  cut -f8 -d" " || echo lo`
+  default_ip=`ip addr show dev "$default_iface" | grep "inet " | sed 's@ *inet \([0-9\.]*\).*@\1@' || echo 127.0.0.1`
+  
+  # load robot-specific config file
+  if [ -r "$HOME/.rasberryrc" ]; then echo "*** loading $HOME/.rasberryrc" ; source "$HOME/.rasberryrc"; fi
+  
+  export_default BASE_CONFIG_DIR `readlink -f . || echo .`
+  export_default ROBOT_NAME `hostname | tr "-" "_" | tr "." "_"`
+  export_default SCENARIO_NAME "default"
+  # load robot-specific config file
+  if [ -r "$BASE_CONFIG_DIR/robots/$ROBOT_NAME.sh" ]; then echo "*** loading $BASE_CONFIG_DIR/robots/$ROBOT_NAME.sh" ; source "$BASE_CONFIG_DIR/robots/$ROBOT_NAME.sh"; fi
+  # load scenario-specific config file
+  if [ -r "$BASE_CONFIG_DIR/scenarios/$SCENARIO_NAME.sh" ]; then echo "*** loading $BASE_CONFIG_DIR/scenarios/$SCENARIO_NAME.sh" ; source "$BASE_CONFIG_DIR/scenarios/$SCENARIO_NAME.sh"; fi  # configure the development workspace (assuming we are in rasberry_bringup/tmule)
+  export_default CATKIN_WORKSPACE "`readlink -f ../../../.. || echo $HOME/rasberry_ws`"
+  source "$CATKIN_WORKSPACE/devel/setup.bash"
+  # set ROS_MASTER to the correct IP
+  export_default ROS_MASTER $default_ip
+  # set ROS_IP not to the IP that we will connect to remotely
+  export_default ROS_IP `ip route get $ROS_MASTER | grep "src" | sed 's/.*src \([0-9\.]*\).*/\1/' || echo $ROS_MASTER`
+  # set ROS_HOSTNAME to the ROS_IP to avoid configuring /etc/hosts for anyone who connects
+  export_default ROS_HOSTNAME "$ROS_IP"
+  # path where to expect MONGODB
+  export_default MONGO_PATH "$HOME/mongodb"
+  # use IMU?
+  export_default USE_IMU false
+  export_default UM7_IMU_PORT "/dev/ttyUSB1"
+  export_default USE_XSENS false
+  # Lidars
+  export_default LIDAR_TYPE_FRONT umt30lxew
+  export_default LIDAR_TYPE_BACK umt30lxew
+  # use MEL? For localisation quality topic and/or gps-lidar fusion
+  # set USE_MEL=true and FUSE_GPS=false to run amcl and publish quality
+  export_default DATUM_FILE ""
+  export_default USE_MEL false
+  export_default FUSE_GPS false
+  export_default USE_GPS_ONLY false
+  # use RTK_GNSS?
+  export_default USE_RTK false
+  export_default RTK_IP "192.168.0.50"
+  export_default RTK_PORT "21098"
+  # the topomap to be used
+  export_default TMAP riseholme_bidirectional
+  # the gridmap to be used (key in mongodb)
+  export_default MAP "$(rospack find rasberry_navigation)/maps/riseholme.yaml"
+  export_default NOGOMAP "$(rospack find rasberry_navigation)/maps/riseholme.yaml"
+  # figure out the robot number from the hostname, assuming it is like `thorvald-XXX`
+  export_default ROBOT_NO `hostname | cut -f2 -d"-"`
+  # set the robot type
+  export_default ROBOT_TYPE "thorvald_ii_4wd4ws_slim"
+  export ROS_MASTER_URI="http://$ROS_MASTER:11311/"
+  export_default ROSBRIDGE_IP "10.8.0.18"
+  export_default ROSBRIDGE_PORT "9090"
+  export_default USE_SIM false
+  export_default GAZEBO_WORLD riseholme
+  export_default EKF_PUBLISH_TF true
+  export_default USE_CARROT false
+  # put this in your local file only:
+  # export_default SLACK_WEBHOOK <SECRET_ASK_MARC>
+  export_default USE_GUI false
+  export_default USE_OMNI false
+  export_default SITE_NAME "riseholme"
+  export_default TASK "transportation"
+  export_default POLE_POSITIONS ""
+  export_default NUM_EXPERIMENTS 10
+  export_default EXPERIMENT_COUNTER 0
+  export_default NUM_PICKERS 1
+# tags: core, nav
+windows:
+- name: roscore
+  panes:
+  - roslaunch rasberry_bringup roscore.launch use_sim:=$USE_SIM
+  check: "rostopic list"
+  tags: [core, nav, rfid, lidar, rfid_lidar]
+- name: init
+  panes:
+  - mkdir -p "$MONGO_PATH" && roslaunch mongodb_store mongodb_store.launch db_path:=$MONGO_PATH
+  - if [ -r "$BASE_CONFIG_DIR/robots/$ROBOT_NAME.yaml" ]; then rosparam load "$BASE_CONFIG_DIR/robots/$ROBOT_NAME.yaml"; fi
+  check: "rosservice list | grep -q message_store"
+  tags: [core, nav, rfid, lidar, rfid_lidar]
+- name: robot
+  panes:
+  - roslaunch rasberry_bringup robot_bringup.launch robot_model:=$(rospack find rasberry_bringup)/config/robot_$ROBOT_NO.yaml model_extras:=$(rospack find rasberry_bringup)/urdf/robot_${ROBOT_NO}_sensors_two_rfid.xacro datum_file:="$DATUM_FILE" ekf_publish_tf:="$EKF_PUBLISH_TF" simple_sim:=$USE_SIM with_teleoperation:=true world_name:=$GAZEBO_WORLD with_gui:=$USE_GUI
+  - if ! $USE_SIM; then roslaunch rasberry_bringup rasberry_lidar.launch lidar_type:="$LIDAR_TYPE_FRONT" position:="front" ip_address:="192.168.0.11"; fi
+  - if ! $USE_SIM; then roslaunch rasberry_bringup rasberry_lidar.launch lidar_type:="$LIDAR_TYPE_BACK" position:="back"  ip_address:="192.168.0.10"; fi
+  - if ! $USE_SIM; then roslaunch rasberry_bringup rasberry_imu.launch use_imu:="$USE_IMU" um7_imu_port:="$UM7_IMU_PORT" use_xsens:="$USE_XSENS"; fi
+  check: "rostopic list | grep -q -e scanner_front/scan -e scanner_back/scan"
+  tags: [core, nav, rfid, lidar, rfid_lidar]
+- name: robot_localisation
+  panes:
+  - roslaunch rasberry_navigation map_server.launch map:="$MAP" use_no_go_map:=true no_go_map:=$NOGOMAP
+  - roslaunch rasberry_bringup corner_lasers_merger.launch
+  - if ! $USE_MEL; then roslaunch rasberry_navigation rasberry_localisation.launch publish_tf:="$EKF_PUBLISH_TF" use_omni:="$USE_OMNI" use_sim:="$USE_SIM"; fi
+  - if $USE_RTK; then roslaunch rasberry_navigation dual_septentrio_gps.launch rtk_ip:="$RTK_IP" rtk_port:="$RTK_PORT"; fi
+  check: "rostopic list | grep -q /map"
+  tags: [nav, rfid, lidar, rfid_lidar]
+- name: topology
+  panes:
+  - roslaunch rasberry_navigation topological_map_manager_central.launch map:=$TMAP
+  check: "rostopic list | grep -q /topological_map"
+  tags: [nav, rfid, lidar, rfid_lidar]
+- name: target_localisation
+  panes:
+  - roslaunch bayesian_topological_localisation topological_localisation.launch
+  check: "rosservice list | grep -q /bayesian_topological_localisation/localise_agent"
+  tags: [nav, rfid, lidar, rfid_lidar, reset_rfid, reset_lidar, reset_rfid_lidar]
+- name: navigation
+  panes:
+  - rosrun persistent_topics single_channel_persistent_topics_node _topics:="['/topological_map']" _file_name:="$HOME/.ros/rasberry.ptb"
+  - roslaunch rasberry_move_base move_base_dwa.launch use_carrot_planner:=$USE_CARROT use_omni:="$USE_OMNI" robot_no:=$ROBOT_NO
+  - roslaunch rasberry_navigation topological_navigation_robot.launch move_base_reconf_service:=DWAPlannerROS use_omni:="$USE_OMNI" site_name:="$SITE_NAME" map:="$TMAP"
+  tags: [nav, rfid, lidar, rfid_lidar]
+- name: row_traversal
+  panes:
+  - roslaunch rasberry_navigation row_traversal.launch site_name:=$SITE_NAME task:=$TASK pole_positions:=$POLE_POSITIONS
+  tags: [nav, rfid, lidar, rfid_lidar]
+- name: nbs_gazebo
+  panes:
+  - roslaunch nbs_experiments RASBERRY_rfid_grid_gazebo_two_readers.launch num_pickers:="$NUM_PICKERS"
+  tags: [rfid, lidar, rfid_lidar]
+- name: mcmd-rfid
+  panes:
+  - |
+    EXPERIMENT_COUNTER=$((EXPERIMENT_COUNTER+1))
+    if [ $EXPERIMENT_COUNTER -le $NUM_EXPERIMENTS ]; then rostopic pub /last_experiment std_msgs/Bool "data: false" --once; else rostopic pub /last_experiment std_msgs/Bool "data: true"; fi
+    roslaunch next_best_sense pure.launch dest_folder:="$DATA_DIR" two_readers:="true" num_tags:="$NUM_PICKERS" w_info_gain:=0 w_travel_distance:=0.30 w_sensing_time:=0.1 w_rfid_gain:=0.35 w_battery_status:=0.25
+  tags: [rfid, rfid_lidar, reset_rfid, reset_rfid_lidar]
+- name: mcmd-no-rfid
+  panes:
+  - |
+    EXPERIMENT_COUNTER=$((EXPERIMENT_COUNTER+1))
+    if [ $EXPERIMENT_COUNTER -le $NUM_EXPERIMENTS ]; then rostopic pub /last_experiment std_msgs/Bool "data: false" --once; else rostopic pub /last_experiment std_msgs/Bool "data: true"; fi
+    roslaunch next_best_sense pure.launch dest_folder:="$DATA_DIR" two_readers:="true" num_tags:="$NUM_PICKERS" w_info_gain:=0 w_travel_distance:=0.30 w_sensing_time:=0.1 w_rfid_gain:=0.35 w_battery_status:=0.25
+  tags: [lidar, reset_lidar]
+- name: people_perception
+  panes:
+  - rosparam set /people_tracker_filter/frame_id_people "base_link" ; roslaunch perception_people_launch people_tracker_robot.launch scan:=scan bayes_people_param_file:=$(rospack find rasberry_people_perception)/config/bayes_people_tracker_detectors.yaml
+  - rosrun topic_tools throttle messages /people_tracker/pose_array 1.0
+- name: sim_gps
+  panes:
+  - rosrun rasberry_people_perception simulated_noisy_gps.py --name tag_1 --gps_obs_std 5.0 --err_variance 0.1 --err_offset_x 2.0 --err_offset_y 2.0 --rate 0.25 --stepsize 0.1 --tunnels 7 8 9 10
+  - if [ $NUM_PICKERS -ge 2 ]; then sleep "$(((RANDOM%30)+1))"; rosrun rasberry_people_perception simulated_noisy_gps.py --name tag_2 --gps_obs_std 5.0 --err_variance 0.1 --err_offset_x 2.0 --err_offset_y 2.0 --rate 0.25 --stepsize 0.1 --tunnels 0 1 2 3; fi
+  - if [ $NUM_PICKERS -ge 3 ]; then sleep "$(((RANDOM%30)+1))"; rosrun rasberry_people_perception simulated_noisy_gps.py --name tag_3 --gps_obs_std 5.0 --err_variance 0.1 --err_offset_x 2.0 --err_offset_y 2.0 --rate 0.25 --stepsize 0.1 --tunnels 4 5 6 7; fi
+  - rosrun rasberry_people_perception make_robot_enter_forward.py
+  tags: [rfid, lidar, rfid_lidar, reset_rfid, reset_lidar, reset_rfid_lidar]
+- name: rviz
+  panes:
+  - DISPLAY=:0 rviz -d $(rospack find rasberry_bringup)/resources/topological_navigation_two_readers.rviz
+  tags: [rfid, lidar, rfid_lidar]
+- name: sentor_rfid
+  panes:
+  - roslaunch sentor sentor.launch config_file:=$(rospack find rasberry_bringup)/config/sentor_tworfid_experiments.yaml
+  tags: [rfid]
+- name: sentor_lidar
+  panes:
+  - roslaunch sentor sentor.launch config_file:=$(rospack find rasberry_bringup)/config/sentor_twolidar_experiments.yaml
+  tags: [lidar]
+- name: sentor_rfid_lidar
+  panes:
+  - roslaunch sentor sentor.launch config_file:=$(rospack find rasberry_bringup)/config/sentor_tworfidlidar_experiments.yaml
+  tags: [rfid_lidar]
+- name: debug
+  panes:
+  - ls
+  - ls
+  tags: [rfid, lidar, rfid_lidar]

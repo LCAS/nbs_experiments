@@ -78,7 +78,7 @@ if __name__== "__main__":
     args = parser.parse_args()
 
     # folder to save results
-    out_folder = os.path.join(args.root, "out_" + "_".join(args.experiments))
+    out_folder = os.path.join(args.root, "out_" + "_".join("results_estimated_node"))
     if not os.path.exists(out_folder):
         os.makedirs(out_folder)
     print("I will save the plots to {}".format(out_folder))

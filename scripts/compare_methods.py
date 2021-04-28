@@ -8,8 +8,6 @@ def plotDistance(data, pos, y_label, label, color, axes):
     #  Plot the trajectories
     # Now data are plotted for every ten seconds, we may want to subsample them for every minute
     x = np.arange(0, data.shape[0] , 1)/6.0
-    # print(data.shape)
-    # exit(0)
     axs[pos].plot(x, data[:,0], label=label, color=color)
     axs[pos].fill_between(x, data[:, 0]-data[:, 1], data[:, 0]+data[:, 1], alpha=0.05, edgecolor=color, facecolor=color)
     axs[pos].set_ylabel(y_label, fontsize=16)
@@ -24,7 +22,7 @@ def plotDistance(data, pos, y_label, label, color, axes):
 
 def calculateMetricsAndPlot(data, ylabel, label_list, color_list, axs, axs_pos):
     # Calculate metrics (MSE)
-    if (axs_pos == 0):
+    if (axs_pos == 1):
         print("=== TOPOLOGICAL DISTANCE ===")
     else:
         print("=== EUCLIDEAN DISTANCE ===")
@@ -67,19 +65,19 @@ if __name__== "__main__":
     # 2) RFID only
     # 3) lidar_RFID
     # and for all of them we need gt and pf data
-    topo_gps_connected_result    = np.load(args.root + "topo_result_gps_connected.npy")
-    topo_gps_unconnected_result    = np.load(args.root + "topo_result_gps_unconnected.npy")
-    topo_lidar_result    = np.load(args.root + "topo_result_lidar.npy")
-    topo_rfid_result     = np.load(args.root + "topo_result_rfid.npy")
+    # topo_gps_connected_result    = np.load(args.root + "topo_result_gps_connected.npy")
+    # topo_gps_unconnected_result    = np.load(args.root + "topo_result_gps_unconnected.npy")
+    # topo_lidar_result    = np.load(args.root + "topo_result_lidar.npy")
+    # topo_rfid_result     = np.load(args.root + "topo_result_rfid.npy")
     topo_combined_result = np.load(args.root + "topo_result_combined.npy")
-    # topo_estimated_node_result = np.load(args.root + "topo_result_exp3_estimated_node.npy")
+    topo_estimated_node_result = np.load(args.root + "topo_result_estimated_node.npy")
 
-    gps_connected_result    = np.load(args.root + "metric_result_gps_connected.npy")
-    gps_unconnected_result    = np.load(args.root + "metric_result_gps_unconnected.npy")
-    lidar_result    = np.load(args.root + "metric_result_lidar.npy")
-    rfid_result     = np.load(args.root + "metric_result_rfid.npy")
+    # gps_connected_result    = np.load(args.root + "metric_result_gps_connected.npy")
+    # gps_unconnected_result    = np.load(args.root + "metric_result_gps_unconnected.npy")
+    # lidar_result    = np.load(args.root + "metric_result_lidar.npy")
+    # rfid_result     = np.load(args.root + "metric_result_rfid.npy")
     combined_result = np.load(args.root + "metric_result_combined.npy")
-    # estimated_node_result = np.load(args.root + "metric_result_exp3_estimated_node.npy")
+    estimated_node_result = np.load(args.root + "metric_result_estimated_node.npy")
     
 
     # For debug
@@ -100,11 +98,14 @@ if __name__== "__main__":
     
     # TODO: Check that they sizes are the sames
     # data = [gps_connected_result, gps_unconnected_result, lidar_result, rfid_result, combined_result]
-    topo_data = [topo_gps_connected_result, topo_gps_unconnected_result, topo_lidar_result, topo_rfid_result, topo_combined_result]
-    metric_data = [gps_connected_result, gps_unconnected_result, lidar_result, rfid_result, combined_result]
+    # topo_data = [ topo_lidar_result, topo_rfid_result, topo_combined_result, topo_gps_connected_result, topo_gps_unconnected_result]
+    # metric_data = [lidar_result, rfid_result, combined_result, gps_connected_result, gps_unconnected_result]
+    topo_data = [topo_combined_result, topo_estimated_node_result]
+    metric_data = [combined_result, estimated_node_result]
     # label_list=["GPS-connected", "GPS-unconnected", "Lidar", "RFID", "Combined"]
-    label_list = ["Khan et al.[3] - connected", "Khan et al.[3] - unconnected", "LIDAR+GPS", "RFID+GPS", "RFID+LIDAR+GPS(ours)"]
-    color_list=["b", "c", "purple", "r", "g"]
+    # label_list = [ "LIDAR+GPS", "RFID+GPS", "RFID+LIDAR+GPS(ours)", "Khan et al.[3] - connected", "Khan et al.[3] - unconnected"]
+    label_list = ["Next-Best-Sense[5]", "EstimatedNode"]
+    color_list=[ "g", "r", "g", "b", "c"]
     
     topo_data = normalizeLenData(topo_data)
     metric_data = normalizeLenData(metric_data)
