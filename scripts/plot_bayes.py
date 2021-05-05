@@ -79,6 +79,8 @@ if __name__ == "__main__":
     all_bags_topo_distances = []
     all_bags_bayesdistances = []
     all_bags_topo_bayesdistances = []
+    all_bags_noisydistances = []
+    all_bags_topo_noisydistances = []
     all_bags_gtnodes = []
     all_bags_enodes = []
     all_bags_bayesnodes = []
@@ -92,6 +94,8 @@ if __name__ == "__main__":
         topo_distances = [[], [], []]
         bayesdistances = [[], [], []]
         topo_bayesdistances = [[], [], []]
+        noisydistances = [[], [], []]
+        topo_noisydistances = [[], [], []]
         gtnodes = [[], [], []]
         enodes = [[], [], []]
         bayesnodes = [[], [], []]
@@ -99,13 +103,16 @@ if __name__ == "__main__":
         ###last read values
         last_time = None
         last_gtnode = [None, None, None]
+        last_noisynode = [None, None, None]
         last_enode = [None, None, None]
         last_bayesnode = [None, None, None]
         nbs_step = False
+        last_noisynode_pose = [None, None, None]
         last_enode_pose = [None, None, None]
         last_bayesnode_pose = [None, None, None]
         tpose = [None, None, None]
-        for j, (topic, msg, ts) in enumerate(bag.read_messages(topics=['/tag_1/estimated_node', '/poses/1', '/tag_2/estimated_node', '/poses/2', '/tag_3/estimated_node', '/poses/3',  '/thorvald/rfid_grid_map_node/rfid_belief_maps', '/people_tracker_filter/positions_throttle'])):
+        noisypose = [None, None, None]
+        for j, (topic, msg, ts) in enumerate(bag.read_messages(topics=['/tag_1/estimated_node', '/poses/1', '/tag_1/pose_obs', '/tag_2/estimated_node', '/poses/2', '/tag_2/pose_obs', '/tag_3/estimated_node', '/poses/3',  '/tag_3/pose_obs', '/thorvald/rfid_grid_map_node/rfid_belief_maps', '/people_tracker_filter/positions_throttle'])):
             # update time
             if last_time is None:
                 last_time = ts
@@ -138,6 +145,21 @@ if __name__ == "__main__":
                         else:
                             bayesdistances[tagi].append(np.nan)
                             topo_bayesdistances[tagi].append(np.nan)
+                        # get distance of noisy gps and GT
+                        if not (last_noisynode[tagi] is None or last_noisynode_pose[tagi] is None):
+                            topo_distance = find_distance(last_noisynode[tagi], last_gtnode[tagi])
+                            distance = find_eucliden_distance(last_noisynode_pose[tagi], tpose[tagi])
+                            if distance is None:
+                                print("Distance not found {} {}".format(
+                                    last_enode, last_gtnode))
+                                noisydistances[tagi].append(np.nan)
+                                topo_noisydistances[tagi].append(np.nan)
+                            else:
+                                noisydistances[tagi].append(int(distance))
+                                topo_noisydistances[tagi].append(int(topo_distance))
+                        else:
+                            noisydistances[tagi].append(np.nan)
+                            topo_noisydistances[tagi].append(np.nan)
 
 
                         # update general stuff
@@ -151,6 +173,8 @@ if __name__ == "__main__":
                         topo_distances[tagi].append(np.nan)
                         bayesdistances[tagi].append(np.nan)
                         topo_bayesdistances[tagi].append(np.nan)
+                        noisydistances[tagi].append(np.nan)
+                        topo_noisydistances[tagi].append(np.nan)
                         gtnodes[tagi].append(None)
                         enodes[tagi].append(None)
                         bayesnodes[tagi].append(None)
@@ -166,6 +190,13 @@ if __name__ == "__main__":
                 last_enode[0] = msg.data
                 index = node_names.index(last_enode[0])
                 last_enode_pose[0] = node_positions[index]
+            elif topic == '/tag_1/pose_obs':
+                noisypose[0] = np.array(
+                    [msg.pose.pose.pose.position.x, msg.pose.pose.pose.position.y])
+                closest = np.argmin(
+                    np.sqrt(np.sum((np.array(node_positions) - noisypose[0]) ** 2, axis=1)))
+                last_noisynode[0] = node_names[closest]
+                last_noisynode_pose[0] = node_positions[closest]
             elif topic == '/poses/2':
                 tpose[1] = np.array([msg.pose.pose.position.x, msg.pose.pose.position.y])
                 closest = np.argmin(np.sqrt(np.sum((np.array(node_positions) - tpose[1]) ** 2, axis=1)))
@@ -174,6 +205,13 @@ if __name__ == "__main__":
                 last_enode[1] = msg.data
                 index = node_names.index(last_enode[1])
                 last_enode_pose[1] = node_positions[index]
+            elif topic == '/tag_2/pose_obs':
+                noisypose[1] = np.array(
+                    [msg.pose.pose.pose.position.x, msg.pose.pose.pose.position.y])
+                closest = np.argmin(
+                    np.sqrt(np.sum((np.array(node_positions) - noisypose[1]) ** 2, axis=1)))
+                last_noisynode[1] = node_names[closest]
+                last_noisynode_pose[1] = node_positions[closest]
             elif topic == '/poses/3':
                 tpose[2] = np.array([msg.pose.pose.position.x, msg.pose.pose.position.y])
                 closest = np.argmin(np.sqrt(np.sum((np.array(node_positions) - tpose[2]) ** 2, axis=1)))
@@ -182,10 +220,20 @@ if __name__ == "__main__":
                 last_enode[2] = msg.data
                 index = node_names.index(last_enode[2])
                 last_enode_pose[2] = node_positions[index]
+            elif topic == '/tag_3/pose_obs':
+                noisypose[2] = np.array(
+                    [msg.pose.pose.pose.position.x, msg.pose.pose.pose.position.y])
+                closest = np.argmin(
+                    np.sqrt(np.sum((np.array(node_positions) - noisypose[2]) ** 2, axis=1)))
+                last_noisynode[2] = node_names[closest]
+                last_noisynode_pose[2] = node_positions[closest]
             elif topic == '/thorvald/rfid_grid_map_node/rfid_belief_maps':
                 nbs_step = True
             elif topic == '/people_tracker_filter/positions_throttle':
                 for tag_idx in range(3):
+                    if noisypose[tag_idx] is None:
+                        continue
+
                     # check if still being tracked
                     if tag_uuids[tag_idx] in msg.uuids:
                         ti = msg.uuids.index(tag_uuids[tag_idx])
@@ -197,12 +245,19 @@ if __name__ == "__main__":
                     elif len(msg.uuids) > 0:
                         # find tracked closest to gt which is not already tracked for another tag
                         tracks_positions = np.array([[pose.position.x, pose.position.y] for pose in msg.poses])
-                        ord_idx = np.argsort(np.sqrt(np.sum((tracks_positions - tpose[tag_idx]) ** 2, axis=1)))
+                        ord_idx = np.argsort(
+                            np.sqrt(np.sum((tracks_positions - noisypose[tag_idx]) ** 2, axis=1)))
+                        # if tag_idx == 0:
+                        #     # print(tracks_positions, noisypose)
+                        #     # print(np.array(tracks_positions).shape,
+                        #     #       np.array(noisypose).shape)
+                        #     # print(ord_idx)
                         theone = None
                         for candidateidx in ord_idx:
                             if msg.uuids[candidateidx] not in tag_uuids:
                                 theone = np.argmin(
                                     np.sqrt(np.sum((np.array(node_positions) - tracks_positions[candidateidx]) ** 2, axis=1)))
+                                tag_uuids[tag_idx] = msg.uuids[candidateidx]
                                 break 
                         if theone is None:
                             last_bayesnode[tag_idx] = None
@@ -214,6 +269,28 @@ if __name__ == "__main__":
                         last_bayesnode[tag_idx] = None
                         last_bayesnode_pose[tag_idx] = None
 
+
+        # ### DEBUG scatter the gt trajectory and the bayes trajectory
+        # plt.figure()
+        # plt.scatter(np.arange(len(bayesdistances[0])), np.array(bayesdistances[0]))
+        # # print(np.array(node_positions).shape)
+        # # print(np.array(bayesnodes[0]).shape, np.array(enodes[0]).shape)
+        # # for i, (bnode, enode) in enumerate(zip(bayesnodes[0], enodes[0])):
+        # #     bposes = np.array(node_positions)[np.in1d(node_names, bnode)]
+        # #     eposes = np.array(node_positions)[np.in1d(node_names, enode)]
+        # #     # print(bposes, eposes)
+        # #     try:
+        # #         diff2d = np.abs(eposes - bposes)[0]
+        # #     except:
+        # #         diff2d = [np.nan, np.nan]
+        # #     # print(diff2d)
+        # #     # plt.plot(bposes[:, 0], bposes[:, 1], 'r')
+        # #     # plt.plot(eposes[:, 0], eposes[:, 1], 'g')
+        # #     plt.plot([i], [diff2d[0]], 'go')
+        # #     plt.plot([i], [diff2d[1]], 'bo')
+        # plt.show()
+        # # bayesnodes[0]
+        # ###
 
         if len(distances) > 0:
             # avg_distance = np.average(distances)
@@ -227,8 +304,10 @@ if __name__ == "__main__":
                 all_bags_times.append(np.array(times[tagi]))
                 all_bags_distances.append(np.array(distances[tagi]))
                 all_bags_bayesdistances.append(np.array(bayesdistances[tagi]))
+                all_bags_noisydistances.append(np.array(noisydistances[tagi]))
                 all_bags_topo_distances.append(np.array(topo_distances[tagi]))
                 all_bags_topo_bayesdistances.append(np.array(topo_bayesdistances[tagi]))
+                all_bags_topo_noisydistances.append(np.array(topo_noisydistances[tagi]))
                 all_bags_gtnodes.append(np.array(gtnodes[tagi]))
                 all_bags_enodes.append(np.array(enodes[tagi]))
                 all_bags_bayesnodes.append(np.array(bayesnodes[tagi]))
@@ -243,6 +322,8 @@ if __name__ == "__main__":
         all_bags_topo_distances[i] = all_bags_topo_distances[i][:min_size]
         all_bags_bayesdistances[i] = all_bags_bayesdistances[i][:min_size]
         all_bags_topo_bayesdistances[i] = all_bags_topo_bayesdistances[i][:min_size]
+        all_bags_noisydistances[i] = all_bags_noisydistances[i][:min_size]
+        all_bags_topo_noisydistances[i] = all_bags_topo_noisydistances[i][:min_size]
         all_bags_times[i] = all_bags_times[i][:min_size]
         all_bags_gtnodes[i] = all_bags_gtnodes[i][:min_size]
         all_bags_enodes[i] = all_bags_enodes[i][:min_size]
@@ -271,6 +352,13 @@ if __name__ == "__main__":
         np.nanmean(all_bags_topo_bayesdistances)))
     print("\t\tTOTAL TOPO STD: {}".format(
         np.nanstd(all_bags_topo_bayesdistances)))
+    print("Noisy GPS:")
+    print("\t\tTOTAL AVERAGE: {}".format(np.nanmean(all_bags_noisydistances)))
+    print("\t\tTOTAL STD: {}".format(np.nanstd(all_bags_noisydistances)))
+    print("\t\tTOTAL TOPO AVERAGE: {}".format(
+        np.nanmean(all_bags_topo_noisydistances)))
+    print("\t\tTOTAL TOPO STD: {}".format(
+        np.nanstd(all_bags_topo_noisydistances)))
 
     # for tagi in range(3):
     #     averages = np.nanmean(all_bags_distances[tagi::3], axis=0)
@@ -317,6 +405,13 @@ if __name__ == "__main__":
     bayestopo_stds = np.nanstd(
         all_bags_topo_bayesdistances, axis=0)
 
+    noisyaverages = np.nanmean(all_bags_noisydistances, axis=0)
+    noisystds = np.nanstd(all_bags_noisydistances, axis=0)
+    noisytopo_averages = np.nanmean(
+        all_bags_topo_noisydistances, axis=0)
+    noisytopo_stds = np.nanstd(
+        all_bags_topo_noisydistances, axis=0)
+
     averages = np.expand_dims(averages, axis=1)
     stds = np.expand_dims(stds, axis=1)
     result = np.concatenate((averages, stds), axis=1)
@@ -336,4 +431,14 @@ if __name__ == "__main__":
     bayestopo_stds = np.expand_dims(bayestopo_stds, axis=1)
     result = np.concatenate((bayestopo_averages, bayestopo_stds), axis=1)
     np.save(out_folder + "/bayes_topo_result{}".format("tot"), result)
+
+    noisyaverages = np.expand_dims(noisyaverages, axis=1)
+    noisystds = np.expand_dims(noisystds, axis=1)
+    result = np.concatenate((noisyaverages, noisystds), axis=1)
+    np.save(out_folder + "/noisygps_metric_result{}".format("tot"), result)
+
+    noisytopo_averages = np.expand_dims(noisytopo_averages, axis=1)
+    noisytopo_stds = np.expand_dims(noisytopo_stds, axis=1)
+    result = np.concatenate((noisytopo_averages, noisytopo_stds), axis=1)
+    np.save(out_folder + "/noisygps_topo_result{}".format("tot"), result)
 

@@ -68,7 +68,7 @@ def plotDistance(data, pos, y_label, label, color, axes):
 
 if __name__== "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--experiments", type=str, nargs="+", default=["03-02-2021-17-35-01"],
+    parser.add_argument("--experiments", type=str, nargs="+", default=[],
                         help="Experiment name")
     parser.add_argument("--root", type=str, default=os.environ['DATA_DIR'],
                         help="Folder path")
@@ -77,13 +77,19 @@ if __name__== "__main__":
 
     args = parser.parse_args()
 
+    experiments = args.experiments
+    if len(experiments) == 0:
+        for d in os.listdir(args.root):
+            if os.path.isdir(os.path.join(args.root, d)) and not d.startswith("out_"):
+                experiments.append(d) 
+    run = len(experiments)
+
     # folder to save results
     out_folder = os.path.join(args.root, "out_" + "_".join("results_estimated_node"))
     if not os.path.exists(out_folder):
         os.makedirs(out_folder)
     print("I will save the plots to {}".format(out_folder))
 
-    run = len(args.experiments)
     gt_list = []
     gps_list = []
     pf_list = []
