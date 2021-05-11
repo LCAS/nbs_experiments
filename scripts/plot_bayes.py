@@ -67,12 +67,7 @@ if __name__ == "__main__":
         tdistances = {dist[0]: dist[1] for dist in tdistances} 
         # print(tdistances)
 
-    # stores the bayes tracker uuids corresponding to the pickers
-    tag_uuids = [
-        "",
-        "",
-        ""
-    ]
+
 
     all_bags_times = []
     all_bags_distances = []
@@ -88,6 +83,12 @@ if __name__ == "__main__":
     step_size = rospy.Duration(secs=10) #seconds
     for i, bag in enumerate(bags):
         print(bag_names[i])
+        # stores the bayes tracker uuids corresponding to the pickers
+        tag_uuids = [
+            "",
+            "",
+            ""
+        ]
         ###trajectory vectors
         times = [[], [], []]
         distances = [[], [], []]
@@ -112,6 +113,9 @@ if __name__ == "__main__":
         last_bayesnode_pose = [None, None, None]
         tpose = [None, None, None]
         noisypose = [None, None, None]
+        ###
+        # plt.figure()
+        ###
         for j, (topic, msg, ts) in enumerate(bag.read_messages(topics=['/tag_1/estimated_node', '/poses/1', '/tag_1/pose_obs', '/tag_2/estimated_node', '/poses/2', '/tag_2/pose_obs', '/tag_3/estimated_node', '/poses/3',  '/tag_3/pose_obs', '/thorvald/rfid_grid_map_node/rfid_belief_maps', '/people_tracker_filter/positions_throttle'])):
             # update time
             if last_time is None:
@@ -180,6 +184,15 @@ if __name__ == "__main__":
                         bayesnodes[tagi].append(None)
                         nbssteps[tagi].append(nbs_step)
                         times[tagi].append(j*step_size.secs)
+                    # ###
+                    # if last_noisynode_pose[tagi] is not None and last_bayesnode_pose[tagi] is not None:
+                    #     plt.figure(tagi)
+                    #     # print(last_noisynode_pose[1])
+                    #     plt.plot(j, last_noisynode_pose[tagi][0], 'gx')
+                    #     plt.plot(j, last_noisynode_pose[tagi][1], 'b*')
+                    #     plt.plot(j, last_bayesnode_pose[tagi][0], 'rx')
+                    #     plt.plot(j, last_bayesnode_pose[tagi][1], 'y*')
+                    # ###
                 nbs_step = False
                 last_time = rospy.Time(secs=ts.secs, nsecs=ts.nsecs)
             if topic == '/poses/1':
@@ -230,10 +243,10 @@ if __name__ == "__main__":
             elif topic == '/thorvald/rfid_grid_map_node/rfid_belief_maps':
                 nbs_step = True
             elif topic == '/people_tracker_filter/positions_throttle':
-                for tag_idx in range(3):
-                    if noisypose[tag_idx] is None:
-                        continue
+                if any([el is None for el in noisypose]):
+                    continue
 
+                for tag_idx in range(3):
                     # check if still being tracked
                     if tag_uuids[tag_idx] in msg.uuids:
                         ti = msg.uuids.index(tag_uuids[tag_idx])
@@ -243,29 +256,93 @@ if __name__ == "__main__":
                         last_bayesnode[tag_idx] = node_names[closest]
                         last_bayesnode_pose[tag_idx] = node_positions[closest]
                     elif len(msg.uuids) > 0:
-                        # find tracked closest to gt which is not already tracked for another tag
+                        ###
+                        # print()
+                        # print(j)
+                        # print(tag_idx)
+                        # print("We are changing tracking trace")
+                        # print("from {} - {}...".format(
+                        #     tag_uuids, msg.uuids))
+                        ###
+                        ## re-organise all the matches ##
+                        # reset all the vectors
+                        tag_uuids = [""] * 3
+                        last_bayesnode = [None, None, None]
+                        last_bayesnode_pose = [None, None, None]
+
+                        #stack all the distances
                         tracks_positions = np.array([[pose.position.x, pose.position.y] for pose in msg.poses])
-                        ord_idx = np.argsort(
-                            np.sqrt(np.sum((tracks_positions - noisypose[tag_idx]) ** 2, axis=1)))
+                        distance_matrix = np.vstack((
+                            np.sqrt(
+                                np.sum((tracks_positions - noisypose[0]) ** 2, axis=1)),
+                            np.sqrt(
+                                np.sum((tracks_positions - noisypose[1]) ** 2, axis=1)),
+                            np.sqrt(
+                                np.sum((tracks_positions - noisypose[2]) ** 2, axis=1))
+                        ))
+                        # print(distance_matrix)
+                        det_to_assign = min(len(tracks_positions), len(tag_uuids))
+                        while det_to_assign > 0:
+                            indices = np.unravel_index(
+                                distance_matrix.argmin(), distance_matrix.shape)
+                            # print(indices)
+                            _tagidx = indices[0]
+                            _candidateidx = indices[1]
+
+                            # find the closest node
+                            theone = np.argmin(
+                                np.sqrt(np.sum((np.array(node_positions) - tracks_positions[_candidateidx]) ** 2, axis=1)))
+                            
+                            # assign uuid and node
+                            tag_uuids[_tagidx] = msg.uuids[_candidateidx]
+                            last_bayesnode[_tagidx] = node_names[theone]
+                            last_bayesnode_pose[_tagidx] = node_positions[theone]
+                            
+                            # delete row for the picker already assigned 
+                            # distance_matrix = np.delete(
+                            #     distance_matrix, indices[0], 0)
+                            distance_matrix[indices[0], :] = np.inf
+                            # ... and column for the tracked detection
+                            # distance_matrix = np.delete(
+                            #     distance_matrix, indices[1], 1)
+                            distance_matrix[:, indices[1]] = np.inf
+                            det_to_assign -= 1
+                            # print(distance_matrix)
+            
+                        # # we do this once for all the 3 pickers, so break
+                        # print("... to {}".format(
+                        #     tag_uuids))
+                        break
+
+                        # ###
+                        # # find tracked closest to gt which is not already tracked for another tag
+                        # tracks_positions = np.array([[pose.position.x, pose.position.y] for pose in msg.poses])
+                        # ord_idx = np.argsort(
+                        #     np.sqrt(np.sum((tracks_positions - noisypose[tag_idx]) ** 2, axis=1)))
+
+                        # theone = None
+                        # for candidateidx in ord_idx:
+                        #     if msg.uuids[candidateidx] not in tag_uuids:
+                        #         theone = np.argmin(
+                        #             np.sqrt(np.sum((np.array(node_positions) - tracks_positions[candidateidx]) ** 2, axis=1)))
+                        #         tag_uuids[tag_idx] = msg.uuids[candidateidx]
+                        #         break
+                        # if theone is None:
+                        #     last_bayesnode[tag_idx] = None
+                        #     last_bayesnode_pose[tag_idx] = None
+                        # else:
+                        #     last_bayesnode[tag_idx] = node_names[theone]
+                        #     last_bayesnode_pose[tag_idx] = node_positions[closest]
+                        # ###
+                        ###
                         # if tag_idx == 0:
-                        #     # print(tracks_positions, noisypose)
-                        #     # print(np.array(tracks_positions).shape,
-                        #     #       np.array(noisypose).shape)
-                        #     # print(ord_idx)
-                        theone = None
-                        for candidateidx in ord_idx:
-                            if msg.uuids[candidateidx] not in tag_uuids:
-                                theone = np.argmin(
-                                    np.sqrt(np.sum((np.array(node_positions) - tracks_positions[candidateidx]) ** 2, axis=1)))
-                                tag_uuids[tag_idx] = msg.uuids[candidateidx]
-                                break 
-                        if theone is None:
-                            last_bayesnode[tag_idx] = None
-                            last_bayesnode_pose[tag_idx] = None       
-                        else:        
-                            last_bayesnode[tag_idx] = node_names[theone]
-                            last_bayesnode_pose[tag_idx] = node_positions[closest]
+                        # print(tracks_positions, noisypose)
+                        # print(np.array(tracks_positions).shape,
+                        #       np.array(noisypose).shape)
+                        # print(ord_idx)
+                        ###
                     else:
+                        tag_uuids[tag_idx] = ""
                         last_bayesnode[tag_idx] = None
                         last_bayesnode_pose[tag_idx] = None
 
