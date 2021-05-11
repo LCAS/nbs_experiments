@@ -97,13 +97,13 @@ if __name__ == "__main__":
     # fig.suptitle("Tags localization error")
 
     plt.xlabel("Minutes", fontsize=14)
-    label_list = ["Next-Best-Sense", "Estimated Node"]
+    label_list = ["RFID+LIDAR+GPS(ours)", "NoMonitor", "CostantSpeed", "Dondrup et al.[24]"]
     pickers_label_list = [
         ["picker1", "picker1"],
         ["picker2", "picker2"],
         ["picker3", "picker3"]
     ]
-    color_list = ["g", "b"]
+    color_list = ["g", "b", "c", "r"]
     pickers_color_list = ["#6666ff66", "#ff666666"]
     pickers_style = ["--", "-.", ":"]
     tot_topo_combined_result = []
@@ -147,18 +147,26 @@ if __name__ == "__main__":
     #     #     metric_data, "Euclidan Error[m]", pickers_label_list[tagi], pickers_color_list, pickers_style[tagi], axs, 1)
         
     tot_topo_combined_result = np.load(
-        args.root + "topo_result{}.npy".format("_nbs"))
-    tot_topo_estimated_node_result = np.load(
-        args.root + "topo_result{}.npy".format("_estimated_node"))
+        args.root + "topo_result{}.npy".format("_combined"))
+    tot_topo_nothreshold_result = np.load(
+        args.root + "topo_result{}.npy".format("_nothreshold"))
+    tot_topo_costantspeed_result = np.load(
+        args.root + "topo_result{}.npy".format("_costantspeed"))
+    tot_topo_bayes_result = np.load(
+        args.root + "topo_result{}.npy".format("_bayes"))
 
     tot_combined_result = np.load(
-        args.root + "metric_result{}.npy".format("_nbs"))
-    tot_estimated_node_result = np.load(
-        args.root + "metric_result{}.npy".format("_estimated_node"))
+        args.root + "metric_result{}.npy".format("_combined"))
+    tot_nothreshold_result = np.load(
+        args.root + "metric_result{}.npy".format("_nothreshold"))
+    tot_costantspeed_result = np.load(
+        args.root + "metric_result{}.npy".format("_costantspeed"))
+    tot_bayes_result = np.load(
+        args.root + "metric_result{}.npy".format("_bayes"))
     # TODO: Check that they sizes are the sames
     # data = [gps_connected_result, gps_unconnected_result, lidar_result, rfid_result, combined_result]
-    topo_data = [tot_topo_combined_result, tot_topo_estimated_node_result]
-    metric_data = [tot_combined_result, tot_estimated_node_result]
+    topo_data = [tot_topo_combined_result, tot_topo_nothreshold_result, tot_topo_costantspeed_result, tot_topo_bayes_result]
+    metric_data = [tot_combined_result, tot_nothreshold_result, tot_costantspeed_result, tot_bayes_result]
     # label_list=["GPS-connected", "GPS-unconnected", "Lidar", "RFID", "Combined"]
 
     topo_data = normalizeLenData(topo_data)
@@ -173,6 +181,6 @@ if __name__ == "__main__":
     # plt.show()
     fig.tight_layout()
     # , bbox_to_anchor=(0.5, 0.95))
-    axs[0].legend(ncol=2, loc='upper right', fontsize=12)
+    axs[0].legend(ncol=2, loc='upper right', fontsize=16)
 
     fig.savefig(fname=os.path.join(out_folder, "distance.pdf"), dpi=300)

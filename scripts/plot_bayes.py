@@ -85,7 +85,7 @@ if __name__ == "__main__":
     all_bags_nbssteps = []
     step_size = rospy.Duration(secs=10) #seconds
     for i, bag in enumerate(bags):
-        print(bag_names[i])
+        print(i, bag_names[i])
         ###trajectory vectors
         times = [[], [], []]
         distances = [[], [], []]
@@ -251,10 +251,14 @@ if __name__ == "__main__":
         
 
     # fig = plt.figure(figsize=(12, 8))
-    # plt.plot(all_bags_times[0], averages, label='label', color='r')
+    # for i in range(0, len(all_bags_bayesdistances), 3):
+    #     if (i != 0):
+    #         plt.plot(all_bags_bayesdistances[i], label=str(i/3))
     # plt.fill_between(all_bags_times[0], averages-stds, averages +
     #                       stds, alpha=0.2, edgecolor='r', facecolor='r')
+    # plt.legend()
     # plt.show()
+    # exit(0)
     # plt.savefig(fname=os.path.join(out_folder, bag_names[i].replace(".bag", ".png")), dpi=300)
     
     print("TPF:")
@@ -312,6 +316,11 @@ if __name__ == "__main__":
 
     bayesaverages = np.nanmean(all_bags_bayesdistances, axis=0)
     bayesstds = np.nanstd(all_bags_bayesdistances, axis=0)
+
+    # plt.plot(bayesaverages, label="avg")
+    # plt.legend()
+    # plt.show()
+    # exit(0)
     bayestopo_averages = np.nanmean(
         all_bags_topo_bayesdistances, axis=0)
     bayestopo_stds = np.nanstd(
