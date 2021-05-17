@@ -20,7 +20,7 @@ def plotDistance(data, pos, y_label, label, color, style, axes):
                             data[::3, 1], alpha=0.05, edgecolor=color, facecolor=color)
     else:
         axs[pos].plot(x[::2], data[::2, 0], label=label, color=color, linestyle=style)
-    axs[pos].set_ylabel(y_label, fontsize=14)
+    axs[pos].set_ylabel(y_label, fontsize=16)
     axs[pos].xaxis.set_major_locator(MaxNLocator(integer=True))
     axs[pos].set_xlim(min(x), max(x))
     axs[pos].set_ylim(0, 12)
@@ -96,7 +96,7 @@ if __name__ == "__main__":
     axs = fig.subplots(rows, cols, sharex=True, sharey=False)
     # fig.suptitle("Tags localization error")
 
-    plt.xlabel("Minutes", fontsize=14)
+    plt.xlabel("Minutes", fontsize=16)
     label_list = ["RFID+LIDAR+GPS(ours)", "NoMonitor", "CostantSpeed", "Dondrup et al.[24]"]
     pickers_label_list = [
         ["picker1", "picker1"],
