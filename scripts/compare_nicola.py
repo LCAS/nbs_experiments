@@ -163,6 +163,11 @@ if __name__ == "__main__":
         args.root + "metric_result{}.npy".format("_costantspeed"))
     tot_bayes_result = np.load(
         args.root + "metric_result{}.npy".format("_bayes"))
+
+    # load switching times for pickers
+    tot_tunnelswitch_result = np.load(
+        args.root + "tunnelswitch.npy")
+
     # TODO: Check that they sizes are the sames
     # data = [gps_connected_result, gps_unconnected_result, lidar_result, rfid_result, combined_result]
     topo_data = [tot_topo_combined_result, tot_topo_nothreshold_result, tot_topo_costantspeed_result, tot_topo_bayes_result]
@@ -172,10 +177,33 @@ if __name__ == "__main__":
     topo_data = normalizeLenData(topo_data)
     metric_data = normalizeLenData(metric_data)
 
+    # plot vertical lines when the pickers change lane
+    x = np.arange(
+        0, len(tot_tunnelswitch_result[0]), 1, dtype=float) / 6.0
+    for pi in range(tot_tunnelswitch_result.shape[0]):
+        mask = tot_tunnelswitch_result[pi] == 1
+        switchtimes = x[mask]
+        for i in range(len(switchtimes)):
+            if i > 0 and (switchtimes[i] - switchtimes[i-1]) < 1:
+                continue
+            # print(switchtimes[i])
+            for pos in range(2):
+                axs[pos].axvline(x=switchtimes[i], color='#ff22aa22')
+        mask = tot_tunnelswitch_result[pi] == -1
+        switchtimes = x[mask]
+        for i in range(len(switchtimes)):
+            if i > 0 and (switchtimes[i] - switchtimes[i-1]) < 1:
+                continue
+            # print(switchtimes[i])
+            for pos in range(2):
+                axs[pos].axvline(x=switchtimes[i], color='#ffaa0033')
+
     calculateMetricsAndPlot(
         metric_data, "Euclidan Error[m]", label_list, color_list, "-", axs, 0)
     calculateMetricsAndPlot(
         topo_data, "Topological Error[nodes]", label_list, color_list, "-", axs, 1)
+
+
 
 
     # plt.show()

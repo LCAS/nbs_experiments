@@ -67,7 +67,9 @@ if __name__ == "__main__":
         tdistances = {dist[0]: dist[1] for dist in tdistances} 
         # print(tdistances)
 
-
+    offset = 0.2
+    start_tunnel_x = 5.53 + offset
+    end_tunnel_x = start_tunnel_x + 27.0 - (2*offset)
 
     all_bags_times = []
     all_bags_distances = []
@@ -80,6 +82,7 @@ if __name__ == "__main__":
     all_bags_enodes = []
     all_bags_bayesnodes = []
     all_bags_nbssteps = []
+    all_bags_endtunnel = []
     step_size = rospy.Duration(secs=10) #seconds
     for i, bag in enumerate(bags):
         print(bag_names[i])
@@ -101,6 +104,7 @@ if __name__ == "__main__":
         enodes = [[], [], []]
         bayesnodes = [[], [], []]
         nbssteps = [[], [], []]
+        endtunnel = [[], [], []]
         ###last read values
         last_time = None
         last_gtnode = [None, None, None]
@@ -113,6 +117,7 @@ if __name__ == "__main__":
         last_bayesnode_pose = [None, None, None]
         tpose = [None, None, None]
         noisypose = [None, None, None]
+        last_endtunnel = [0, 0, 0]
         ###
         # plt.figure()
         ###
@@ -172,6 +177,7 @@ if __name__ == "__main__":
                         bayesnodes[tagi].append(last_bayesnode[tagi])
                         nbssteps[tagi].append(nbs_step)
                         times[tagi].append(j*step_size.secs)
+                        endtunnel[tagi].append(last_endtunnel[tagi])
                     else:
                         distances[tagi].append(np.nan)
                         topo_distances[tagi].append(np.nan)
@@ -184,21 +190,19 @@ if __name__ == "__main__":
                         bayesnodes[tagi].append(None)
                         nbssteps[tagi].append(nbs_step)
                         times[tagi].append(j*step_size.secs)
-                    # ###
-                    # if last_noisynode_pose[tagi] is not None and last_bayesnode_pose[tagi] is not None:
-                    #     plt.figure(tagi)
-                    #     # print(last_noisynode_pose[1])
-                    #     plt.plot(j, last_noisynode_pose[tagi][0], 'gx')
-                    #     plt.plot(j, last_noisynode_pose[tagi][1], 'b*')
-                    #     plt.plot(j, last_bayesnode_pose[tagi][0], 'rx')
-                    #     plt.plot(j, last_bayesnode_pose[tagi][1], 'y*')
-                    # ###
+                        endtunnel[tagi].append(last_endtunnel[tagi])
                 nbs_step = False
                 last_time = rospy.Time(secs=ts.secs, nsecs=ts.nsecs)
             if topic == '/poses/1':
                 tpose[0] = np.array([msg.pose.pose.position.x, msg.pose.pose.position.y])
                 closest = np.argmin(np.sqrt(np.sum((np.array(node_positions) - tpose[0]) ** 2, axis=1)))
                 last_gtnode[0] = node_names[closest]
+                if tpose[0][0] < start_tunnel_x:
+                    last_endtunnel[0] = 1
+                elif tpose[0][0] > end_tunnel_x:
+                    last_endtunnel[0] = -1
+                else:
+                    last_endtunnel[0] = 0
             elif topic == '/tag_1/estimated_node':
                 last_enode[0] = msg.data
                 index = node_names.index(last_enode[0])
@@ -214,6 +218,12 @@ if __name__ == "__main__":
                 tpose[1] = np.array([msg.pose.pose.position.x, msg.pose.pose.position.y])
                 closest = np.argmin(np.sqrt(np.sum((np.array(node_positions) - tpose[1]) ** 2, axis=1)))
                 last_gtnode[1] = node_names[closest]
+                if tpose[1][0] < start_tunnel_x:
+                    last_endtunnel[1] = 1
+                elif tpose[1][0] > end_tunnel_x:
+                    last_endtunnel[1] = -1
+                else:
+                    last_endtunnel[1] = 0
             elif topic == '/tag_2/estimated_node':
                 last_enode[1] = msg.data
                 index = node_names.index(last_enode[1])
@@ -229,6 +239,12 @@ if __name__ == "__main__":
                 tpose[2] = np.array([msg.pose.pose.position.x, msg.pose.pose.position.y])
                 closest = np.argmin(np.sqrt(np.sum((np.array(node_positions) - tpose[2]) ** 2, axis=1)))
                 last_gtnode[2] = node_names[closest]
+                if tpose[2][0] < start_tunnel_x:
+                    last_endtunnel[2] = 1
+                elif tpose[2][0] > end_tunnel_x:
+                    last_endtunnel[2] = -1
+                else:
+                    last_endtunnel[2] = 0
             elif topic == '/tag_3/estimated_node':
                 last_enode[2] = msg.data
                 index = node_names.index(last_enode[2])
@@ -256,16 +272,6 @@ if __name__ == "__main__":
                         last_bayesnode[tag_idx] = node_names[closest]
                         last_bayesnode_pose[tag_idx] = node_positions[closest]
                     elif len(msg.uuids) > 0:
-                        ###
-                        # print()
-                        # print(j)
-                        # print(tag_idx)
-                        # print("We are changing tracking trace")
-                        # print("from {} - {}...".format(
-                        #     tag_uuids, msg.uuids))
-                        ###
-                        ## re-organise all the matches ##
-                        # reset all the vectors
                         tag_uuids = [""] * 3
                         last_bayesnode = [None, None, None]
                         last_bayesnode_pose = [None, None, None]
@@ -307,40 +313,9 @@ if __name__ == "__main__":
                             #     distance_matrix, indices[1], 1)
                             distance_matrix[:, indices[1]] = np.inf
                             det_to_assign -= 1
-                            # print(distance_matrix)
-            
-                        # # we do this once for all the 3 pickers, so break
-                        # print("... to {}".format(
-                        #     tag_uuids))
+                            # print(distance_matrix)    
                         break
 
-                        # ###
-                        # # find tracked closest to gt which is not already tracked for another tag
-                        # tracks_positions = np.array([[pose.position.x, pose.position.y] for pose in msg.poses])
-                        # ord_idx = np.argsort(
-                        #     np.sqrt(np.sum((tracks_positions - noisypose[tag_idx]) ** 2, axis=1)))
-
-                        # theone = None
-                        # for candidateidx in ord_idx:
-                        #     if msg.uuids[candidateidx] not in tag_uuids:
-                        #         theone = np.argmin(
-                        #             np.sqrt(np.sum((np.array(node_positions) - tracks_positions[candidateidx]) ** 2, axis=1)))
-                        #         tag_uuids[tag_idx] = msg.uuids[candidateidx]
-                        #         break
-                        # if theone is None:
-                        #     last_bayesnode[tag_idx] = None
-                        #     last_bayesnode_pose[tag_idx] = None
-                        # else:
-                        #     last_bayesnode[tag_idx] = node_names[theone]
-                        #     last_bayesnode_pose[tag_idx] = node_positions[closest]
-                        # ###
-                        ###
-                        # if tag_idx == 0:
-                        # print(tracks_positions, noisypose)
-                        # print(np.array(tracks_positions).shape,
-                        #       np.array(noisypose).shape)
-                        # print(ord_idx)
-                        ###
                     else:
                         tag_uuids[tag_idx] = ""
                         last_bayesnode[tag_idx] = None
@@ -389,6 +364,7 @@ if __name__ == "__main__":
                 all_bags_enodes.append(np.array(enodes[tagi]))
                 all_bags_bayesnodes.append(np.array(bayesnodes[tagi]))
                 all_bags_nbssteps.append(np.array(nbssteps[tagi]))
+                all_bags_endtunnel.append(np.array(endtunnel[tagi]))
             # print(distances.shape)
 
     
@@ -406,6 +382,7 @@ if __name__ == "__main__":
         all_bags_enodes[i] = all_bags_enodes[i][:min_size]
         all_bags_bayesnodes[i] = all_bags_bayesnodes[i][:min_size]
         all_bags_nbssteps[i] = all_bags_nbssteps[i][:min_size]
+        all_bags_endtunnel[i] = all_bags_endtunnel[i][:min_size]
         
 
     # fig = plt.figure(figsize=(12, 8))
@@ -519,3 +496,5 @@ if __name__ == "__main__":
     result = np.concatenate((noisytopo_averages, noisytopo_stds), axis=1)
     np.save(out_folder + "/noisygps_topo_result{}".format("tot"), result)
 
+
+    np.save(out_folder + "/tunnelswitch", all_bags_endtunnel)
