@@ -24,23 +24,11 @@ init_cmd: |
 
 # tags: core, nav
 windows:
-# - name: roscore
-#   tags: [base]
-#   panes:
-#   - roscore
 - name: rad_gazebo
   tags: [base]
   panes:
   - roslaunch nbs_experiments radiation_demonstrator_ncnr.launch loc_map_yaml:=$LOC_MAP_YAML nav_map_yaml:=$LOC_MAP_YAML
   check: "rostopic list | grep gazebo"
-# - name: krigin
-#   tags: [base]
-#   panes:
-#   - |
-#     conda create -n krigin python=3.6 numpy scipy matplotlib -y
-#     conda activate krigin
-#     conda install -c conda-forge pykrige
-#   check: "rosservice list | grep -q message_store"
 - name: rad_map
   tags: [base]
   panes:
