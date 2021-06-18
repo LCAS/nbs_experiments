@@ -1,12 +1,14 @@
 ################################################################################
 #                           Experiment setup packages                          #
 ################################################################################
-- git: {local-name: nbs_experiments,             uri: 'https://github.com/LCAS/nbs_experiments.git', version: 'melodic-devel'}
+- git: {local-name: nbs_experiments,             uri: 'https://github.com/LCAS/nbs_experiments.git', version: 'ncnr'}
+- git: {local-name: gazebo_radiation_plugin,     uri: 'https://github.com/EEEManchester/gazebo_radiation_plugin', version: 'melodic'}
+- git: {local-name: ncnr,                        uri: 'https://github.com/pulver22/ncnr', version: 'melodic-devel'}
 
 ################################################################################
-#                           MCDM packages                                      #
+#                           NBS packages                                      #
 ################################################################################
-- git: {local-name: mcdm_exploration_framework,   uri: 'https://github.com/pulver22/nbs_ros.git', version: 'probRFID'}
+- git: {local-name: next_best_sense,   uri: 'https://github.com/pulver22/nbs_ros.git', version: 'topo-nuclear'}
 
 ################################################################################
 #                           RFID                                               #

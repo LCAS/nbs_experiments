@@ -1,0 +1,45 @@
+---
+session: ncnr_robot
+init_cmd: |
+  #exec /bin/bash
+  cd @TMULE_CONFIG_DIR@ || true
+  set -o pipefail
+  function export_default () {
+    var_name="$1"
+    var_default="$2"
+    eval $var_name="${!var_name:-$var_default}"
+    export $var_name
+    echo "  $0 -> $var_name=${!var_name}"
+  }
+
+# tags: core, nav
+windows:
+# - name: roscore
+#   tags: [base]
+#   panes:
+#   - roscore
+- name: rad_gazebo
+  tags: [base]
+  panes:
+  - roslaunch nbs_experiments radiation_demonstrator_ncnr.launch
+  check: "rostopic list | grep gazebo"
+# - name: krigin
+#   tags: [base]
+#   panes:
+#   - |
+#     conda create -n krigin python=3.6 numpy scipy matplotlib -y
+#     conda activate krigin
+#     conda install -c conda-forge pykrige
+#   check: "rosservice list | grep -q message_store"
+- name: rad_map
+  tags: [base]
+  panes:
+  - |
+    conda activate krigin
+    roslaunch ncnr_logging krigin.launch
+  check: "rosservice list | grep radiation_map"
+- name: nbs
+  tags: [base]
+  panes:
+  - roslaunch next_best_sense pure.launch
+  check: "rostopic list | grep stats"
