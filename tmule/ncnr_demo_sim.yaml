@@ -12,6 +12,16 @@ init_cmd: |
     echo "  $0 -> $var_name=${!var_name}"
   }
 
+  # source ROS
+  source "/opt/ros/$(rosversion -d)/setup.bash"
+
+  export CATKIN_WORKSPACE="`readlink -f ../../../`"
+  source "$CATKIN_WORKSPACE/devel/setup.bash"
+
+  export_default LOC_MAP_YAML "$(rospack find gazebo_radiation_plugins)/maps/reactor_2.yaml"
+  export_default LOG_PATH "/tmp/ncnr_topoNBS/nbs/"
+  export_default LOOKUP_TABLE_DISTANCES "reactor_map.csv"
+
 # tags: core, nav
 windows:
 # - name: roscore
@@ -21,7 +31,7 @@ windows:
 - name: rad_gazebo
   tags: [base]
   panes:
-  - roslaunch nbs_experiments radiation_demonstrator_ncnr.launch
+  - roslaunch nbs_experiments radiation_demonstrator_ncnr.launch loc_map_yaml:=$LOC_MAP_YAML nav_map_yaml:=$LOC_MAP_YAML
   check: "rostopic list | grep gazebo"
 # - name: krigin
 #   tags: [base]
@@ -36,10 +46,11 @@ windows:
   panes:
   - |
     conda activate krigin
-    roslaunch ncnr_logging krigin.launch
+    roslaunch ncnr_logging krigin.launch out_path:=$LOG_PATH
   check: "rosservice list | grep radiation_map"
 - name: nbs
   tags: [base]
   panes:
-  - roslaunch next_best_sense pure.launch
+  - rosrun topological_navigation get_simple_policy.py
+  - roslaunch next_best_sense pure.launch dest_folder:=$LOG_PATH distances_map:=$LOOKUP_TABLE_DISTANCES
   check: "rostopic list | grep stats"

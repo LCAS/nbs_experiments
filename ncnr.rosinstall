@@ -2,8 +2,8 @@
 #                           Experiment setup packages                          #
 ################################################################################
 - git: {local-name: nbs_experiments,             uri: 'https://github.com/LCAS/nbs_experiments.git', version: 'ncnr'}
-- git: {local-name: gazebo_radiation_plugin,     uri: 'https://github.com/EEEManchester/gazebo_radiation_plugin', version: 'melodic'}
-- git: {local-name: ncnr,                        uri: 'https://github.com/pulver22/ncnr', version: 'melodic-devel'}
+- git: {local-name: gazebo_radiation_plugin,     uri: 'https://github.com/pulver22/gazebo_radiation_plugin.git', version: 'melodic'}
+- git: {local-name: ncnr,                        uri: 'https://github.com/pulver22/ncnr.git', version: 'melodic-devel'}
 
 ################################################################################
 #                           NBS packages                                      #
