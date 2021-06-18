@@ -15,7 +15,7 @@ init_cmd: |
   # source ROS
   source "/opt/ros/$(rosversion -d)/setup.bash"
 
-  export CATKIN_WORKSPACE="`readlink -f ../../../`"
+  export_default CATKIN_WORKSPACE "`readlink -f ../../../`"
   source "$CATKIN_WORKSPACE/devel/setup.bash"
 
   export_default LOC_MAP_YAML "$(rospack find gazebo_radiation_plugins)/maps/reactor_2.yaml"
